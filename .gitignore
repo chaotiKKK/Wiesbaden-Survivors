@@ -1,0 +1,15 @@
+# Preview- / Harness-Scratch (Logs, Zustand)
+.freebuff/
+
+# Fremder Unreal-Engine-C++-Drop-in — bleibt auf Platte, gehört nicht in dieses HTML-Spiel-Repo
+UnrealDropIn/
+
+# Node-Abhängigkeiten (falls für tools/ installiert)
+node_modules/
+
+# OS-/Editor-Cruft
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
