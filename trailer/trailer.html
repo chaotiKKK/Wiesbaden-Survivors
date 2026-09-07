@@ -1,0 +1,62 @@
+<!doctype html>
+<!--
+  ============================================================================
+  ⚠️  SKELETT — NOCH NICHT ECHT (NOT A FINISHED / RENDERABLE COMPOSITION)
+  ============================================================================
+  Zweck: ein KORREKT VERDRAHTETES HyperFrames-Audio-Gerüst (Musik-Bed +
+  Voiceover-Gruppe + Carve), das die hyperframes-audio-Skill mischen KANN,
+  sobald zwei Voraussetzungen erfüllt sind:
+
+    1) Runtime installieren:   npm i -D @hyperframes/core
+    2) ECHTE Audio-Dateien in ./media/ ablegen (aktuell nur STILLE Platzhalter!):
+         media/bgm-trailer.mp3  (Musik-Bed)      -> via /media-use sourcen
+         media/vo-intro.mp3     (Voiceover)      -> via /media-use erzeugen
+         media/vo-mid.mp3       (Voiceover)
+         media/vo-outro.mp3     (Voiceover)
+
+  Der Carve unten IST richtig verdrahtet (Bett -> Gruppe "voiceover"), liefert
+  aber erst mit echtem Sprach-Audio ein Ergebnis: stille Platzhalter haben keine
+  Sprachbänder zum Herausschneiden. Danach:
+         node C:\Users\HP\.agents\skills\hyperframes-audio\scripts\carve.mjs --comp trailer/trailer.html
+
+  Bild-/Track-Layout (Video, Titelkarten, Clip-Reihenfolge) gehört zu
+  /hyperframes-core und ist hier bewusst NICHT enthalten.
+  ============================================================================
+-->
+<html lang="de">
+<head><meta charset="utf-8"><title>Wiesbaden Survivors — Trailer (Skelett)</title></head>
+<body>
+
+  <!-- Voiceover als GRUPPE (Bus): eine Kette + ein Fader + eine Uhr für alle
+       Narrations-Clips. Der Carve zeigt auf DIESE Gruppen-id, nie auf Einzel-Clips.
+       Kette: Kompressor (Narration einebnen) + Präsenz-Peak @3kHz (Verständlichkeit). -->
+  <hf-audio-group
+    id="voiceover"
+    data-label="Voiceover"
+    data-volume="0.95"
+    data-fx-chain='{"version":1,"nodes":[
+      {"type":"compressor","id":"vo1","params":{"threshold":-18,"ratio":3,"attack":0.004,"release":0.18}},
+      {"type":"peaking","id":"vo2","params":{"frequency":3000,"gain":2,"q":1}}]}'
+  ></hf-audio-group>
+
+  <!-- Narrations-Clips: Mitglieder der Gruppe "voiceover" (KEIN Bett/SFX hier rein). -->
+  <audio id="vo-intro" data-audio-group="voiceover" src="media/vo-intro.mp3"
+         data-start="1.5"  data-duration="4" data-media-start="0"></audio>
+  <audio id="vo-mid"   data-audio-group="voiceover" src="media/vo-mid.mp3"
+         data-start="7"    data-duration="5" data-media-start="0"></audio>
+  <audio id="vo-outro" data-audio-group="voiceover" src="media/vo-outro.mp3"
+         data-start="14"   data-duration="4" data-media-start="0"></audio>
+
+  <!-- Musik-Bett: läuft über den ganzen Trailer. Der CARVE lebt HIER (auf dem
+       Bett-Clip) und zeigt auf die Gruppe "voiceover" — dynamisch, Standardstärke.
+       Er schreibt beim Lauf peaking-Filter + Level-gain (getaggt fromCarve) und
+       Automations-Lanes; von Hand gebaute Effekte/Lanes bleiben erhalten. -->
+  <audio id="music-bed" src="media/bgm-trailer.mp3"
+         data-start="0" data-duration="20" data-media-start="0"
+         data-fx-carve='{"enabled":true,"sources":["voiceover"],"strength":0.25,"dynamic":true}'></audio>
+
+  <!-- TODO (nach echtem Audio): Fade-in/out des Betts als data-automation-Volume-Lane
+       ergänzen (Schema in references/attributes.md prüfen) oder im Studio ziehen. -->
+
+</body>
+</html>
