@@ -13,3 +13,6 @@ desktop.ini
 .DS_Store
 .vscode/
 .idea/
+
+# Erzeugte Trailer-Videos (aus tools/trailer-capture.mjs + tools/trailer-build.mjs neu baubar)
+trailer/out/
