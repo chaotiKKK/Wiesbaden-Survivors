@@ -21,26 +21,16 @@
 //
 // Dependency-free: plain Node >= 22 (global WebSocket, global fetch) + system Edge.
 
-import { existsSync, mkdirSync, writeFileSync, rmSync, readFileSync, readdirSync } from 'node:fs';
-import { spawnSync } from 'node:child_process';
-import http from 'node:http';
-import net from 'node:net';
+import { mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { EDGE_PATH, repoRoot, argOf, startStaticServer, launchEdge, killScratchEdges, connectPageCdp } from './lib/harness.mjs';
 
-const HERE_DIR = path.dirname(fileURLToPath(new URL(import.meta.url)));
-const ROOT = path.resolve(HERE_DIR, '..');
+const ROOT = repoRoot(import.meta.url);
 const argv = process.argv.slice(2);
-const argOf = (flag, dflt) => { const i = argv.indexOf(flag); return i >= 0 && argv[i + 1] ? argv[i + 1] : dflt; };
-const OUT_DIR = path.resolve(argOf('--out', path.join(os.tmpdir(), 'ws-trailer-capture')));
+const OUT_DIR = path.resolve(argOf(argv, '--out', path.join(os.tmpdir(), 'ws-trailer-capture')));
 const WIDTH = 1280, HEIGHT = 720;
-
-const MSEDGE_CANDIDATES = [
-  'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
-  'C:/Program Files/Microsoft/Edge/Application/msedge.exe'
-];
-const EDGE_PATH = MSEDGE_CANDIDATES.find(p => existsSync(p));
+const EDGE_PROFILE_PREFIX = 'wstrailer-edge-';
 
 const log = (m) => console.log(m);
 
@@ -52,86 +42,6 @@ const BEATS = [
   { id: 'mid', wave: 5, seconds: 10, label: 'Welle 5 — Boss' },
   { id: 'outro', wave: 10, seconds: 10, label: 'Welle 10 — Eskalation' }
 ];
-
-// ------------------------------------------------------------ static srv ----
-let server = null, edgeProfile = null, edgePort = 0;
-
-function freePort() {
-  return new Promise((resolve) => {
-    const srv = net.createServer();
-    srv.listen(0, '127.0.0.1', () => { const p = srv.address().port; srv.close(() => resolve(p)); });
-  });
-}
-
-function startStaticServer() {
-  const MIME = {
-    '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8',
-    '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.webmanifest': 'application/manifest+json',
-    '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.ico': 'image/x-icon',
-    '.mp3': 'audio/mpeg', '.ogg': 'audio/ogg', '.woff2': 'font/woff2', '.txt': 'text/plain; charset=utf-8'
-  };
-  return new Promise((resolve, reject) => {
-    const srv = http.createServer((req, res) => {
-      try {
-        let p = decodeURIComponent((req.url || '/').split('?')[0]);
-        if (p.endsWith('/')) p += 'index.html';
-        const file = path.resolve(ROOT, '.' + p);
-        if (file.indexOf(ROOT) !== 0 || !existsSync(file)) throw new Error('forbidden');
-        const body = readFileSync(file);
-        res.writeHead(200, { 'Content-Type': MIME[path.extname(file).toLowerCase()] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
-        res.end(body);
-      } catch { res.writeHead(404); res.end('not found'); }
-    });
-    srv.on('error', reject);
-    srv.listen(0, '127.0.0.1', () => { server = srv; resolve(srv.address().port); });
-  });
-}
-
-function sh(cmd, args, opts) {
-  const r = spawnSync(cmd, args, Object.assign({ encoding: 'utf8', timeout: 20000 }, opts || {}));
-  if (r.error && r.error.code === 'ETIMEDOUT') return { timedOut: true, code: null, stdout: '', stderr: '' };
-  return { timedOut: false, code: r.status, stdout: r.stdout || '', stderr: r.stderr || '' };
-}
-// PowerShell re-parses its own command line: flags and script must be separate argv.
-const powershell = (script, opts) => sh('powershell', ['-NoProfile', '-Command', script], opts);
-
-function killScratchEdges() {
-  powershell("Get-CimInstance Win32_Process -Filter \"Name = 'msedge.exe'\" | Where-Object { $_.CommandLine -like '*wstrailer-edge-*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }", { timeout: 15000 });
-  try {
-    for (const f of readdirSync(os.tmpdir())) if (f.indexOf('wstrailer-edge-') === 0) rmSync(path.join(os.tmpdir(), f), { recursive: true, force: true });
-  } catch { /* ignore */ }
-}
-
-function launchEdge() {
-  return new Promise((resolve) => {
-    freePort().then((port) => {
-      edgePort = port;
-      edgeProfile = path.join(os.tmpdir(), 'wstrailer-edge-' + process.pid + '-' + Date.now());
-      // Background-timer throttling has to stay off or rAF crawls in headless.
-      const ps = "Start-Process -WindowStyle Hidden -FilePath '" + EDGE_PATH +
-        "' -ArgumentList '--headless=new --remote-debugging-port=" + port +
-        ' --user-data-dir=' + edgeProfile.replace(/\\/g, '/') +
-        ' --window-size=' + WIDTH + ',' + HEIGHT +
-        " --hide-scrollbars --mute-audio --disable-extensions --no-first-run --no-default-browser-check --disable-features=msEdgeFirstRunExperience --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-renderer-backgrounding about:blank'";
-      const r = powershell(ps);
-      if (r.timedOut || r.code !== 0) { resolve(false); return; }
-      const deadline = Date.now() + 15000;
-      const probe = () => {
-        if (Date.now() > deadline) { resolve(false); return; }
-        const rr = powershell('try { (Invoke-WebRequest -UseBasicParsing -TimeoutSec 2 http://127.0.0.1:' + port + '/json/version).StatusCode } catch { 0 }', { timeout: 5000 });
-        if ((rr.stdout || '').trim().startsWith('200')) resolve(true); else setTimeout(probe, 500);
-      };
-      probe();
-    });
-  });
-}
-
-function killEdge() {
-  if (!edgeProfile) return;
-  const pat = edgeProfile.replace(/\\/g, '/');
-  powershell("Get-CimInstance Win32_Process -Filter \"Name = 'msedge.exe'\" | Where-Object { $_.CommandLine -like '*" + pat + "*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }", { timeout: 15000 });
-  setTimeout(() => { try { rmSync(edgeProfile, { recursive: true, force: true }); } catch { /* ignore */ } }, 800);
-}
 
 // ------------------------------------------------------------- autopilot ----
 // Writes ONLY into Input.keys — the same map the real keydown handler writes —
@@ -189,40 +99,23 @@ async function main() {
   if (!argv.includes('--keep')) { try { rmSync(OUT_DIR, { recursive: true, force: true }); } catch { /* ignore */ } }
   mkdirSync(OUT_DIR, { recursive: true });
 
-  killScratchEdges();
-  const sitePort = await startStaticServer();
-  const site = 'http://127.0.0.1:' + sitePort;
+  killScratchEdges(EDGE_PROFILE_PREFIX);
+  const server = await startStaticServer(ROOT);
+  const site = server.url;
   log('static server on ' + site);
 
-  if (!await launchEdge()) { console.error('FATAL: headless Edge did not start'); server.close(); process.exit(1); }
-  log('headless Edge up on CDP port ' + edgePort);
-
-  const list = JSON.parse(await (await fetch('http://127.0.0.1:' + edgePort + '/json/list')).text());
-  const page = list.find(t => t.type === 'page');
-  if (!page || !page.webSocketDebuggerUrl) { console.error('FATAL: no page target'); server.close(); killEdge(); process.exit(1); }
-
-  const ws = new WebSocket(page.webSocketDebuggerUrl);
-  await new Promise((res, rej) => { ws.onopen = res; ws.onerror = () => rej(new Error('CDP WebSocket refused')); });
-
-  const pending = new Map(); let msgId = 0;
-  let onEvent = null;
-  ws.onmessage = (m) => {
-    const d = JSON.parse(m.data);
-    if (d.id && pending.has(d.id)) {
-      const p = pending.get(d.id); pending.delete(d.id);
-      d.error ? p.reject(new Error(d.error.message)) : p.resolve(d.result);
-    } else if (d.method && onEvent) onEvent(d);
-  };
-  const cdp = (method, params = {}, tmo = 25000) => new Promise((resolve, reject) => {
-    const id = ++msgId; pending.set(id, { resolve, reject });
-    ws.send(JSON.stringify({ id, method, params }));
-    setTimeout(() => { if (pending.has(id)) { pending.delete(id); reject(new Error('CDP timeout: ' + method)); } }, tmo);
+  // Window size + muted audio are the only launch differences from the gate's Edge.
+  const edge = await launchEdge({
+    profilePrefix: EDGE_PROFILE_PREFIX,
+    extraArgs: ['--window-size=' + WIDTH + ',' + HEIGHT, '--hide-scrollbars', '--mute-audio']
   });
-  const ev = async (expression, tmo) => {
-    const rr = await cdp('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }, tmo);
-    if (rr.exceptionDetails) throw new Error('eval threw: ' + JSON.stringify(rr.exceptionDetails).slice(0, 300));
-    return rr.result.value;
-  };
+  if (!edge.ok) { console.error('FATAL: headless Edge did not start'); server.close(); process.exit(1); }
+  log('headless Edge up on CDP port ' + edge.port);
+
+  let conn;
+  try { conn = await connectPageCdp(edge.port); }
+  catch (e) { console.error('FATAL: ' + e.message); server.close(); edge.kill(); process.exit(1); }
+  const { cdp, ev, setEventHandler } = conn;
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
   const manifest = { width: WIDTH, height: HEIGHT, capturedAt: new Date().toISOString(), beats: [] };
@@ -290,16 +183,16 @@ async function main() {
       await sleep(400);
 
       const frames = [];
-      onEvent = (d) => {
+      setEventHandler((d) => {
         if (d.method !== 'Page.screencastFrame') return;
         const p = d.params;
         frames.push({ ts: p.metadata.timestamp, buf: Buffer.from(p.data, 'base64') });
         cdp('Page.screencastFrameAck', { sessionId: p.sessionId }, 8000).catch(() => { });
-      };
+      });
       await cdp('Page.startScreencast', { format: 'jpeg', quality: 90, maxWidth: WIDTH, maxHeight: HEIGHT, everyNthFrame: 1 });
       await sleep(beat.seconds * 1000);
       await cdp('Page.stopScreencast');
-      onEvent = null;
+      setEventHandler(null);
       await sleep(250);
 
       // Write frames + a concat list carrying the REAL gaps between them.
@@ -327,8 +220,8 @@ async function main() {
     console.error('CAPTURE FAILED: ' + (e && e.message ? e.message : e));
     process.exitCode = 1;
   } finally {
-    try { ws.close(); } catch { /* ignore */ }
-    server.close(); killEdge();
+    if (conn) conn.close();
+    server.close(); edge.kill();
   }
 }
 

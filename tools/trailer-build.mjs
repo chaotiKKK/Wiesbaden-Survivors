@@ -17,19 +17,17 @@
 //
 // Usage: node tools/trailer-build.mjs [--capture <dir>] [--out <file>]
 
-import { existsSync, mkdirSync, writeFileSync, copyFileSync, readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync, copyFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { repoRoot, argOf } from './lib/harness.mjs';
 
-const HERE_DIR = path.dirname(fileURLToPath(new URL(import.meta.url)));
-const ROOT = path.resolve(HERE_DIR, '..');
+const ROOT = repoRoot(import.meta.url);
 const argv = process.argv.slice(2);
-const argOf = (f, d) => { const i = argv.indexOf(f); return i >= 0 && argv[i + 1] ? argv[i + 1] : d; };
 
-const CAPTURE_DIR = path.resolve(argOf('--capture', path.join(os.tmpdir(), 'ws-trailer-capture')));
-const OUT_FILE = path.resolve(argOf('--out', path.join(ROOT, 'trailer', 'out', 'wiesbaden-survivors-trailer.mp4')));
+const CAPTURE_DIR = path.resolve(argOf(argv, '--capture', path.join(os.tmpdir(), 'ws-trailer-capture')));
+const OUT_FILE = path.resolve(argOf(argv, '--out', path.join(ROOT, 'trailer', 'out', 'wiesbaden-survivors-trailer.mp4')));
 const BUILD_DIR = path.join(os.tmpdir(), 'ws-trailer-build');
 const BED = path.join(ROOT, 'trailer', 'media', 'bgm-trailer.mp3');
 

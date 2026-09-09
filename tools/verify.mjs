@@ -36,24 +36,15 @@
 // Dependency-free (plain Node >= 22 — global WebSocket for raw CDP — plus the
 // system Edge binary; no npm install, no agent-browser involvement).
 
-import { readFileSync, existsSync, rmSync, readdirSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
-import http from 'node:http';
-import net from 'node:net';
-import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { EDGE_PATH, repoRoot, startStaticServer, launchEdge, killScratchEdges, connectPageCdp } from './lib/harness.mjs';
 
-const HERE_DIR = path.dirname(fileURLToPath(new URL(import.meta.url)));
-const ROOT = path.resolve(HERE_DIR, '..');
+const ROOT = repoRoot(import.meta.url);
 const SRC_PATH = path.resolve(ROOT, 'index.html');
 const NO_BROWSER = process.argv.includes('--no-browser');
 const VERBOSE = process.argv.includes('--verbose');
-const MSEDGE_CANDIDATES = [
-  'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
-  'C:/Program Files/Microsoft/Edge/Application/msedge.exe'
-];
-const EDGE_PATH = MSEDGE_CANDIDATES.find(p => existsSync(p));
 
 let failures = 0;
 const fail = (name, detail) => { failures++; console.error('FAIL  ' + name + ' — ' + detail); };
@@ -131,7 +122,7 @@ if (src !== null) {
 
 // ---- gate self-marker: this file's own throttle leg must not silently vanish ----
 try {
-  const vsrc = readFileSync(path.join(HERE_DIR, 'verify.mjs'), 'utf8');
+  const vsrc = readFileSync(path.join(ROOT, 'tools', 'verify.mjs'), 'utf8');
   if (vsrc.includes('Emulation.setCPUThrottlingRate')) pass('gate self-marker: throttled 4x/6x leg present in verify.mjs');
   else fail('gate self-marker: throttled leg', 'verify.mjs no longer contains the CPU-throttle leg — the gate itself was reverted?');
 } catch (e) { fail('gate self-marker', String(e.message)); }
@@ -157,101 +148,8 @@ try {
 
 // ============================ browser leg ============================
 
-let server = null;
-let edgeProfile = null;
-let edgePort = 0;
-
-function freePort() {
-  return new Promise((resolve) => {
-    const srv = net.createServer();
-    srv.listen(0, '127.0.0.1', () => { const p = srv.address().port; srv.close(() => resolve(p)); });
-  });
-}
-
-function startStaticServer() {
-  const MIME = {
-    '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8',
-    '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.webmanifest': 'application/manifest+json',
-    '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.ico': 'image/x-icon',
-    '.mp3': 'audio/mpeg', '.ogg': 'audio/ogg', '.woff2': 'font/woff2', '.txt': 'text/plain; charset=utf-8'
-  };
-  return new Promise((resolve, reject) => {
-    const srv = http.createServer((req, res) => {
-      try {
-        let p = decodeURIComponent((req.url || '/').split('?')[0]);
-        if (p.endsWith('/')) p += 'index.html';
-        const file = path.resolve(ROOT, '.' + p);
-        if (file.indexOf(ROOT) !== 0 || !existsSync(file)) throw new Error('forbidden');
-        const body = readFileSync(file);
-        res.writeHead(200, { 'Content-Type': MIME[path.extname(file).toLowerCase()] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
-        res.end(body);
-      } catch {
-        res.writeHead(404); res.end('not found');
-      }
-    });
-    srv.on('error', reject);
-    srv.listen(0, '127.0.0.1', () => { server = srv; resolve(srv.address().port); });
-  });
-}
-
-function sh(cmd, args, opts) {
-  const r = spawnSync(cmd, args, Object.assign({ encoding: 'utf8', timeout: 20000 }, opts || {}));
-  if (r.error && r.error.code === 'ETIMEDOUT') return { timedOut: true, code: null, stdout: '', stderr: '' };
-  return { timedOut: false, code: r.status, stdout: r.stdout || '', stderr: r.stderr || '' };
-}
-
-function powershell(script, opts) {
-  // PowerShell re-parses its own command line, so -NoProfile / -Command / script
-  // MUST be separate argv entries and the script must not contain double quotes.
-  return sh('powershell', ['-NoProfile', '-Command', script], opts);
-}
-
-function launchEdge() {
-  return new Promise((resolve) => {
-    freePort().then((port) => {
-      edgePort = port;
-      edgeProfile = path.join(os.tmpdir(), 'fbverify-edge-' + process.pid + '-' + Date.now());
-      const profileFwd = edgeProfile.replace(/\\/g, '/');
-      const ps = "Start-Process -WindowStyle Hidden -FilePath '" + EDGE_PATH +
-        "' -ArgumentList '--headless=new --remote-debugging-port=" + port +
-        ' --user-data-dir=' + profileFwd +
-        " --disable-extensions --no-first-run --no-default-browser-check --disable-features=msEdgeFirstRunExperience --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-renderer-backgrounding about:blank'";
-      const r = powershell(ps);
-      if (r.timedOut || r.code !== 0) { resolve(false); return; }
-      const deadline = Date.now() + 15000;
-      const probe = () => {
-        if (Date.now() > deadline) { resolve(false); return; }
-        const probeScript = 'try { (Invoke-WebRequest -UseBasicParsing -TimeoutSec 2 http://127.0.0.1:' + port + '/json/version).StatusCode } catch { 0 }';
-        const rr = powershell(probeScript, { timeout: 5000 });
-        if ((rr.stdout || '').trim().startsWith('200')) resolve(true);
-        else setTimeout(probe, 500);
-      };
-      probe();
-    });
-  });
-}
-
-// Kill any headless Edge we (or a previous crashed run) left behind, so this
-// run can never bind to (or fight with) a stale browser.
-function killAllScratchEdges() {
-  const ps = "Get-CimInstance Win32_Process -Filter \"Name = 'msedge.exe'\" | Where-Object { $_.CommandLine -like '*fbverify-edge-*' -or $_.CommandLine -like '*abverify*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }";
-  powershell(ps, { timeout: 15000 });
-  // remove leftover scratch profiles (best-effort; files may linger if Edge is slow to release)
-  try {
-    for (const f of readdirSync(os.tmpdir())) {
-      if (f.indexOf('fbverify-edge-') === 0 || f.indexOf('abverify') === 0) rmSync(path.join(os.tmpdir(), f), { recursive: true, force: true });
-    }
-  } catch { /* ignore */ }
-}
-
-function killEdgeByProfile() {
-  if (!edgeProfile) return;
-  const pat = edgeProfile.replace(/\\/g, '/'); // launched with forward slashes in --user-data-dir
-  const ps = "Get-CimInstance Win32_Process -Filter \"Name = 'msedge.exe'\" | Where-Object { $_.CommandLine -like '*" + pat + "*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }";
-  powershell(ps, { timeout: 15000 });
-  const done = () => { try { rmSync(edgeProfile, { recursive: true, force: true }); } catch { /* ignore */ } };
-  setTimeout(done, 800); // let Edge release the profile dir before removing it
-}
+let server = null;     // { port, url, close } from the shared static server
+let edge = null;       // { ok, port, profile, kill } from the shared Edge launcher
 
 async function browserLeg() {
   if (NO_BROWSER) { note('browser leg skipped (--no-browser)'); return; }
@@ -259,43 +157,23 @@ async function browserLeg() {
 
   const t0 = Date.now();
   const ts = () => Math.round((Date.now() - t0) / 100) / 10 + 's';
-  killAllScratchEdges();
+  killScratchEdges(['fbverify-edge-', 'abverify']);
   verbose('scratch Edges cleaned (+' + ts() + ')');
-  const sitePort = await startStaticServer();
-  const site = 'http://127.0.0.1:' + sitePort;
+  server = await startStaticServer(ROOT);
+  const site = server.url;
   note('static server on ' + site + ' (+' + ts() + ')');
 
-  const up = await launchEdge();
-  if (!up) { fail('browser', 'headless Edge did not start on CDP port ' + edgePort); server.close(); return; }
-  note('headless Edge up on CDP port ' + edgePort + ' (' + path.basename(EDGE_PATH) + ') (+' + ts() + ')');
+  edge = await launchEdge({ profilePrefix: 'fbverify-edge-' });
+  if (!edge.ok) { fail('browser', 'headless Edge did not start on CDP port ' + edge.port); server.close(); return; }
+  note('headless Edge up on CDP port ' + edge.port + ' (' + path.basename(EDGE_PATH) + ') (+' + ts() + ')');
 
   // One raw-CDP WebSocket bound to the exact page target drives EVERY leg below
   // (daemon-routed evals flapped when stale targets from killed Edge sessions
   // lingered — a direct WebSocket is deterministic and dependency-free).
-  let list = [];
-  try { list = JSON.parse(await (await fetch('http://127.0.0.1:' + edgePort + '/json/list')).text()); }
-  catch (e) { fail('browser', 'CDP /json/list failed: ' + e.message); server.close(); killEdgeByProfile(); return; }
-  const page = list.find(t => t.type === 'page' && (t.url === 'about:blank' || t.url.startsWith('http'))) || list.find(t => t.type === 'page');
-  if (!page || !page.webSocketDebuggerUrl) { fail('browser', 'no page CDP target: ' + JSON.stringify(list.map(t => t.type + ':' + t.url)).slice(0, 160)); server.close(); killEdgeByProfile(); return; }
-  const ws = new WebSocket(page.webSocketDebuggerUrl);
-  await new Promise((res2, rej) => { ws.onopen = res2; ws.onerror = () => rej(new Error('CDP WebSocket refused')); });
-  const pending = new Map(); let msgId = 0;
-  ws.onmessage = (m) => { const d = JSON.parse(m.data); if (d.id && pending.has(d.id)) { const p = pending.get(d.id); pending.delete(d.id); d.error ? p.reject(new Error(d.error.message)) : p.resolve(d.result); } };
-  const cdp = (method, params = {}, tmo = 25000) => new Promise((resolve, reject) => {
-    const id = ++msgId; pending.set(id, { resolve, reject });
-    ws.send(JSON.stringify({ id, method, params }));
-    setTimeout(() => { if (pending.has(id)) { pending.delete(id); reject(new Error('CDP timeout: ' + method)); } }, tmo);
-  });
-  const ev = async (expression, tmo) => {
-    const rr = await cdp('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }, tmo);
-    if (rr.exceptionDetails) throw new Error('eval threw: ' + JSON.stringify(rr.exceptionDetails).slice(0, 200));
-    return rr.result.value;
-  };
-  // Same {ok,value}/{err} shape the phases below already consume.
-  const evalResult = async (script, t) => {
-    try { return { ok: true, value: await ev(script, t) }; }
-    catch (e) { return { err: String(e && e.message ? e.message : e).slice(0, 200) }; }
-  };
+  let conn = null;
+  try { conn = await connectPageCdp(edge.port); }
+  catch (e) { fail('browser', e.message); server.close(); edge.kill(); return; }
+  const { cdp, ev, evalResult } = conn;
   const nav = async (url) => {
     await cdp('Page.navigate', { url }, 15000);
     verbose('navigated ' + url.slice(site.length) + ' (+' + ts() + ')');
@@ -498,8 +376,8 @@ async function browserLeg() {
   } catch (e) {
     fail('browser leg', String(e && e.message ? e.message : e));
   } finally {
-    try { ws.close(); } catch { /* ignore */ }
-    killEdgeByProfile();
+    if (conn) conn.close();
+    if (edge) edge.kill();
     if (server) { try { server.close(); } catch { /* ignore */ } }
   }
   note('browser leg wall time: ' + Math.round((Date.now() - t0) / 100) / 10 + 's');
