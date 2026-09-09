@@ -5,6 +5,8 @@
 - The actual game is inline in `index.html`; a real `Game` engine (rAF loop, state machine, input poll, pooling hooks, flow field, spatial hash) already exists there — there is no separate clean game file to retrofit.
 - **Data split (2026-09-04):** the pure-data registries (STAT_DEF/Data/CHARS/WEAPONS/ENEMIES/ARENAS/ACHIEVEMENTS) moved out of the engine script into `data.js`, loaded by `<script src="data.js">` immediately before the engine `<script>`. Both are classic scripts so the top-level `const`s share the global lexical environment — `data.js` MUST stay ahead of the engine script (gate marker guards it) and next to `index.html` (relative include, file://-safe). Tables still inline: BOSSES/ITEMS/DANGERS/MODS. `data.js` ends with a guarded `module.exports` for Node require. If index.html ever again contains `const CHARS = [` inline while data.js exists, the double declaration breaks the load — the gate's FORBIDDEN list flags that. sw.js `SHELL`/CACHE stamp are manual here (`tools/build.js` stamper referenced in its comment does not exist in this workspace) — re-stamp CACHE from the sha1 of index.html whenever the shell changes.
 - First-run key safety: keep the optional `seedInput` on `scTitle` from stealing focus on load; the title screen is the most likely place for cold-start key hijacking.
+- Audio lifecycle is gesture-gated: `Game.init()` must not create an `AudioContext`; `AudioSys.init()` is allowed through the intro/UI gesture or `startRun()`. A suspended context is still a cold-start side effect for QA.
+- Endscreen QA is not natural-play proof: wave 20 is not reachable in a bounded live run, so direct `Game.endRun(true|false)` or `?qa` controls must be labeled white-box; repeated terminal calls are expected to be idempotent for saves and presentation cues.
 
 ## Tooling / environment
 
@@ -19,6 +21,7 @@
 - The preview never fires `requestAnimationFrame` (engine time frozen even with state `play`/focused). Advance runs with bounded `Game.update(1/60)` batches — legitimate, since the page’s own `?selftest` LongRun drives `update()` directly. Wall-clock counters (Spielzeit) show 0:00 under stepping: a surface artifact, not a game defect.
 - Native `confirm()` blocks automation and looks like a hang — stub `window.confirm=()=>true` first. The preview can serve a cached old page: navigate with `?cb=N` and verify an edit marker in the live DOM before trusting reads.
 - A11y snapshots uppercase text that the DOM holds mixed-case (CSS `text-transform`): prefer `data-act`/id handles and case-insensitive matches; option toggles and offer cards are clickable divs, not `<button>`s.
+- If `F:` is not mounted, .NET/PowerShell recursive enumeration reports an unavailable scope rather than an empty one; preserve that distinction in `docs/f-audio-search.md` and never claim a full-drive result. Check drive existence before spending time on recursive scans.
 
 ## Git state (this workspace)
 

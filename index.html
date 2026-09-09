@@ -339,6 +339,14 @@ body.reduced-motion .lvlCard{animation:none}
 #endEpilog{text-align:center;border:1px solid var(--violet);background:rgba(10,16,30,.75);padding:14px;
   font-size:12px;line-height:1.7;color:var(--dim);width:min(760px,95vw)}
 #endEpilog b{color:var(--gold2)}
+#scEnd.end-win #endTitle,#scEnd.end-loss #endTitle{animation:endTitleIn .65s cubic-bezier(.2,.8,.2,1) both}
+#scEnd.end-win #endTitle{text-shadow:0 0 30px rgba(74,222,128,.5),4px 4px 0 #17633c,8px 8px 0 rgba(74,222,128,.18)}
+#scEnd.end-loss #endTitle{text-shadow:0 0 30px rgba(248,113,113,.38),4px 4px 0 #6b2030,8px 8px 0 rgba(248,113,113,.14)}
+#scEnd.end-win #endStats,#scEnd.end-loss #endStats{animation:endStatsIn .55s .16s ease-out both}
+@keyframes endTitleIn{from{opacity:0;transform:translateY(12px) scale(.96);filter:blur(5px)}to{opacity:1;transform:none;filter:none}}
+@keyframes endStatsIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+body.reduced-motion #scEnd.end-win #endTitle,body.reduced-motion #scEnd.end-loss #endTitle,
+body.reduced-motion #scEnd.end-win #endStats,body.reduced-motion #scEnd.end-loss #endStats{animation:none!important}
 
 /* =========================================================================
    RESPONSIVE — Desktop / Tablet / Mobile
@@ -3479,6 +3487,44 @@ const AudioSys = {
       [0,5,7,12,14,12,7,5].forEach((n, i) => this._chipArp(M(n, 6), .16, .02, { at: i * .1 }));
       this._chipChord([M(0, 5), M(5, 5), M(7, 5)], .7, .03, { at: .6 });
     }
+  },
+  /* Endscreen-Praesenz: ein klarer erster Impuls, danach die Jingle-Antwort.
+     Das bleibt absichtlich ein Rollenvertrag statt einer Asset-Bibliothek:
+     spaetere Samples koennen dieselben Rollen (cue/jingle) ersetzen. */
+  PRESENTATION_CUES: {
+    win:  { cue: 'win',  jingle: 'win',  delay: 520, duck: .42, duckDur: .9 },
+    lose: { cue: 'over', jingle: 'lose', delay: 460, duck: .55, duckDur: .7 }
+  },
+  _presentationSeq: 0, _presentationTimers: [],
+  transitionCue(kind) {
+    this._presentationSeq++;
+    for (const id of this._presentationTimers) clearTimeout(id);
+    this._presentationTimers = [];
+    if (!this.started) return;
+    if (OPT().music > 0) this.duckMusic(.62, .45);
+    if (OPT().sfx <= 0) return;
+    /* Ein einzelner, kurzer Übergangsimpuls: der Endlos-Entscheid bekommt
+       Gewicht, ohne den späteren Endscreen vorwegzunehmen oder zu loopen. */
+    this.sfx(kind === 'endless' ? 'wave' : 'telegraph');
+  },
+  endCue(won) {
+    const plan = this.PRESENTATION_CUES[won ? 'win' : 'lose'];
+    this._presentationSeq++;
+    const seq = this._presentationSeq;
+    for (const id of this._presentationTimers) clearTimeout(id);
+    this._presentationTimers = [];
+    /* Kein Audio-Kontext erzwingen: Autoplay bleibt an einer echten Nutzergeste
+       (bindUI/playIntro) gebunden. Mute-/Music-/SFX-Regler greifen in den
+       bestehenden sfx()/jingle()-Methoden weiter. */
+    if (!this.started || !plan) return;
+    if (OPT().music > 0) this.duckMusic(plan.duck, plan.duckDur);
+    if (OPT().sfx > 0) this.sfx(plan.cue);
+    if (OPT().music <= 0) return;
+    /* Der zweite Impuls ist bewusst versetzt: kein doppelter Anschlag beim
+       Screenwechsel, aber ein gefuehrter Abschluss auch ohne Asset-Dateien. */
+    this._presentationTimers.push(setTimeout(() => {
+      if (seq === this._presentationSeq && this.started) this.jingle(plan.jingle);
+    }, plan.delay));
   },
   tickMusic(dt, intensity) {
     this._dangerTick(dt);
@@ -12635,6 +12681,10 @@ Skalierung: ${sc}${owned ? '\nFUSION: kombiniert zu Stufe ' + (o.tier + 2) : ''}
     this.refreshNav();
   },
   renderEnd(won) {
+    const endScreen = $('scEnd');
+    endScreen.classList.toggle('end-win', !!won);
+    endScreen.classList.toggle('end-loss', !won);
+    endScreen.dataset.presentation = won ? 'victory' : 'defeat';
     $('endTitle').textContent = won ? 'WIESBADEN GERETTET' : 'RUN BEENDET';
     $('endTitle').style.color = won ? 'var(--green)' : 'var(--red)';
     const R = Game.run;
@@ -12866,8 +12916,8 @@ Object.assign(Game, {
     document.addEventListener('visibilitychange', () => { if (document.hidden && OPT().autoPause) this.autoPause(); });
     addEventListener('blur', () => { if (OPT().autoPause) this.autoPause(); });
     UI.initFit();
-    AudioSys.init();
-    AudioSys.musicOn = true;
+    /* Audio wird erst durch eine echte Nutzergeste initialisiert:
+       Intro, UI-Klick oder startRun() rufen AudioSys.init() auf. */
     try { Prof.init(); } catch (e) { }
     this.playIntro();
     requestAnimationFrame(t => this.loop(t));
@@ -12877,7 +12927,7 @@ Object.assign(Game, {
     const el = document.getElementById('intro');
     if (!el) return;
     let weg = false;
-    const schliessen = () => {
+    const schliessen = (userGesture) => {
       if (weg) return;
       weg = true;
       el.style.transition = 'opacity .35s ease-in';
@@ -12885,14 +12935,15 @@ Object.assign(Game, {
       setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 380);
       removeEventListener('keydown', schliessen, true);
       removeEventListener('pointerdown', schliessen, true);
-      /* Der Vorspann ist zugleich die Nutzergeste, die Ton erlaubt. */
-      try { AudioSys.init(); AudioSys.musicOn = true; } catch (e) { }
+      /* Nur eine echte Intro-Geste darf den AudioContext freischalten; der
+         automatische Timeout schliesst die Szene ohne Cold-Start-Seiteneffekt. */
+      if (userGesture) try { AudioSys.init(); AudioSys.musicOn = true; } catch (e) { }
       /* Direkt im Anschluss: Sebbo laeuft rein und zersaegt den Bildschirm. */
       setTimeout(() => { try { Game.sebboIntro(); } catch (e) { } }, 260);
     };
     addEventListener('keydown', schliessen, true);
     addEventListener('pointerdown', schliessen, true);
-    setTimeout(schliessen, 11400);   /* dreifache Standzeit, jederzeit ueberspringbar */
+    setTimeout(() => schliessen(false), 11400);   /* dreifache Standzeit, jederzeit ueberspringbar */
   },
   /* ---- Sebbos Auftritt: reinlaufen, ausholen, den Bildschirm zersaegen ----
      Laeuft einmal nach dem Studio-Vorspann. Die Leinwand liegt ueber allem und
@@ -13185,6 +13236,7 @@ Object.assign(Game, {
     const o = OPT();
     document.querySelector('.scan').style.display = o.crt && !o.reduceFlicker ? '' : 'none';
     document.body.classList.toggle('cb', !!o.colorblind);
+    document.body.classList.toggle('reduced-motion', !!o.reduceFlicker);
     document.body.dataset.qualityProfile = this.qualityProfile().name;
   },
   bindUI() {
@@ -13533,7 +13585,13 @@ Object.assign(Game, {
     this.hazObjs.length = 0;
     this.splats.length = 0;
     this.magnetSweep = 0;
-    if (n > 20 && !this.endless) { this.state = 'paused'; UI.navIdx = 0; UI.show('scEndless'); return; }
+    if (n > 20 && !this.endless) {
+      this.state = 'paused'; UI.navIdx = 0;
+      const alreadyOpen = UI.cur === 'scEndless';
+      UI.show('scEndless');
+      if (!alreadyOpen) AudioSys.transitionCue('endless');
+      return;
+    }
     this.state = 'play'; this.waveEnding = false; this.bossAlive = false;
     this.otT = 0; this.otLevel = 0; this.otTick = 0;
     UI.show(null); $('hud').classList.remove('hidden');
@@ -13795,11 +13853,12 @@ Object.assign(Game, {
     this.nextLevelOrShop();
   },
   endRun(won) {
+    if (this.state === 'end') return;
     this.state = 'end';
     this._endWon = won;
     RAND = Math.random; this.rng = null;
-    AudioSys.sfx(won ? 'win' : 'over');
-    AudioSys.jingle(won ? 'win' : 'lose');
+    /* Ein zentraler Endscreen-Vertrag verhindert doppelte Impulse und gibt dem
+       Titel erst Raum, bevor der kurze Abschluss-Jingle einsetzt. */
     this.gloryEarned = Math.max(0, this.wave - 15) * (won ? 2 : 1) + (won ? this.danger : 0);
     Save.data.glory = (Save.data.glory || 0) + this.gloryEarned;
     if (this.endless) Save.data.stats.endlessBest = Math.max(Save.data.stats.endlessBest, this.wave);
@@ -13835,6 +13894,7 @@ Object.assign(Game, {
     this.hideTutorial();
     UI.renderEnd(won); UI.show('scEnd');
     $('hud').classList.add('hidden');
+    AudioSys.endCue(won);
   },
   makeEpilog(won) {
     if (!won) return null;
@@ -16863,6 +16923,7 @@ const SelfTest = {
     try { this._systemLoop(); } catch (e) { this._ok(false, 'SystemLoop (Fehler: ' + e.message + ')'); }
     try { this._extendedSystems(); } catch (e) { this._ok(false, 'ExtendedSystems (Fehler: ' + e.message + ')'); }
     try { this._audioBudget(); } catch (e) { this._ok(false, 'AudioBudget (Fehler: ' + e.message + ')'); }
+    try { this._audioPresentation(); } catch (e) { this._ok(false, 'AudioPresentation (Fehler: ' + e.message + ')'); }
     try { this._longRunContracts(); } catch (e) { this._ok(false, 'LongRun (Fehler: ' + e.message + ')'); }
     try { this._qualityContracts(); } catch (e) { this._ok(false, 'QualityContracts (Fehler: ' + e.message + ')'); }
     try { this._characterContracts(); } catch (e) { this._ok(false, 'CharacterContracts (Fehler: ' + e.message + ')'); }
@@ -16887,6 +16948,12 @@ const SelfTest = {
      Aufteilung direkt im Selftest — auch ohne Browser-Gate. Bewusst nur 2000
      Laeufe: selbst auf schnellen Maschinen ~1-2 Budget-Slices; die Aussage ist
      die Paritaet, nicht die Slice-Anzahl (Slices/Max stehen im Row-Text). */
+  _audioPresentation() {
+    const c = AudioSys.PRESENTATION_CUES;
+    this._ok(!!c && c.win && c.lose && c.win.cue === 'win' && c.lose.cue === 'over', 'AudioPresentation: Sieg/Niederlage besitzen getrennte Cue-Rollen');
+    this._ok(c.win.delay >= 400 && c.lose.delay >= 400 && c.win.delay !== c.lose.delay, 'AudioPresentation: zweiter Impuls ist versetzt und nicht spammy');
+    this._ok(typeof AudioSys.endCue === 'function' && typeof AudioSys.jingle === 'function', 'AudioPresentation: Endscreen-Vertrag nutzt bestehende AudioSys-Schnittstelle');
+  },
   _balanceParity() {
     const sync = BalanceSim.compute(2000);
     const syncKey = sync.rows.map(r => String(r.dps)).join();

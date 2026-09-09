@@ -8,7 +8,7 @@
 /* CACHE-Name wird beim Build aus dem Content-Hash von index.html gestempelt
    (tools/build.js). Aendert sich das Spiel, aendert sich der Name -> die
    activate-Phase raeumt den alten Cache weg. Manuelles Hochzaehlen entfaellt. */
-const CACHE = 'wbns-bbe09e61b740';
+const CACHE = 'wbns-a2bbeca6875f932614c1372ba3ef84ed6367bfb1';
 const SHELL = ['./', './index.html', './data.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './maskable-512.png'];
 
 self.addEventListener('install', (event) => {
