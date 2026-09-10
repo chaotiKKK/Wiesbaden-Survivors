@@ -1,8 +1,17 @@
-# Trailer — HyperFrames-Audio-Skelett (noch NICHT real)
+# Trailer — HyperFrames-Audio (2026-09-10: ECHTES Audio)
 
 Ein korrekt verdrahtetes HyperFrames-Audio-Gerüst für einen Spiel-Trailer:
-**Musik-Bed + Voiceover-Gruppe + Carve**. Es ist bewusst ein **Skelett** — die
-Audio-Dateien in `media/` sind **stille Platzhalter**.
+**Musik-Bed + Voiceover-Gruppe + Carve**. Die Audio-Dateien in `media/` sind
+jetzt **echtes Audio** (vorher −91-dB-Stille-Platzhalter):
+
+- `bgm-trailer.mp3` — 20 s BGM-Bett, synthetisiert (A-Moll, 96 BPM),
+  erzeugt von `tools/trailer-audio.mjs` (ffmpeg-only, keine npm-Deps).
+- `vo-intro/mid/outro.mp3` — deutsche Narration, **Microsoft Hedda (de-DE)**
+  via System.Speech-TTS, −16 LUFS.
+
+Der fertige 20-s-Trailer wird von `tools/trailer-build.mjs` aus den
+Capture-Frames gemischt; das Bett duckt deterministisch unter die drei
+VO-Fenster (1.5–5.5 / 7–11 / 14–18 s).
 
 ## Was drin ist (und korrekt ist)
 - `<hf-audio-group id="voiceover">` — Voiceover-Bus mit eigener Effektkette
@@ -13,11 +22,10 @@ Audio-Dateien in `media/` sind **stille Platzhalter**.
   die Gruppe oder einen Voice-Clip.
 
 ## Was fehlt, damit es „echt" wird
-1. **Runtime:** `npm i -D @hyperframes/core`
-2. **Echte Audios** in `media/` ersetzen (aktuell still):
-   - `bgm-trailer.mp3` — Musik-Bett (via `/media-use` sourcen)
-   - `vo-intro.mp3`, `vo-mid.mp3`, `vo-outro.mp3` — Voiceover (via `/media-use`)
-3. Danach carven:
+1. ~~**Runtime:** `npm i -D @hyperframes/core`~~ — für den gemischten Trailer
+   nicht nötig: `tools/trailer-build.mjs` assembliert direkt mit ffmpeg.
+2. ~~**Echte Audios** in `media/`~~ — erledigt (tools/trailer-audio.mjs).
+3. Optional (HyperFrames-Carve-Route, falls das Comp live laufen soll):
    ```
    node C:\Users\HP\.agents\skills\hyperframes-audio\scripts\carve.mjs --comp trailer/trailer.html
    ```

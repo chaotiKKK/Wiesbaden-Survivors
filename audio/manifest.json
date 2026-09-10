@@ -1,0 +1,131 @@
+{
+  "generated": "tools/synth-audio.mjs",
+  "roles": [
+    {
+      "role": "w_pistol",
+      "file": "audio/w_pistol.m4a",
+      "dur": 0.8,
+      "design": "sharp shot: bandpassed crack 2.5k + 62 Hz sub thump"
+    },
+    {
+      "role": "w_smg",
+      "file": "audio/w_smg.m4a",
+      "dur": 0.7,
+      "design": "compact burst: tighter crack, less sub, mechanical"
+    },
+    {
+      "role": "w_shotgun",
+      "file": "audio/w_shotgun.m4a",
+      "dur": 1.1,
+      "design": "wide boom: two noise layers + heavy sub, long decay"
+    },
+    {
+      "role": "w_railgun",
+      "file": "audio/w_railgun.m4a",
+      "dur": 1,
+      "design": "charge riser then thick zap + metallic ring"
+    },
+    {
+      "role": "w_plasma",
+      "file": "audio/w_plasma.m4a",
+      "dur": 0.35,
+      "design": "sci-fi zap: pitch-folded sine slide + wet attack"
+    },
+    {
+      "role": "w_tesla",
+      "file": "audio/w_tesla.m4a",
+      "dur": 0.22,
+      "design": "electric snap: 3k crackle + 110 Hz buzz, ultra short"
+    },
+    {
+      "role": "hit",
+      "file": "audio/hit.m4a",
+      "dur": 0.35,
+      "design": "body hit: 900 Hz thud burst + 180 Hz body"
+    },
+    {
+      "role": "crit",
+      "file": "audio/crit.m4a",
+      "dur": 0.46,
+      "design": "crit: hit + bright 1.8k ping with shimmer tail"
+    },
+    {
+      "role": "hitMelee",
+      "file": "audio/hitMelee.m4a",
+      "dur": 0.5,
+      "design": "melee connect: woody 210 Hz knock + 800 Hz slap"
+    },
+    {
+      "role": "boom",
+      "file": "audio/boom.m4a",
+      "dur": 1.4,
+      "design": "explosion: rumble + mid blast + 55 Hz sub drop"
+    },
+    {
+      "role": "kill",
+      "file": "audio/kill.m4a",
+      "dur": 0.65,
+      "design": "kill confirm: descending two-tone + noise pop"
+    },
+    {
+      "role": "ric",
+      "file": "audio/ric.m4a",
+      "dur": 0.42,
+      "design": "ricochet: thin high ping sliding down"
+    },
+    {
+      "role": "clank",
+      "file": "audio/clank.m4a",
+      "dur": 0.32,
+      "design": "metal clank: detuned 1.5k/2.1k burst"
+    },
+    {
+      "role": "glass",
+      "file": "audio/glass.m4a",
+      "dur": 0.2,
+      "design": "glass break: dense 4k+ noise, spiky"
+    },
+    {
+      "role": "hurt",
+      "file": "audio/hurt.m4a",
+      "dur": 0.33,
+      "design": "player hurt: dark 120 Hz thud + filtered noise"
+    },
+    {
+      "role": "step",
+      "file": "audio/step.m4a",
+      "dur": 0.25,
+      "design": "footstep: soft 420 Hz tap, subtle"
+    },
+    {
+      "role": "dash",
+      "file": "audio/dash.m4a",
+      "dur": 0.38,
+      "design": "dash whoosh: lowpass opens then closes"
+    },
+    {
+      "role": "pick",
+      "file": "audio/pick.m4a",
+      "dur": 0.65,
+      "design": "pickup: two-note bell chirp up"
+    },
+    {
+      "role": "ui",
+      "file": "audio/ui.m4a",
+      "dur": 0.22,
+      "design": "ui blip: single 880 Hz tick"
+    },
+    {
+      "role": "ok",
+      "file": "audio/ok.m4a",
+      "dur": 0.65,
+      "design": "confirm: pleasant G5->C6 rise"
+    },
+    {
+      "role": "err",
+      "file": "audio/err.m4a",
+      "dur": 0.3,
+      "design": "error: dull 140 Hz buzz, clipped"
+    }
+  ]
+}

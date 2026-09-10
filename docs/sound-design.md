@@ -33,8 +33,24 @@ Short brief and plan. Licensed assets are not shipped; the browser-native presen
 
 ## Blocker, stated plainly
 
-- Licensed/generated asset generation remains blocked until an `ELEVENLABS_API_KEY` is available or the work is done elsewhere. The procedural fallback does not remove that blocker for final AAA audio quality.
+- ~~Licensed/generated asset generation remains blocked until an `ELEVENLABS_API_KEY` is available or the work is done elsewhere.~~ **Gelöst auf lokalem Weg (2026-09-10):** eine ffmpeg-Synthese-Pipeline erzeugt jetzt echte, hörbare Cues — siehe "Lokale Asset-Pipeline" unten. Lizenzierte/menschliche Assets bleiben der nächste Qualitätsschritt, sind aber kein Blocker mehr für hörbares Feedback.
 - Do not treat `tools/gen_sfx.mjs` as already runnable here without that key and dependency.
+
+## Lokale Asset-Pipeline (2026-09-10, ohne ElevenLabs)
+
+- `tools/synth-audio.mjs` → `audio/<role>.m4a` (21 Rollen, AAC 96k, −16 LUFS,
+  −1 dBTP). Rollennamen = BAKE_SLOT-Slots; Kontrakt gepinnt in
+  data-regression 3j (Manifest ⊆ BAKE_SLOT, Dateien vorhanden).
+- `AudioSys.prefetchAssets()` (index.html) lädt die Cues NUR bei http(s) und
+  NUR nach der Audio-Init-Geste; file:// bleibt still bei der Bake. Die
+  Profile (SFX_PRIO/DUCK/VERB/STACK, Koaleszenz, Voice-Budget) gelten
+  unverändert — die Wellenform kommt aus der Datei, das Verhalten aus der
+  Engine.
+- `tools/trailer-audio.mjs` → `trailer/media/`: 20 s BGM-Bett (A-Moll,
+  96 BPM, Synth-Pad/Arp/Kick/Bass) + deutsche VO (Microsoft Hedda, de-DE).
+  Ersetzt die −91-dB-Stille-Platzhalter; trailer.html-Kontrakt unverändert.
+- `tools/trailer-build.mjs` mischt Bett+VO mit deterministischem
+  Fenster-Ducking (VO +5.6 dB, Bett −55 % unter den Zeilen).
 
 ## Suggested next step
 

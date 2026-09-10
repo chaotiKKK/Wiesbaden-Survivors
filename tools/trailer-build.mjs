@@ -5,9 +5,9 @@
 // Turns the beat frame-dumps written by tools/trailer-capture.mjs into the
 // finished 20-second trailer, following the timeline that trailer/trailer.html
 // already encodes: music bed 0-20 s, three narration beats at 1.5 / 7 / 14 s
-// (durations 4 / 5 / 4 s). Those VO windows drive the on-screen lines here,
-// because the shipped media/*.mp3 are digital silence (-91 dB placeholders, as
-// trailer/README.md says) — so the narration is carried visually instead.
+// (durations 4 / 5 / 4 s). The narration is REAL audio now (tools/trailer-audio.mjs,
+// Microsoft Hedda de-DE): the three VO clips are sidechain-ducked into the bed
+// so the bed dips under every line and swells back between them.
 //
 // Two ffmpeg passes: one per beat to turn the timestamped frame list into a CFR
 // clip, then a single filter_complex pass that trims, concatenates, titles,
@@ -30,6 +30,9 @@ const CAPTURE_DIR = path.resolve(argOf(argv, '--capture', path.join(os.tmpdir(),
 const OUT_FILE = path.resolve(argOf(argv, '--out', path.join(ROOT, 'trailer', 'out', 'wiesbaden-survivors-trailer.mp4')));
 const BUILD_DIR = path.join(os.tmpdir(), 'ws-trailer-build');
 const BED = path.join(ROOT, 'trailer', 'media', 'bgm-trailer.mp3');
+const VO_FILES = ['vo-intro', 'vo-mid', 'vo-outro'].map(n => path.join(ROOT, 'trailer', 'media', n + '.mp3'));
+// VO windows mirror trailer.html: intro 1.5-5.5, mid 7-12, outro 14-18 (s).
+const VO_DELAYS_MS = [1500, 7000, 14000];
 
 // Cut plan — 7 + 6 + 5 + 2 = 20 s, matching the bed length in trailer.html.
 // Windows picked from the captures, not guessed: each beat's first ~2 s is the
@@ -102,6 +105,25 @@ const draws = LINES.map(l =>
 ).join(',');
 parts.push(`[vc]${draws},fade=t=in:st=0:d=0.6,fade=t=out:st=${(total - 0.7).toFixed(2)}:d=0.7,format=yuv420p[vout]`);
 
+// ---- audio graph: bed + delayed VOs, bed ducked under the voice -----------
+// Voiceover group (see trailer/trailer.html): each VO clip is delayed into its
+// window and summed. The bed ducks under the narration with a deterministic
+// volume automation on the known windows (same audible effect as a sidechain
+// compressor, but frame-exact and graph-binding-proof on every ffmpeg build).
+const voLabels = [];
+VO_FILES.forEach((_, i) => {
+  parts.push(`[${CUTS.length + 2 + i}:a]adelay=${VO_DELAYS_MS[i]}|${VO_DELAYS_MS[i]},volume=1.9[vo${i}]`);
+  voLabels.push(`[vo${i}]`);
+});
+parts.push(`${voLabels.join('')}amix=inputs=${VO_FILES.length}:normalize=0[vox]`);
+// Duck windows = VO windows with 150 ms soft edges via volume=...:eval=frame.
+const duckWindows = VO_DELAYS_MS.map((ms, i) => {
+  const from = (ms / 1000).toFixed(2), to = (ms / 1000 + 4.0).toFixed(2);
+  return `between(t,${from},${to})`;
+}).join('+');
+parts.push(`[${CUTS.length + 1}:a]volume='1-0.55*min(1\,${duckWindows})':eval=frame[bedd]`);
+parts.push(`[bedd][vox]amix=inputs=2:normalize=0,alimiter=limit=0.891[aout]`);
+
 const graphFile = path.join(BUILD_DIR, 'graph.txt');
 writeFileSync(graphFile, parts.join(';\n'), 'utf8');
 console.log('filter graph -> ' + graphFile);
@@ -110,8 +132,9 @@ const args = ['-hide_banner', '-loglevel', 'error', '-y'];
 for (const c of CUTS) args.push('-i', 'beat-' + c.id + '.mp4');
 args.push('-f', 'lavfi', '-i', 'color=c=0x080b14:s=1280x720:r=60:d=' + END_CARD);
 args.push('-i', BED);
+for (const vf of VO_FILES) args.push('-i', vf);
 args.push('-/filter_complex', 'graph.txt');
-args.push('-map', '[vout]', '-map', String(CUTS.length + 1) + ':a',
+args.push('-map', '[vout]', '-map', '[aout]',
   '-c:v', 'libx264', '-preset', 'slow', '-crf', '19', '-pix_fmt', 'yuv420p',
   '-profile:v', 'high', '-level', '4.1', '-movflags', '+faststart',
   '-c:a', 'aac', '-b:a', '160k', '-shortest', OUT_FILE);

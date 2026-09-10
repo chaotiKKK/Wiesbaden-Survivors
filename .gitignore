@@ -16,3 +16,6 @@ desktop.ini
 
 # Erzeugte Trailer-Videos (aus tools/trailer-capture.mjs + tools/trailer-build.mjs neu baubar)
 trailer/out/
+
+# TTS intermediates (regenerable via tools/trailer-audio.mjs)
+trailer/media/.vo-text/

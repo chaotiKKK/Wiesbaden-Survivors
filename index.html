@@ -1332,6 +1332,9 @@ const AudioSys = {
     /* Die Sample-Bank wird ab jetzt im Hintergrund gerendert. Bis ein Klang
        fertig ist, greift der (budgetierte) Synthese-Rueckfall. */
     try { this.startBaking(); } catch (e) { }
+    /* Externe Assets (audio/*.m4a) duerfen erst nach der Geste geladen
+       werden — gleiche Lifecycle-Regel wie der AudioContext selbst. */
+    try { this.prefetchAssets(); } catch (e) { }
   },
   refresh() { if (!this.ctx) return; this.master.gain.value = OPT().master; this.sfxGain.gain.value = OPT().sfx; this.musicGain.gain.value = OPT().music * .5; },
   /* ============================================================
@@ -3581,7 +3584,48 @@ const AudioSys = {
       this._nextTime += spb;
     }
     this.musicTimer = spb;
-  }
+  },
+  /* ============================================================
+     EXTERNE ASSET-BANK (audio/*.m4a, nur bei http(s))
+     ------------------------------------------------------------
+     Ueber `tools/synth-audio.mjs` erzeugte AAC-Cues ersetzen hier
+     gebackene Synthese-Samples, wenn sie abrufbar sind. Bewusst
+     bewahrt bleibt: file://-Laufwerke fallen stillschweigend auf
+     die vorhandene Offline-Bake zurueck (kein fetch auf file://),
+     das Gesten-Gating bleibt (Load erst nach AudioSys.init()), und
+     SFX_PRIO/SFX_DUCK/SFX_VERB/SFX_STACK der Synthese-Welt gelten
+     unveretzt weiter — nur die Wellenform kommt aus der Datei.
+     ============================================================ */
+  assetsReady: false, _assetsLoading: false,
+  ASSET_ROLES: ['w_pistol', 'w_smg', 'w_shotgun', 'w_railgun', 'w_plasma', 'w_tesla',
+    'hit', 'crit', 'hitMelee', 'boom', 'kill', 'ric', 'clank', 'glass',
+    'hurt', 'step', 'dash', 'pick', 'ui', 'ok', 'err'],
+  prefetchAssets() {
+    if (this.assetsReady || this._assetsLoading) return;
+    if (typeof fetch !== 'function') return;
+    if (location.protocol === 'file:') return; // fetch ist dort blockiert; Bake bleibt
+    this._assetsLoading = true;
+    const roles = this.ASSET_ROLES.slice();
+    let pending = roles.length;
+    let loaded = 0;
+    const done = () => {
+      this._assetsLoading = false;
+      if (loaded > 0) this.assetsReady = true;
+    };
+    for (const name of roles) {
+      fetch('audio/' + name + '.m4a', { cache: 'force-cache' })
+        .then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
+        .then(ab => this.ctx.decodeAudioData(ab))
+        .then(buf => {
+          /* Nur einsetzen, wenn die Bake diesen Slot nicht schon belegt:
+             Bankformat (variants array) bleibt identisch zur Bake. */
+          if (!this.bank[name]) this.bank[name] = { v: [buf] };
+          loaded++;
+          if (loaded >= pending) done();
+        })
+        .catch(() => { if (--pending <= 0) done(); });
+    }
+  },
 };
 
 /* ===================== PROFILER-HUD (Taste F3) =====================

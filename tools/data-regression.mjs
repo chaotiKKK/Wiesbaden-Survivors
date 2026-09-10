@@ -43,7 +43,7 @@
 //
 // Dependency-free: plain Node >= 18, no npm install.
 
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -186,6 +186,32 @@ ok(flatD.length === 0, 'DANGERS: ' + DCOLS.join('/') + ' steigen streng mit Eben
 /* 3i. Arenen + Achievements: grundlegende Form (Detail-Refs im Schema) */
 ok(ARENAS.length >= 4 && ARENAS.every(a => a.w > 0 && a.h > 0), 'Arenen: >= 4, w/h > 0');
 ok(ACHIEVEMENTS.length > 0 && ACHIEVEMENTS.every(a => a.id && a.need > 0), 'Achievements nicht leer, need > 0');
+
+/* 3j. Externe Audio-Assets (AudioSys.prefetchAssets): jede Rolle im Manifest
+        muss (a) ein echter BAKE_SLOT-Slot sein — nur dann haelt der
+        Synthese-Rueckfall den Slot bis zur Decodierung warm — und (b) eine
+        reale .m4a im audio/-Verzeichnis haben. tools/synth-audio.mjs ist die
+        erzeugende Seite; zeigt das Manifest auf umbenannte Rollen, bricht
+        hier statt stumm im Spiel. */
+const audioDir = path.join(HERE, '..', 'audio');
+const mfPath = path.join(audioDir, 'manifest.json');
+if (existsSync(mfPath)) {
+  const mf = JSON.parse(readFileSync(mfPath, 'utf8'));
+  const mfRoles = (mf.roles || []).map(r => r.role);
+  /* BAKE_SLOT ist eine Engine-Tabelle (index.html), nicht data.js — hier wird
+     der Tabellenblock direkt gelesen statt eine zweite Liste zu pflegen. */
+  const idxSrc = readFileSync(path.join(HERE, '..', 'index.html'), 'utf8');
+  const slotBlock = /BAKE_SLOT:\s*\{([\s\S]*?)\}/.exec(idxSrc);
+  const slots = slotBlock ? new Set([...slotBlock[1].matchAll(/([a-zA-Z_]+)\s*:/g)].map(m => m[1])) : new Set();
+  const unknown = slotBlock ? mfRoles.filter(r => !slots.has(r)) : mfRoles;
+  ok(slotBlock && unknown.length === 0, 'Audio-Manifest-Rollen sind BAKE_SLOT-Slots (aus index.html gelesen)' +
+    (!slotBlock ? ' — BAKE_SLOT-Block nicht gefunden' : unknown.length ? ' — unbekannt: ' + unknown.join(', ') : ' (' + mfRoles.length + ' Rollen)'));
+  const missing = mfRoles.filter(r => !existsSync(path.join(audioDir, r + '.m4a')));
+  ok(missing.length === 0, 'Audio-Assets liegen fuer jede Manifest-Rolle vor' +
+    (missing.length ? ' — fehlt: ' + missing.join(', ') : ' (' + mfRoles.length + ' Dateien)'));
+} else {
+  ok(true, 'Audio-Manifest nicht vorhanden (audio/ ungenerated) — Asset-Pfad inaktiv');
+}
 
 console.log('\nRESULT ' + pass + '/' + (pass + fail) + ' PASS');
 process.exit(fail ? 1 : 0);
