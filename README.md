@@ -6,9 +6,13 @@ im Browser, kein Server nötig.
 
 ## Spielen
 
-- **Am einfachsten:** `index.html` direkt öffnen (file://). Läuft komplett;
+- **Am einfachsten:** **https://chaotikkk.github.io/Wiesbaden-Survivors/** —
+  GitHub Pages, voller Sound (alle 21 SFX-Cues) und offline-fähig (PWA,
+  Service-Worker precacht Shell + Cues). Installierbar via Browser-Menü
+  („App installieren").
+- **Lokal:** `index.html` direkt öffnen (file://). Läuft komplett;
   Game-Audio nutzt dabei die eingebaute Offline-Synthese-Bake.
-- **Voll-Audio (empfohlen):** über http(s) serven (z. B.
+- **Lokal mit Voll-Audio:** über http(s) serven (z. B.
   `python -m http.server` oder jeder statische Server). Dann lädt
   `AudioSys.prefetchAssets()` die 21 externen SFX-Cues aus `audio/`.
 
