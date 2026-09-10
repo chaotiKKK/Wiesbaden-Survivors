@@ -12964,7 +12964,10 @@ Object.assign(Game, {
        Intro, UI-Klick oder startRun() rufen AudioSys.init() auf. */
     try { Prof.init(); } catch (e) { }
     this.playIntro();
-    requestAnimationFrame(t => this.loop(t));
+    /* Gebundene Loop-Referenz genau einmal erzeugen: pro Frame kein Closure-
+       Alloc mehr (rAF-Kick lief sonst jede Frame ein neues Funktionsobjekt). */
+    this._loopBound = this.loop.bind(this);
+    requestAnimationFrame(this._loopBound);
   },
   /* ---- Studio-Vorspann: laeuft einmal beim Start, jederzeit ueberspringbar ---- */
   playIntro() {
@@ -15114,7 +15117,7 @@ Object.assign(Game, {
     if (!Net.isGuest()) this.render();
     Input.endFrame();
     if (Prof.on) Prof.sample(_pInt, performance.now() - _pc0);
-    requestAnimationFrame(tt => this.loop(tt));
+    requestAnimationFrame(this._loopBound || (this._loopBound = this.loop.bind(this)));
   },
   handleGlobalInput() {
     /* Der Gast simuliert nichts: seine Tasten werden nur als Ereignisse verschickt. */
