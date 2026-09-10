@@ -3601,6 +3601,11 @@ const AudioSys = {
     'hit', 'crit', 'hitMelee', 'boom', 'kill', 'ric', 'clank', 'glass',
     'hurt', 'step', 'dash', 'pick', 'ui', 'ok', 'err'],
   prefetchAssets() {
+    /* Zweite Sperre direkt am Loader: der einzige legitime Aufrufer ist
+       init() (Gesten-gebunden). Ohne started läuft nichts — so bleibt der
+       Gesten-Vertrag auch bestehen, wenn künftig ein zweiter Caller den
+       Loader direkt erreicht. Der Selftest (AudioGestenGate) pinnt genau das. */
+    if (!this.started) return;
     if (this.assetsReady || this._assetsLoading) return;
     if (typeof fetch !== 'function') return;
     if (location.protocol === 'file:') return; // fetch ist dort blockiert; Bake bleibt
@@ -16957,6 +16962,14 @@ const SelfTest = {
   _asyncPending: 0,
   _ok(cond, name) { this.results.push({ ok: !!cond, name }); },
   run() {
+    /* Gesten-Gate-Instrumentierung (Vertrag in _audioGestureGate): Fetch-Zeuge
+       fuer audio/*.m4a, Zeitstempel der ersten Geste aus SEITENSICHT (jede
+       pointerdown/keydown/touchstart — synthetische zaehlen, denn die
+       Produkt-Handler unterscheiden nicht) und Init-Zaehler. */
+    this._audioWitness = [];
+    this._audioFirstGestureAt = null;
+    this._audioInitCalls = 0;
+    this._armAudioGateProbes();
     this.results = [];
     try { this._rng(); } catch (e) { this._ok(false, 'RNG-Determinismus (Fehler: ' + e.message + ')'); }
     try { this._save(); } catch (e) { this._ok(false, 'Save-Roundtrip (Fehler: ' + e.message + ')'); }
@@ -16983,6 +16996,10 @@ const SelfTest = {
     try { this._surfaceContracts(); } catch (e) { this._ok(false, 'Surfaces (Fehler: ' + e.message + ')'); }
     try { this._controlsSeedCopy(); } catch (e) { this._ok(false, 'SeedCopy (Fehler: ' + e.message + ')'); }
     try { this._net(); } catch (e) { this._ok(false, 'Net (Fehler: ' + e.message + ')'); }
+    /* Gesten-Gate-Gruppe bewusst als LETZTE Sync-Gruppe: der Fetch-Zeuge ist
+       ab run()-Start armiert und deckt damit das gesamte Sync-Fenster ab —
+       jede Gruppe, die unabsichtlich Assets laden wuerde, faellt hier auf. */
+    try { this._audioGestureGate(); } catch (e) { this._ok(false, 'AudioGestenGate (Fehler: ' + e.message + ')'); }
     /* Async-Gruppen (Balance-Parity) rendern den Banner selbst, wenn sie fertig
        sind — sonst erschiene er vor dem letzten Assertions-Schub und ein Poll
        (tools/verify.mjs) koennte den Suite-Zustand ohne sie abnehmen. */
@@ -16995,6 +17012,83 @@ const SelfTest = {
      Aufteilung direkt im Selftest — auch ohne Browser-Gate. Bewusst nur 2000
      Laeufe: selbst auf schnellen Maschinen ~1-2 Budget-Slices; die Aussage ist
      die Paritaet, nicht die Slice-Anzahl (Slices/Max stehen im Row-Text). */
+  /* Fetch-Zeuge + Geste + Init-Sperre. "Geste" im Sinne des Vertrags ist ein
+     VERTRAUENSWUERDIGES Eingabeereignis (isTrusted — die Plattform-Definition
+     eines Nutzerwunsens); synthetische dispatchEvent-Pokes der eigenen Suite
+     zaehlen bewusst NICHT. Solange keine echte Geste da war, ist AudioSys.init
+     wirkungslos (kein ctx) — genau der Produktvertrag. Audio-Fetch-Versuche
+     werden "hoeflich" blockiert (200 + Mist-Bytes), damit ein laufender Loader
+     sauber durch seinen Fehlerpfad settelt (kein Netz, keine Bank-Eintraege,
+     kein Wedge). Nach der ersten echten Geste delegiert init wieder —
+     ein menschlicher Besucher einer ?selftest-Seite verliert nichts. */
+  _armAudioGateProbes() {
+    if (this._audioGateRawFetch) return;
+    const rawFetch = window.fetch.bind(window);
+    this._audioGateRawFetch = rawFetch;
+    window.fetch = function (input, init) {
+      const url = typeof input === 'string' ? input : (input && input.url) || String(input);
+      if (/audio\/[a-zA-Z_]+\.m4a/.test(url)) {
+        SelfTest._audioWitness.push({ u: String(url).split('/').pop(), t: performance.now() });
+        return Promise.resolve(new Response(new ArrayBuffer(8), { status: 200 }));
+      }
+      return rawFetch(input, init);
+    };
+    this._audioGestureListener = (e) => { if (e.isTrusted && this._audioFirstGestureAt === null) this._audioFirstGestureAt = performance.now(); };
+    for (const t of ['pointerdown', 'keydown', 'touchstart']) addEventListener(t, this._audioGestureListener, { capture: true });
+    const rawInit = AudioSys.init.bind(AudioSys);
+    this._audioGateRawInit = rawInit;
+    AudioSys.init = function (...args) {
+      if (!SelfTest._audioInitStack) SelfTest._audioInitStack = new Error().stack;
+      SelfTest._audioInitCalls++;
+      if (SelfTest._audioFirstGestureAt === null) return undefined; // vor erster echter Geste: wirkungslos
+      return rawInit(...args);
+    };
+  },
+  _disarmAudioGateProbes() {
+    if (!this._audioGateRawFetch) return;
+    window.fetch = this._audioGateRawFetch;
+    this._audioGateRawFetch = null;
+    for (const t of ['pointerdown', 'keydown', 'touchstart']) removeEventListener(t, this._audioGestureListener, { capture: true });
+    this._audioGestureListener = null;
+    if (this._audioGateRawInit) { AudioSys.init = this._audioGateRawInit; this._audioGateRawInit = null; }
+    this._audioInitStack = null;
+  },
+  /* Gesten-Gate-Vertrag (Assets): externe SFX-Assets duerfen NIE vor der
+     ersten echten (isTrusted-) Geste laden. Ebenen:
+     1) Zeitleiste: null Asset-Fetch-Versuche vor der ersten echten Geste
+        (oder ueberhaupt keiner, wenn keine kam) — DIE Vertragszeile.
+     2) Init-Sperre: init() ohne Geste war wirkungslos (kein ctx, kein
+        started), N Versuche wurden geblockt.
+     3) Sperrnotwendigkeit: NUR die started-Sperre steht zwischen stiller
+        Seite und Loader (Fake-Geste, hoeflich blockiert, Restore zuerst).
+     Ebenen 2/3 laufen nur bei beobachtbarem Vor-Geste-Zustand. */
+  _audioGestureGate() {
+    const a = AudioSys;
+    this._ok(typeof a.prefetchAssets === 'function' && Array.isArray(a.ASSET_ROLES) && a.ASSET_ROLES.length > 0,
+      'Audio-Gate: Prefetch-Seam existiert (prefetchAssets + ' + (a.ASSET_ROLES ? a.ASSET_ROLES.length : 0) + ' Rollen)');
+    const attempts = this._audioWitness.slice();
+    const gAt = this._audioFirstGestureAt;
+    const early = attempts.filter(x => gAt === null || x.t < gAt).length;
+    this._ok(early === 0, 'Audio-Gate: null Asset-Fetch-Versuche vor der ersten echten Geste (' + attempts.length + ' Versuche gesamt, ' + early + ' davor)');
+    if (!a.started) {
+      const before = attempts.length;
+      a.prefetchAssets(); // darf ohne Geste nichts tun
+      this._ok(this._audioWitness.length === before && a._assetsLoading === false && a.assetsReady === false,
+        'Audio-Gate: prefetchAssets ohne Geste ist ein No-op (loading/ready unveraendert)');
+      /* Sperrnotwendigkeit unter Fake-Geste: Fetch-Versuche landen im Zeuge
+         (hoeflich blockiert -> decode schlaegt fehl -> Loader settelt auf
+         seinem Fehlerpfad), deshalb ist der synchrone Restore racemessen. */
+      a.started = true;
+      try { a.prefetchAssets(); } catch (e) { }
+      const faked = this._audioWitness.length - before;
+      a.started = false; a._assetsLoading = false; a.assetsReady = false;
+      this._ok(faked === a.ASSET_ROLES.length,
+        'Audio-Gate: nur die started-Sperre verhindert das Laden (' + faked + '/' + a.ASSET_ROLES.length + ' Versuche unter Fake-Geste)');
+    } else {
+      this._ok(true, 'Audio-Gate: Seite bereits gestartet (echte Geste lag vor) — No-op-Ebenen uebersprungen');
+    }
+    this._disarmAudioGateProbes();
+  },
   _audioPresentation() {
     const c = AudioSys.PRESENTATION_CUES;
     this._ok(!!c && c.win && c.lose && c.win.cue === 'win' && c.lose.cue === 'over', 'AudioPresentation: Sieg/Niederlage besitzen getrennte Cue-Rollen');
