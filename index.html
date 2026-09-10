@@ -3606,12 +3606,13 @@ const AudioSys = {
     if (location.protocol === 'file:') return; // fetch ist dort blockiert; Bake bleibt
     this._assetsLoading = true;
     const roles = this.ASSET_ROLES.slice();
+    /* Settelt garantiert: JEDER Abschluss — Erfolg oder Fehler — zielt auf
+       denselben Zaehler. Sonst blockiert eine einzige fehlgeschlagene Datei
+       den Fertig-Meldung fuer immer (und assetsReady bliebe false, obwohl 20
+       von 21 Cues geladen sind). */
     let pending = roles.length;
     let loaded = 0;
-    const done = () => {
-      this._assetsLoading = false;
-      if (loaded > 0) this.assetsReady = true;
-    };
+    const step = (good) => { if (good) loaded++; if (--pending <= 0) { this._assetsLoading = false; if (loaded > 0) this.assetsReady = true; } };
     for (const name of roles) {
       fetch('audio/' + name + '.m4a', { cache: 'force-cache' })
         .then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
@@ -3620,10 +3621,9 @@ const AudioSys = {
           /* Nur einsetzen, wenn die Bake diesen Slot nicht schon belegt:
              Bankformat (variants array) bleibt identisch zur Bake. */
           if (!this.bank[name]) this.bank[name] = { v: [buf] };
-          loaded++;
-          if (loaded >= pending) done();
+          step(true);
         })
-        .catch(() => { if (--pending <= 0) done(); });
+        .catch(() => step(false));
     }
   },
 };
