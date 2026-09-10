@@ -209,6 +209,14 @@ if (existsSync(mfPath)) {
   const missing = mfRoles.filter(r => !existsSync(path.join(audioDir, r + '.m4a')));
   ok(missing.length === 0, 'Audio-Assets liegen fuer jede Manifest-Rolle vor' +
     (missing.length ? ' — fehlt: ' + missing.join(', ') : ' (' + mfRoles.length + ' Dateien)'));
+  /* SW-Vorcach (Erst-Offline-Sound): sw.js muss jede Manifest-Cue vorhalten,
+     sonst ist die erste Offline-Sitzung an der Stelle stumm. Wird eine Rolle
+     bewusst nicht vorgecacht, muss sie auch aus dem Manifest raus. */
+  const swSrc = readFileSync(path.join(HERE, '..', 'sw.js'), 'utf8');
+  const swAudio = new Set([...swSrc.matchAll(/audio\/([a-zA-Z_]+)\.m4a/g)].map(m => m[1]));
+  const swMissing = mfRoles.filter(r => !swAudio.has(r));
+  ok(swMissing.length === 0, 'Service-Worker precacht jede Manifest-Cue (Erst-Offline-Sound)' +
+    (swMissing.length ? ' — fehlt in sw.js: ' + swMissing.join(', ') : ' (' + mfRoles.length + ' Cues)'));
 } else {
   ok(true, 'Audio-Manifest nicht vorhanden (audio/ ungenerated) — Asset-Pfad inaktiv');
 }

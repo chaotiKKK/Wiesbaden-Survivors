@@ -11,12 +11,27 @@
 const CACHE = 'wbns-b44be35ccc15c0776fed65bb162ee0b554a1de64';
 const SHELL = ['./', './index.html', './data.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './maskable-512.png'];
 
+/* SFX-Vorcach: damit hat der ERSTE Offline-Start vollen Sound (vorher kamen
+   die Cues nur durch den Runtime-Cache nach der Audio-Geste zustande).
+   Liste haendisch parallel zu AudioSys.ASSET_ROLES (index.html) — der
+   data-regression-Check 3j bricht, wenn die Listen abdriften.
+   Pro Datei cache.add mit catch statt addAll: eine fehlende Cue-Datei darf
+   den Install nicht brechen — die Synthese-Bake deckt den Slot im Spiel. */
+const AUDIO = [
+  'audio/w_pistol.m4a', 'audio/w_smg.m4a', 'audio/w_shotgun.m4a', 'audio/w_railgun.m4a', 'audio/w_plasma.m4a', 'audio/w_tesla.m4a',
+  'audio/hit.m4a', 'audio/crit.m4a', 'audio/hitMelee.m4a', 'audio/boom.m4a', 'audio/kill.m4a', 'audio/ric.m4a', 'audio/clank.m4a', 'audio/glass.m4a',
+  'audio/hurt.m4a', 'audio/step.m4a', 'audio/dash.m4a', 'audio/pick.m4a', 'audio/ui.m4a', 'audio/ok.m4a', 'audio/err.m4a',
+];
+
 self.addEventListener('install', (event) => {
   /* KEIN automatisches skipWaiting: der neue Worker wartet, bis der Spieler im
      Update-Toast "Neu laden" klickt (siehe message-Handler). So springt der
      Cache nicht mitten in der Sitzung um. */
   event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(SHELL))
+    caches.open(CACHE)
+      .then((cache) => cache.addAll(SHELL))
+      .then(() => caches.open(CACHE))
+      .then((cache) => Promise.all(AUDIO.map((u) => cache.add(u).catch(() => { /* Cue fehlt: Offline-Sound lueckt dort, Bake bleibt */ }))))
   );
 });
 
