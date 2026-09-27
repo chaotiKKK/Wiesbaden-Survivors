@@ -111,7 +111,8 @@ Ein Merge nach `main` ist also ein Deploy.
 
 ## Lizenz
 
-Für den Code dieses Projekts ist noch keine Lizenz festgelegt. Bis dahin gilt
-das Urheberrecht, Weiterverwendung ist also nicht erlaubt. Die fremden Assets
+**Alle Rechte vorbehalten.** Das ist eine bewusste Entscheidung vom
+2026-09-28, keine vergessene Lizenzdatei. Der Quelltext ist öffentlich
+einsehbar, Kopieren, Weitergeben oder Weiterverwenden ist aber nicht erlaubt. Die fremden Assets
 stehen unter ihren eigenen Lizenzen, siehe [`CREDITS.md`](CREDITS.md). Die
 Schrift Chakra Petch steht unter der SIL Open Font License 1.1 (`licenses/`).
