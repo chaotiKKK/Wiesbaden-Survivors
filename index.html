@@ -3843,7 +3843,6 @@ const AudioSys = {
   /* minBars = RELATIVE Frist: „frühestens N Takte ab JETZT" (Absolutvergleich
      würde bei hohem aktuellen Takt sofort feuern). */
   beatAt(fn, minBars) { if (typeof fn === 'function' && this._beatQueue.length < 4) this._beatQueue.push({ fn, minBars: minBars || 0, from: Math.floor(this.musicStep / 16) }); },
-  requestSwitch(fn) { if (typeof fn === 'function') this._pendingSwitch.push(fn); },
   requestSwitch(fn, tag) {
     if (typeof fn !== 'function') return;
     if (tag) { if (this._pendingSwitch.some(s => s.tag === tag)) return; this._pendingSwitch.push({ fn, tag }); }
