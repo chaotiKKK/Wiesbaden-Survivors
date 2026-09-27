@@ -81,7 +81,9 @@ const MARKERS = [
   ['data.js extraction markers', 'extrahiert nach data.js'],
   ['data.js include before engine', '<script src="data.js">'],
   ['slice-budget honest contract comment', 'Wandzeit skaliert mit der CPU-Geschwindigkeit'],
-  ['context-scoped native Tab + ring sync', 'Tab ist NUR im Coop-Shop ein Gameplay-Binding']
+  ['context-scoped native Tab + ring sync', 'Tab ist NUR im Coop-Shop ein Gameplay-Binding'],
+  ['sealed co-op signaling (NetSeal, wbns2)', "PROTO: 'wbns2'"],
+  ['sealed-signaling selftest', '_netSeal()']
 ];
 const FORBIDDEN = [
   ['removed SkinEditor cluster', 'const SkinEditor'],
