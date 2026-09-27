@@ -13,10 +13,13 @@ import json
 import sys
 from playwright.sync_api import sync_playwright
 
+from pw_lib import Serve
+
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-URL = "http://127.0.0.1:8931/index.html"
+PORT = 8931
+URL = "http://127.0.0.1:%d/index.html" % PORT
 SHOT = sys.argv[1] if len(sys.argv) > 1 else "docs/pw/pw-recon-title.png"
 
 VIS_JS = """() => {
@@ -63,7 +66,9 @@ VIS_JS = """() => {
   };
 }"""
 
-with sync_playwright() as p:
+# Serve like the other keepers: recon used to hit 8931 without starting a server,
+# so it only passed while some other process happened to be listening there.
+with Serve(PORT), sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
     ctx = browser.new_context()
     page = ctx.new_page()
