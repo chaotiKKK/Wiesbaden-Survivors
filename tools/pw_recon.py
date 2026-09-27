@@ -10,6 +10,7 @@ using the selectors discovered here.
 """
 
 import json
+import os
 import sys
 from playwright.sync_api import sync_playwright
 
@@ -93,3 +94,24 @@ with Serve(PORT), sync_playwright() as p:
     page.screenshot(path=SHOT)
     print("screenshot:", SHOT)
     browser.close()
+
+# Recon used to only print what it found, so it could never fail. These are the
+# checks a load smoke test can make without walking the game (pw_walk does that).
+results = []
+
+
+def check(ok, name, detail=""):
+    results.append(bool(ok))
+    print("%s | %s%s" % ("PASS" if ok else "FAIL", name, (" - " + str(detail)) if detail else ""))
+
+
+c = info.get("contracts", {})
+errors = [t for k, t in console if k in ("error", "PAGEERROR")]
+check(c.get("scTitle") == "visible", "title screen is visible after load", c.get("scTitle"))
+check("play" in info.get("navActs", []), "title offers the play action in the nav ring")
+check(c.get("scCode") != "missing" and c.get("codePanel") != "missing",
+      "code screen and code panel exist (surface contract)", "scCode=%s codePanel=%s" % (c.get("scCode"), c.get("codePanel")))
+check(not errors, "no console error or page error during load", "; ".join(errors[:2]))
+check(os.path.exists(SHOT) and os.path.getsize(SHOT) > 0, "screenshot written", SHOT)
+print("\n%d/%d checks passed" % (sum(results), len(results)))
+sys.exit(0 if all(results) else 1)

@@ -23,3 +23,6 @@ trailer/media/.vo-text/
 # Python-Bytecode der Playwright-Tools (tools/pw_*.py)
 __pycache__/
 *.pyc
+
+# Gebautes Pages-Artefakt (tools/build-site.mjs)
+_site/

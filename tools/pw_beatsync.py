@@ -75,8 +75,17 @@ def run_checks():
             target = page.evaluate("() => AudioSys.ambientId === 'labor' ? 'rheinufer' : 'labor'")
             s0 = page.evaluate("() => AudioSys.musicStep")
             oldAmb = page.evaluate("() => AudioSys.ambientId")
-            page.evaluate("id => AudioSys.setAmbientKeepGrid(id)", target)
-            immediate = page.evaluate("() => ({ amb: AudioSys.ambientId, q: AudioSys._pendingSwitch.length })")
+            # Queue the switch, hook its callback and read the "not applied yet" state in ONE
+            # page task. The step is recorded by the callback itself, at the moment the game
+            # switches: sampling musicStep from outside raced the scheduler on the CI runner
+            # (the next tick had already advanced 16 -> 17 before the sampler's turn).
+            immediate = page.evaluate("""id => {
+              window.__switchStep = null;
+              AudioSys.setAmbientKeepGrid(id);
+              const e = AudioSys._pendingSwitch.find(s => s.tag === 'ambient');
+              if (e) { const orig = e.fn; e.fn = (a) => { window.__switchStep = a.musicStep; return orig(a); }; }
+              return { amb: AudioSys.ambientId, q: AudioSys._pendingSwitch.length, hooked: !!e };
+            }""", target)
             check("wave start: switch queued, not applied immediately (old song plays out the bar)",
                   immediate["amb"] == oldAmb and immediate["q"] >= 1, str(immediate))
             # sample (step, ambient) densely; the switch fires while step % 16 == 0
@@ -94,8 +103,10 @@ def run_checks():
             check("wave start: new song applied after queue", ok_flip,
                   "flip=%s" % (first_flip,))
             if ok_flip:
+                sw = page.evaluate("() => window.__switchStep")
                 check("wave start: applied EXACTLY at bar boundary (step %% 16 === 0)",
-                      first_flip["s"] % 16 == 0, "step=%d (%%16=%d)" % (first_flip["s"], first_flip["s"] % 16))
+                      sw is not None and sw % 16 == 0,
+                      "step at switch=%s (first sampled flip: step %d)" % (sw, first_flip["s"]))
                 check("wave start: phase preserved (no musicStep reset)", first_flip["s"] > s0 + 4,
                       "step %d -> %d" % (s0, first_flip["s"]))
             check("wave start: queue drained after boundary", page.evaluate("() => AudioSys._pendingSwitch.length") == 0)
