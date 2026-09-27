@@ -27,7 +27,10 @@ const ROOT = repoRoot(import.meta.url);
 const OUT = path.resolve(ROOT, argOf(process.argv.slice(2), '--out', '_site'));
 
 /** Everything the live site serves. Audio: every cue in audio/ (*.m4a only). */
-const FILES = ['index.html', 'data.js', 'sw.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'maskable-512.png'];
+/* CREDITS.md and the font licence ship with the site: the SIL OFL requires the licence to accompany the
+   embedded Chakra Petch wherever it is redistributed — and Pages redistributes it. */
+const FILES = ['index.html', 'data.js', 'sw.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'maskable-512.png',
+  'CREDITS.md', 'licenses/OFL-ChakraPetch.txt'];
 const AUDIO = readdirSync(path.join(ROOT, 'audio')).filter(f => f.endsWith('.m4a')).map(f => 'audio/' + f);
 
 const errors = [];
