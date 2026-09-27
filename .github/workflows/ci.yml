@@ -1,6 +1,8 @@
-# CI: every pull request and every push to main runs the regression gate and
-# the Playwright suites. GitHub Pages serves this repo straight from main, so a
-# merge is a deploy — this workflow is what stands between a PR and the live site.
+# CI + deploy: every pull request and every push to main runs the regression
+# gate and the Playwright suites. GitHub Pages is published by THIS workflow
+# (Pages source = "GitHub Actions"), and only after the gate job is green: a red
+# run deploys nothing, so the live site stays on the last green state — even for
+# a direct push to main.
 #
 # Windows runner on purpose: tools/verify.mjs drives the system Edge through raw
 # CDP and launches it via PowerShell Start-Process, exactly as on the dev
@@ -25,7 +27,9 @@ permissions:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  # Superseded PR runs are cancelled; runs on main are not, so a deployment is
+  # never cut off halfway by the next push.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   gate:
@@ -110,3 +114,29 @@ jobs:
           path: docs/pw/*.png
           retention-days: 7
           if-no-files-found: ignore
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: gate            # the whole point: no green gate, no deploy
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      # Same content the branch-based Pages build served: the repository as-is
+      # (upload-pages-artifact leaves out .git and .github).
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4
