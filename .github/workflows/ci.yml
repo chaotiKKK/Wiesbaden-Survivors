@@ -4,6 +4,11 @@
 # run deploys nothing, so the live site stays on the last green state — even for
 # a direct push to main.
 #
+# What gets published is an allowlist (tools/build-site.mjs): the game, its
+# service worker, manifest, icons and audio cues — nothing else. The debug and
+# preview pages of the character-art pipeline stay in the repository but are no
+# longer public. The gate job builds and smoke-tests that exact site on every PR.
+#
 # Windows runner on purpose: tools/verify.mjs drives the system Edge through raw
 # CDP and launches it via PowerShell Start-Process, exactly as on the dev
 # machine. windows-latest ships Edge, PowerShell and Git Bash.
@@ -78,6 +83,16 @@ jobs:
       - name: Gate — static legs, selftest, BalanceSim, throttle (tools/verify.mjs)
         run: node tools/verify.mjs
 
+      # Separate steps on purpose: GitHub's pwsh wrapper only checks the exit code
+      # of the LAST command in a multi-line step, so a failed build would be masked.
+      - name: Pages artifact — build the allowlist (tools/build-site.mjs)
+        if: success() || failure()
+        run: node tools/build-site.mjs
+
+      - name: Pages artifact — smoke-test the built site (tools/site-smoke.mjs)
+        if: success() || failure()
+        run: node tools/site-smoke.mjs
+
       - name: Playwright — recon (page loads, no crash)
         if: success() || failure()
         run: python tools/pw_recon.py
@@ -132,11 +147,15 @@ jobs:
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
       - uses: actions/configure-pages@v5
-      # Same content the branch-based Pages build served: the repository as-is
-      # (upload-pages-artifact leaves out .git and .github).
+      # Built from the same allowlist the gate job just smoke-tested.
+      - name: Build the allowlisted site
+        run: node tools/build-site.mjs
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
       - id: deployment
         uses: actions/deploy-pages@v4
