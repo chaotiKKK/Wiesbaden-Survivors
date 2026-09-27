@@ -1,0 +1,4603 @@
+{
+  "schema": "wbns-balance-reference/1",
+  "about": "BalanceSim of the HTML game, frozen as the reference the UE 5.8 rebuild is checked against. Regenerate with node tools/export-balance-reference.mjs; see reference/README.md for how to compare.",
+  "provenance": {
+    "commit": "ae08ce8704d0a16f1b636a302ba1fd8e8a05e103",
+    "indexHtmlBlob": "89a8818d537e24e5efe24b7c82f614b2ece24bd2",
+    "dataJsBlob": "391bff1c789d763d0101ce10d6e05a08cd237f5d",
+    "sourceDirty": false,
+    "selfCheckMaxAbsZ": 2.821,
+    "engine": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36 Edg/154.0.0.0"
+  },
+  "tolerances": {
+    "exact": {
+      "relative": 1e-9,
+      "note": "deterministic formulas; differences can only come from operation order or pow/exp implementations"
+    },
+    "monteCarlo": {
+      "bitExact": "if mulberry32, the seeds and the draw order are reproduced, measured values must match to rounding",
+      "statistical": "otherwise |measured - expected| <= 5 * measuredStderr per weapon tier, and |winRate - reference| <= 5 * winRateStderrPct (both sides sample, so a combined stderr of sqrt(2) times this is the strict bound)",
+      "pairs": "informational: 60 samples per weapon, close weapons can swap best/worst",
+      "averages": "standardAverageT3Dps, typeAverageT3Dps and attachmentDeviationPct are built from sampled DPS, exactly as the game shows them; their deterministic counterparts are exact.standardAverageT3ExpectedDps, exact.typeAverageT3ExpectedDps and exact.attachments[].deviationFromExpectedPct"
+    },
+    "summary": {
+      "note": "outlier and win-band counts are derived from sampled values (the verdicts the game itself shows); informational, a value right at a band edge can flip"
+    }
+  },
+  "config": {
+    "iterations": 10000,
+    "perWeaponIterations": 3333,
+    "runsPerCharacter": 434,
+    "referenceBuild": {
+      "level": 14,
+      "stats": {
+        "hpRegen": 1.848,
+        "dmgP": 36.96,
+        "melee": 33.88000000000001,
+        "ranged": 33.88000000000001,
+        "elem": 30.800000000000004,
+        "atkSpd": 30.800000000000004,
+        "crit": 16.32,
+        "critDmg": 46.2,
+        "eng": 24.640000000000004,
+        "range": 18.48,
+        "armor": 3.8500000000000005
+      }
+    },
+    "characterRuns": {
+      "dangerIndex": 2,
+      "danger": {
+        "n": 2,
+        "hp": 1.55,
+        "dmg": 1.25,
+        "spd": 1.08,
+        "cnt": 1.3,
+        "price": 1.2,
+        "desc": "Elitegegner ab Welle 6"
+      },
+      "waves": 20
+    },
+    "pairIterations": 60,
+    "rng": {
+      "algorithm": "mulberry32",
+      "seed": "x = 0; for each UTF-16 code unit c of the id: x = (x * 31 + c) >>> 0; seed = x || 1",
+      "streams": "one isolated stream per weapon (reseeded per weapon, all four tiers in order) and per character (seeded once, continuous over its runs); attachments and the smg base use weaponSeed(\"smg\")"
+    }
+  },
+  "exact": {
+    "standardAverageT3ExpectedDps": 707.3538253172484,
+    "typeAverageT3ExpectedDps": {
+      "charge": 547.7065177880854,
+      "projectile": 481.45482428433735,
+      "chain": 1218.7260480080079,
+      "melee": 916.9880241861304,
+      "cone": 922.5921944466319,
+      "aura": 1394.279274790428,
+      "hitscan": 676.25774274108
+    },
+    "weaponTiers": [
+      {
+        "id": "arc",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 10,
+            "attackInterval": 1,
+            "baseDamage": 58.509312,
+            "critChance": 0.1932,
+            "critMultiplier": 2.193,
+            "cooldown": 0.764525993883792,
+            "hitsPerAttack": 2.6,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 244.84053784812653
+          },
+          {
+            "tier": 2,
+            "tierDamage": 18,
+            "attackInterval": 0.95,
+            "baseDamage": 79.9408128,
+            "critChance": 0.1932,
+            "critMultiplier": 2.193,
+            "cooldown": 0.7262996941896024,
+            "hitsPerAttack": 2.6,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 352.13021173663145
+          },
+          {
+            "tier": 3,
+            "tierDamage": 28,
+            "attackInterval": 0.9,
+            "baseDamage": 111.40326400000001,
+            "critChance": 0.1932,
+            "critMultiplier": 2.5585,
+            "cooldown": 0.6880733944954128,
+            "hitsPerAttack": 2.6,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 547.7065177880854
+          },
+          {
+            "tier": 4,
+            "tierDamage": 45,
+            "attackInterval": 0.85,
+            "baseDamage": 173.88441600000002,
+            "critChance": 0.1932,
+            "critMultiplier": 2.924,
+            "cooldown": 0.6498470948012232,
+            "hitsPerAttack": 2.6,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 954.30518831773
+          }
+        ]
+      },
+      {
+        "id": "bierwerfer",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 23.7,
+            "attackInterval": 1.25,
+            "baseDamage": 57.76972799999999,
+            "critChance": 0.2132,
+            "critMultiplier": 2.6316,
+            "cooldown": 0.9556574923547401,
+            "hitsPerAttack": 1,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 166.5416266903282
+          },
+          {
+            "tier": 2,
+            "tierDamage": 38.5,
+            "attackInterval": 1.15,
+            "baseDamage": 78.03980800000001,
+            "critChance": 0.2232,
+            "critMultiplier": 2.7777999999999996,
+            "cooldown": 0.8792048929663607,
+            "hitsPerAttack": 1,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 253.4210907666793
+          },
+          {
+            "tier": 3,
+            "tierDamage": 62.2,
+            "attackInterval": 1.05,
+            "baseDamage": 110.499328,
+            "critChance": 0.23320000000000002,
+            "critMultiplier": 2.924,
+            "cooldown": 0.8027522935779816,
+            "hitsPerAttack": 1,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 407.5965302909723
+          },
+          {
+            "tier": 4,
+            "tierDamage": 100.7,
+            "attackInterval": 0.95,
+            "baseDamage": 163.228928,
+            "critChance": 0.2532,
+            "critMultiplier": 3.2164,
+            "cooldown": 0.7262996941896024,
+            "hitsPerAttack": 1,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 717.1642120838859
+          }
+        ]
+      },
+      {
+        "id": "blitzableiter",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 11,
+            "attackInterval": 0.78,
+            "baseDamage": 38.26662400000001,
+            "critChance": 0.23320000000000002,
+            "critMultiplier": 2.6316,
+            "cooldown": 0.5963302752293578,
+            "hitsPerAttack": 1,
+            "reactionFactor": 3.3358719999999997,
+            "burnDps": 0,
+            "expectedDps": 295.5123643722414
+          },
+          {
+            "tier": 2,
+            "tierDamage": 18,
+            "attackInterval": 0.72,
+            "baseDamage": 47.853824,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.7777999999999996,
+            "cooldown": 0.5504587155963302,
+            "hitsPerAttack": 1,
+            "reactionFactor": 3.93556736,
+            "burnDps": 0,
+            "expectedDps": 490.06278197737436
+          },
+          {
+            "tier": 3,
+            "tierDamage": 29,
+            "attackInterval": 0.66,
+            "baseDamage": 62.91942400000001,
+            "critChance": 0.2632,
+            "critMultiplier": 3.0702000000000003,
+            "cooldown": 0.5045871559633027,
+            "hitsPerAttack": 1,
+            "reactionFactor": 4.9277033635839995,
+            "burnDps": 0,
+            "expectedDps": 949.2637778888485
+          },
+          {
+            "tier": 4,
+            "tierDamage": 47,
+            "attackInterval": 0.6,
+            "baseDamage": 87.572224,
+            "critChance": 0.2832,
+            "critMultiplier": 3.3625999999999996,
+            "cooldown": 0.4587155963302752,
+            "hitsPerAttack": 1,
+            "reactionFactor": 5.696013484759449,
+            "burnDps": 0,
+            "expectedDps": 1814.9856667276754
+          }
+        ]
+      },
+      {
+        "id": "chaingun",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 2,
+            "attackInterval": 0.09,
+            "baseDamage": 28.260326400000007,
+            "critChance": 0.20320000000000002,
+            "critMultiplier": 2.193,
+            "cooldown": 0.06880733944954127,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 510.2817109627209
+          },
+          {
+            "tier": 2,
+            "tierDamage": 3.8,
+            "attackInterval": 0.08,
+            "baseDamage": 30.72560640000001,
+            "critChance": 0.2132,
+            "critMultiplier": 2.193,
+            "cooldown": 0.06116207951070336,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 630.1386570683891
+          },
+          {
+            "tier": 3,
+            "tierDamage": 6.5,
+            "attackInterval": 0.07,
+            "baseDamage": 34.42352640000001,
+            "critChance": 0.2232,
+            "critMultiplier": 2.193,
+            "cooldown": 0.053516819571865444,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 814.5054347781982
+          },
+          {
+            "tier": 4,
+            "tierDamage": 11,
+            "attackInterval": 0.06,
+            "baseDamage": 40.58672640000001,
+            "critChance": 0.23320000000000002,
+            "critMultiplier": 2.193,
+            "cooldown": 0.04587155963302752,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 1130.9461147304944
+          }
+        ]
+      },
+      {
+        "id": "chopper",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 20,
+            "attackInterval": 1,
+            "baseDamage": 71.47394560000001,
+            "critChance": 0.23320000000000002,
+            "critMultiplier": 2.4854,
+            "cooldown": 0.764525993883792,
+            "hitsPerAttack": 3.19,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 401.5307082062229
+          },
+          {
+            "tier": 2,
+            "tierDamage": 33,
+            "attackInterval": 0.95,
+            "baseDamage": 89.27874560000001,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.6316,
+            "cooldown": 0.7262996941896024,
+            "hitsPerAttack": 3.2849999999999997,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 564.0315667416337
+          },
+          {
+            "tier": 3,
+            "tierDamage": 53,
+            "attackInterval": 0.9,
+            "baseDamage": 116.6707456,
+            "critChance": 0.2532,
+            "critMultiplier": 2.924,
+            "cooldown": 0.6880733944954128,
+            "hitsPerAttack": 3.475,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 876.2716839321159
+          },
+          {
+            "tier": 4,
+            "tierDamage": 85,
+            "attackInterval": 0.85,
+            "baseDamage": 160.4979456,
+            "critChance": 0.2732,
+            "critMultiplier": 3.3625999999999996,
+            "cooldown": 0.6498470948012232,
+            "hitsPerAttack": 3.76,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 1528.0377466813904
+          }
+        ]
+      },
+      {
+        "id": "flamer",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 1.2,
+            "attackInterval": 0.12,
+            "baseDamage": 24.844544000000003,
+            "critChance": 0.1932,
+            "critMultiplier": 2.193,
+            "cooldown": 0.09174311926605504,
+            "hitsPerAttack": 2.0324999999999998,
+            "reactionFactor": 1,
+            "burnDps": 10.634039999999999,
+            "expectedDps": 687.9094748694537
+          },
+          {
+            "tier": 2,
+            "tierDamage": 2.1,
+            "attackInterval": 0.11,
+            "baseDamage": 26.077184000000006,
+            "critChance": 0.1932,
+            "critMultiplier": 2.193,
+            "cooldown": 0.08409785932721713,
+            "hitsPerAttack": 2.09,
+            "reactionFactor": 1,
+            "burnDps": 19.13604,
+            "expectedDps": 816.5783564428323
+          },
+          {
+            "tier": 3,
+            "tierDamage": 3.7,
+            "attackInterval": 0.1,
+            "baseDamage": 28.268544000000006,
+            "critChance": 0.20320000000000002,
+            "critMultiplier": 2.5585,
+            "cooldown": 0.0764525993883792,
+            "hitsPerAttack": 2.1475,
+            "reactionFactor": 1,
+            "burnDps": 30.898229999999998,
+            "expectedDps": 1076.4052914514668
+          },
+          {
+            "tier": 4,
+            "tierDamage": 6.2,
+            "attackInterval": 0.09,
+            "baseDamage": 31.692544000000005,
+            "critChance": 0.2132,
+            "critMultiplier": 2.924,
+            "cooldown": 0.06880733944954127,
+            "hitsPerAttack": 2.2624999999999997,
+            "reactionFactor": 1,
+            "burnDps": 53.268299999999996,
+            "expectedDps": 1522.8395573553892
+          }
+        ]
+      },
+      {
+        "id": "frost",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 32,
+            "attackInterval": 1.2,
+            "baseDamage": 69.3483264,
+            "critChance": 0.1932,
+            "critMultiplier": 2.193,
+            "cooldown": 0.9174311926605504,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 93.01215873038838
+          },
+          {
+            "tier": 2,
+            "tierDamage": 53,
+            "attackInterval": 1.1,
+            "baseDamage": 98.10992640000002,
+            "critChance": 0.1932,
+            "critMultiplier": 2.193,
+            "cooldown": 0.8409785932721713,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 143.55067874247578
+          },
+          {
+            "tier": 3,
+            "tierDamage": 85,
+            "attackInterval": 1,
+            "baseDamage": 141.9371264,
+            "critChance": 0.1932,
+            "critMultiplier": 2.5585,
+            "cooldown": 0.764525993883792,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 241.5545173062993
+          },
+          {
+            "tier": 4,
+            "tierDamage": 135,
+            "attackInterval": 0.9,
+            "baseDamage": 210.4171264,
+            "critChance": 0.1932,
+            "critMultiplier": 2.924,
+            "cooldown": 0.6880733944954128,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 419.4795345956771
+          }
+        ]
+      },
+      {
+        "id": "gravgun",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 26.2,
+            "attackInterval": 1.8,
+            "baseDamage": 83.12924160000001,
+            "critChance": 0.1932,
+            "critMultiplier": 2.193,
+            "cooldown": 1.3761467889908257,
+            "hitsPerAttack": 1,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 151.93127774481565
+          },
+          {
+            "tier": 2,
+            "tierDamage": 43.6,
+            "attackInterval": 1.7,
+            "baseDamage": 106.9602816,
+            "critChance": 0.1932,
+            "critMultiplier": 2.193,
+            "cooldown": 1.2996941896024463,
+            "hitsPerAttack": 1,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 206.98529528223995
+          },
+          {
+            "tier": 3,
+            "tierDamage": 69.8,
+            "attackInterval": 1.6,
+            "baseDamage": 142.8438016,
+            "critChance": 0.1932,
+            "critMultiplier": 2.5585,
+            "cooldown": 1.2232415902140672,
+            "hitsPerAttack": 1,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 310.5571008982489
+          },
+          {
+            "tier": 4,
+            "tierDamage": 104.7,
+            "attackInterval": 1.5,
+            "baseDamage": 190.6428416,
+            "critChance": 0.1932,
+            "critMultiplier": 2.924,
+            "cooldown": 1.146788990825688,
+            "hitsPerAttack": 1,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 466.10347066503476
+          }
+        ]
+      },
+      {
+        "id": "hammer",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 26,
+            "attackInterval": 1.35,
+            "baseDamage": 82.01164800000001,
+            "critChance": 0.2132,
+            "critMultiplier": 2.3392,
+            "cooldown": 1.0321100917431192,
+            "hitsPerAttack": 2.62,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 267.62629309806016
+          },
+          {
+            "tier": 2,
+            "tierDamage": 43,
+            "attackInterval": 1.3,
+            "baseDamage": 105.294848,
+            "critChance": 0.2232,
+            "critMultiplier": 2.3392,
+            "cooldown": 0.9938837920489296,
+            "hitsPerAttack": 2.715,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 373.6114871656984
+          },
+          {
+            "tier": 3,
+            "tierDamage": 70,
+            "attackInterval": 1.25,
+            "baseDamage": 142.274048,
+            "critChance": 0.23320000000000002,
+            "critMultiplier": 2.6316,
+            "cooldown": 0.9556574923547401,
+            "hitsPerAttack": 2.81,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 577.5142800334555
+          },
+          {
+            "tier": 4,
+            "tierDamage": 112,
+            "attackInterval": 1.2,
+            "baseDamage": 199.797248,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.924,
+            "cooldown": 0.9174311926605504,
+            "hitsPerAttack": 3,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 959.0443597708003
+          }
+        ]
+      },
+      {
+        "id": "kettensaege",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 2.7,
+            "attackInterval": 0.18,
+            "baseDamage": 44.19425280000001,
+            "critChance": 0.23320000000000002,
+            "critMultiplier": 2.6316,
+            "cooldown": 0.13761467889908255,
+            "hitsPerAttack": 2.0025,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 887.7824335610604
+          },
+          {
+            "tier": 2,
+            "tierDamage": 4.5,
+            "attackInterval": 0.17,
+            "baseDamage": 46.6595328,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.7777999999999996,
+            "cooldown": 0.12996941896024466,
+            "hitsPerAttack": 2.05,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 1054.1576021875987
+          },
+          {
+            "tier": 3,
+            "tierDamage": 7.4,
+            "attackInterval": 0.16,
+            "baseDamage": 50.631372800000015,
+            "critChance": 0.2632,
+            "critMultiplier": 3.0702000000000003,
+            "cooldown": 0.12232415902140673,
+            "hitsPerAttack": 2.0975,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 1341.2299413172505
+          },
+          {
+            "tier": 4,
+            "tierDamage": 12.1,
+            "attackInterval": 0.15,
+            "baseDamage": 57.06849280000001,
+            "critChance": 0.2832,
+            "critMultiplier": 3.3625999999999996,
+            "cooldown": 0.1146788990825688,
+            "hitsPerAttack": 2.1925,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 1821.0916699532145
+          }
+        ]
+      },
+      {
+        "id": "klingel",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 6,
+            "attackInterval": 0.42,
+            "baseDamage": 43.65189120000001,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.193,
+            "cooldown": 0.3211009174311926,
+            "hitsPerAttack": 1.8829999999999998,
+            "reactionFactor": 1.288,
+            "burnDps": 0,
+            "expectedDps": 425.3669402559495
+          },
+          {
+            "tier": 2,
+            "tierDamage": 10,
+            "attackInterval": 0.39,
+            "baseDamage": 49.13029120000001,
+            "critChance": 0.2632,
+            "critMultiplier": 2.193,
+            "cooldown": 0.2981651376146789,
+            "hitsPerAttack": 1.952,
+            "reactionFactor": 1.288,
+            "burnDps": 0,
+            "expectedDps": 544.3556357452272
+          },
+          {
+            "tier": 3,
+            "tierDamage": 17,
+            "attackInterval": 0.36,
+            "baseDamage": 58.717491200000005,
+            "critChance": 0.2832,
+            "critMultiplier": 2.5585,
+            "cooldown": 0.2752293577981651,
+            "hitsPerAttack": 2.0324999999999998,
+            "reactionFactor": 1.288,
+            "burnDps": 0,
+            "expectedDps": 804.996119477366
+          },
+          {
+            "tier": 4,
+            "tierDamage": 27,
+            "attackInterval": 0.33,
+            "baseDamage": 72.41349120000001,
+            "critChance": 0.31320000000000003,
+            "critMultiplier": 2.924,
+            "cooldown": 0.25229357798165136,
+            "hitsPerAttack": 2.113,
+            "reactionFactor": 1.288,
+            "burnDps": 0,
+            "expectedDps": 1251.8518100199435
+          }
+        ]
+      },
+      {
+        "id": "knife",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 10,
+            "attackInterval": 0.5,
+            "baseDamage": 50.817638400000014,
+            "critChance": 0.3632,
+            "critMultiplier": 2.924,
+            "cooldown": 0.382262996941896,
+            "hitsPerAttack": 2.05,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 462.9643111826704
+          },
+          {
+            "tier": 2,
+            "tierDamage": 16,
+            "attackInterval": 0.47,
+            "baseDamage": 59.03523840000002,
+            "critChance": 0.3832,
+            "critMultiplier": 3.2164,
+            "cooldown": 0.35932721712538224,
+            "hitsPerAttack": 2.05,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 622.8567668204347
+          },
+          {
+            "tier": 3,
+            "tierDamage": 26,
+            "attackInterval": 0.44,
+            "baseDamage": 72.73123840000001,
+            "critChance": 0.4032,
+            "critMultiplier": 3.5088,
+            "cooldown": 0.3363914373088685,
+            "hitsPerAttack": 2.145,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 932.8971820431809
+          },
+          {
+            "tier": 4,
+            "tierDamage": 42,
+            "attackInterval": 0.4,
+            "baseDamage": 94.64483840000001,
+            "critChance": 0.44320000000000004,
+            "critMultiplier": 4.0935999999999995,
+            "cooldown": 0.3058103975535168,
+            "hitsPerAttack": 2.24,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 1643.7643493093797
+          }
+        ]
+      },
+      {
+        "id": "laserzirkel",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 7,
+            "attackInterval": 0.32,
+            "baseDamage": 35.7410816,
+            "critChance": 0.2232,
+            "critMultiplier": 2.4854,
+            "cooldown": 0.24464831804281345,
+            "hitsPerAttack": 3.6,
+            "reactionFactor": 1,
+            "burnDps": 18.8352,
+            "expectedDps": 719.1327263541858
+          },
+          {
+            "tier": 2,
+            "tierDamage": 12,
+            "attackInterval": 0.3,
+            "baseDamage": 42.5890816,
+            "critChance": 0.23320000000000002,
+            "critMultiplier": 2.6316,
+            "cooldown": 0.2293577981651376,
+            "hitsPerAttack": 3.6,
+            "reactionFactor": 1,
+            "burnDps": 28.252800000000004,
+            "expectedDps": 951.0797162844792
+          },
+          {
+            "tier": 3,
+            "tierDamage": 19,
+            "attackInterval": 0.28,
+            "baseDamage": 52.1762816,
+            "critChance": 0.2532,
+            "critMultiplier": 2.924,
+            "cooldown": 0.21406727828746178,
+            "hitsPerAttack": 3.6,
+            "reactionFactor": 1,
+            "burnDps": 42.379200000000004,
+            "expectedDps": 1347.293829471976
+          },
+          {
+            "tier": 4,
+            "tierDamage": 31,
+            "attackInterval": 0.26,
+            "baseDamage": 68.6114816,
+            "critChance": 0.2732,
+            "critMultiplier": 3.2164,
+            "cooldown": 0.19877675840978593,
+            "hitsPerAttack": 3.6,
+            "reactionFactor": 1,
+            "burnDps": 61.214400000000005,
+            "expectedDps": 2056.244921231562
+          }
+        ]
+      },
+      {
+        "id": "leg_neroberg",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 11,
+            "attackInterval": 0.26,
+            "baseDamage": 44.1723392,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.7777999999999996,
+            "cooldown": 0.19877675840978593,
+            "hitsPerAttack": 1,
+            "reactionFactor": 5.33637895995392,
+            "burnDps": 0,
+            "expectedDps": 1698.5718922600859
+          },
+          {
+            "tier": 2,
+            "tierDamage": 18,
+            "attackInterval": 0.24,
+            "baseDamage": 53.7595392,
+            "critChance": 0.2632,
+            "critMultiplier": 2.924,
+            "cooldown": 0.18348623853211007,
+            "hitsPerAttack": 1,
+            "reactionFactor": 6.012491866588316,
+            "burnDps": 0,
+            "expectedDps": 2653.66395932731
+          },
+          {
+            "tier": 3,
+            "tierDamage": 30,
+            "attackInterval": 0.22,
+            "baseDamage": 70.1947392,
+            "critChance": 0.2832,
+            "critMultiplier": 3.2895,
+            "cooldown": 0.16819571865443425,
+            "hitsPerAttack": 1,
+            "reactionFactor": 6.536073701485992,
+            "burnDps": 0,
+            "expectedDps": 4496.406753080422
+          },
+          {
+            "tier": 4,
+            "tierDamage": 48,
+            "attackInterval": 0.2,
+            "baseDamage": 94.84753919999999,
+            "critChance": 0.31320000000000003,
+            "critMultiplier": 3.655,
+            "cooldown": 0.1529051987767584,
+            "hitsPerAttack": 1,
+            "reactionFactor": 7.108551217499063,
+            "burnDps": 0,
+            "expectedDps": 8076.119631312742
+          }
+        ]
+      },
+      {
+        "id": "leg_rheingold",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 16,
+            "attackInterval": 0.32,
+            "baseDamage": 64.5191168,
+            "critChance": 0.2232,
+            "critMultiplier": 2.6316,
+            "cooldown": 0.24464831804281345,
+            "hitsPerAttack": 6,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 4412.125011347054
+          },
+          {
+            "tier": 2,
+            "tierDamage": 27,
+            "attackInterval": 0.3,
+            "baseDamage": 79.58471680000001,
+            "critChance": 0.23320000000000002,
+            "critMultiplier": 2.6316,
+            "cooldown": 0.2293577981651376,
+            "hitsPerAttack": 7,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 6853.747242119998
+          },
+          {
+            "tier": 3,
+            "tierDamage": 44,
+            "attackInterval": 0.27,
+            "baseDamage": 102.8679168,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.924,
+            "cooldown": 0.20642201834862386,
+            "hitsPerAttack": 8,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 11961.791939666029
+          },
+          {
+            "tier": 4,
+            "tierDamage": 70,
+            "attackInterval": 0.24,
+            "baseDamage": 138.4775168,
+            "critChance": 0.2632,
+            "critMultiplier": 3.2895,
+            "cooldown": 0.18348623853211007,
+            "hitsPerAttack": 10,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 24721.841840234803
+          }
+        ]
+      },
+      {
+        "id": "leg_thermal",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 10,
+            "attackInterval": 0.34,
+            "baseDamage": 43.224576,
+            "critChance": 0.20320000000000002,
+            "critMultiplier": 2.3392,
+            "cooldown": 0.25993883792048933,
+            "hitsPerAttack": 3.01,
+            "reactionFactor": 1.288,
+            "burnDps": 9.448992,
+            "expectedDps": 829.5585344097556
+          },
+          {
+            "tier": 2,
+            "tierDamage": 17,
+            "attackInterval": 0.31,
+            "baseDamage": 52.81177600000001,
+            "critChance": 0.2132,
+            "critMultiplier": 2.4854,
+            "cooldown": 0.2370030581039755,
+            "hitsPerAttack": 3.125,
+            "reactionFactor": 1.288,
+            "burnDps": 13.08,
+            "expectedDps": 1194.0132413473932
+          },
+          {
+            "tier": 3,
+            "tierDamage": 28,
+            "attackInterval": 0.28,
+            "baseDamage": 67.87737600000001,
+            "critChance": 0.2232,
+            "critMultiplier": 2.6316,
+            "cooldown": 0.21406727828746178,
+            "hitsPerAttack": 3.2399999999999998,
+            "reactionFactor": 1.288,
+            "burnDps": 16.95168,
+            "expectedDps": 1822.0676927426796
+          },
+          {
+            "tier": 4,
+            "tierDamage": 45,
+            "attackInterval": 0.25,
+            "baseDamage": 91.16057599999999,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.924,
+            "cooldown": 0.191131498470948,
+            "hitsPerAttack": 3.4699999999999998,
+            "reactionFactor": 1.288,
+            "burnDps": 22.6938,
+            "expectedDps": 3151.809161729689
+          }
+        ]
+      },
+      {
+        "id": "loeschwasser",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 4,
+            "attackInterval": 0.35,
+            "baseDamage": 36.4834048,
+            "critChance": 0.23320000000000002,
+            "critMultiplier": 2.193,
+            "cooldown": 0.2675840978593272,
+            "hitsPerAttack": 1.7449999999999999,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 304.1108312516306
+          },
+          {
+            "tier": 2,
+            "tierDamage": 7,
+            "attackInterval": 0.32,
+            "baseDamage": 40.592204800000005,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.193,
+            "cooldown": 0.24464831804281345,
+            "hitsPerAttack": 1.791,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 383.3822705429617
+          },
+          {
+            "tier": 3,
+            "tierDamage": 11,
+            "attackInterval": 0.3,
+            "baseDamage": 46.070604800000005,
+            "critChance": 0.2532,
+            "critMultiplier": 2.5585,
+            "cooldown": 0.2293577981651376,
+            "hitsPerAttack": 1.8369999999999997,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 514.6038359721125
+          },
+          {
+            "tier": 4,
+            "tierDamage": 17,
+            "attackInterval": 0.28,
+            "baseDamage": 54.2882048,
+            "critChance": 0.2632,
+            "critMultiplier": 2.924,
+            "cooldown": 0.21406727828746178,
+            "hitsPerAttack": 1.906,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 728.1443333749494
+          }
+        ]
+      },
+      {
+        "id": "magnetmine",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 25.7,
+            "attackInterval": 1.5,
+            "baseDamage": 57.9779072,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.924,
+            "cooldown": 1.146788990825688,
+            "hitsPerAttack": 1,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 151.6915371035536
+          },
+          {
+            "tier": 2,
+            "tierDamage": 42.1,
+            "attackInterval": 1.4,
+            "baseDamage": 80.4393472,
+            "critChance": 0.2532,
+            "critMultiplier": 3.0702000000000003,
+            "cooldown": 1.0703363914373087,
+            "hitsPerAttack": 1,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 234.13366778917515
+          },
+          {
+            "tier": 3,
+            "tierDamage": 67.8,
+            "attackInterval": 1.3,
+            "baseDamage": 115.6380672,
+            "critChance": 0.2732,
+            "critMultiplier": 3.3625999999999996,
+            "cooldown": 0.9938837920489296,
+            "hitsPerAttack": 1,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 391.3218058334718
+          },
+          {
+            "tier": 4,
+            "tierDamage": 109.8,
+            "attackInterval": 1.2,
+            "baseDamage": 173.1612672,
+            "critChance": 0.2932,
+            "critMultiplier": 3.655,
+            "cooldown": 0.9174311926605504,
+            "hitsPerAttack": 1,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 686.118023260566
+          }
+        ]
+      },
+      {
+        "id": "medgun",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 13.3,
+            "attackInterval": 0.45,
+            "baseDamage": 41.121418240000004,
+            "critChance": 0.2132,
+            "critMultiplier": 2.193,
+            "cooldown": 0.3440366972477064,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 149.92747195454626
+          },
+          {
+            "tier": 2,
+            "tierDamage": 22.1,
+            "attackInterval": 0.42,
+            "baseDamage": 53.17389824,
+            "critChance": 0.2232,
+            "critMultiplier": 2.193,
+            "cooldown": 0.3211009174311926,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 209.6939391660876
+          },
+          {
+            "tier": 3,
+            "tierDamage": 35.4,
+            "attackInterval": 0.39,
+            "baseDamage": 71.38957823999999,
+            "critChance": 0.23320000000000002,
+            "critMultiplier": 2.5585,
+            "cooldown": 0.2981651376146789,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 326.44850565462565
+          },
+          {
+            "tier": 4,
+            "tierDamage": 57.6,
+            "attackInterval": 0.36,
+            "baseDamage": 101.79469823999999,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.924,
+            "cooldown": 0.2752293577981651,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 542.9150033006493
+          }
+        ]
+      },
+      {
+        "id": "musiknoten",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 8.5,
+            "attackInterval": 0.6,
+            "baseDamage": 51.50517760000001,
+            "critChance": 0.2632,
+            "critMultiplier": 2.6316,
+            "cooldown": 0.4587155963302752,
+            "hitsPerAttack": 1.45,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 232.72360765101243
+          },
+          {
+            "tier": 2,
+            "tierDamage": 13.8,
+            "attackInterval": 0.55,
+            "baseDamage": 58.76405760000001,
+            "critChance": 0.2832,
+            "critMultiplier": 2.6316,
+            "cooldown": 0.42048929663608564,
+            "hitsPerAttack": 1.45,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 296.2734515998087
+          },
+          {
+            "tier": 3,
+            "tierDamage": 21.2,
+            "attackInterval": 0.5,
+            "baseDamage": 68.89909760000002,
+            "critChance": 0.3032,
+            "critMultiplier": 2.924,
+            "cooldown": 0.382262996941896,
+            "hitsPerAttack": 1.9,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 542.2301545950335
+          },
+          {
+            "tier": 4,
+            "tierDamage": 32.9,
+            "attackInterval": 0.45,
+            "baseDamage": 84.9234176,
+            "critChance": 0.32320000000000004,
+            "critMultiplier": 3.2164,
+            "cooldown": 0.3440366972477064,
+            "hitsPerAttack": 2.35,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 995.6208920684289
+          }
+        ]
+      },
+      {
+        "id": "nagler",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 3.1,
+            "attackInterval": 0.22,
+            "baseDamage": 20.848599040000003,
+            "critChance": 0.23320000000000002,
+            "critMultiplier": 2.7777999999999996,
+            "cooldown": 0.16819571865443425,
+            "hitsPerAttack": 1.45,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 254.2484797342035
+          },
+          {
+            "tier": 2,
+            "tierDamage": 4.8,
+            "attackInterval": 0.2,
+            "baseDamage": 23.176919040000005,
+            "critChance": 0.2532,
+            "critMultiplier": 2.924,
+            "cooldown": 0.1529051987767584,
+            "hitsPerAttack": 1.9,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 428.29579867356796
+          },
+          {
+            "tier": 3,
+            "tierDamage": 7.9,
+            "attackInterval": 0.18,
+            "baseDamage": 27.422679040000006,
+            "critChance": 0.2632,
+            "critMultiplier": 3.2164,
+            "cooldown": 0.13761467889908255,
+            "hitsPerAttack": 1.9,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 599.4837623295429
+          },
+          {
+            "tier": 4,
+            "tierDamage": 12.8,
+            "attackInterval": 0.16,
+            "baseDamage": 34.13371904000001,
+            "critChance": 0.2832,
+            "critMultiplier": 3.5088,
+            "cooldown": 0.12232415902140673,
+            "hitsPerAttack": 2.35,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 1121.6576455552122
+          }
+        ]
+      },
+      {
+        "id": "needle",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 3,
+            "attackInterval": 0.15,
+            "baseDamage": 25.749027840000004,
+            "critChance": 0.2632,
+            "critMultiplier": 2.193,
+            "cooldown": 0.1146788990825688,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 295.0338820372926
+          },
+          {
+            "tier": 2,
+            "tierDamage": 5,
+            "attackInterval": 0.14,
+            "baseDamage": 28.488227840000004,
+            "critChance": 0.2832,
+            "critMultiplier": 2.193,
+            "cooldown": 0.10703363914373089,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 356.08610929406046
+          },
+          {
+            "tier": 3,
+            "tierDamage": 9,
+            "attackInterval": 0.13,
+            "baseDamage": 33.96662784,
+            "critChance": 0.31320000000000003,
+            "critMultiplier": 2.5585,
+            "cooldown": 0.09938837920489296,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 508.5754828905955
+          },
+          {
+            "tier": 4,
+            "tierDamage": 15,
+            "attackInterval": 0.12,
+            "baseDamage": 42.184227840000005,
+            "critChance": 0.3432,
+            "critMultiplier": 2.924,
+            "cooldown": 0.09174311926605504,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 763.4270857377991
+          }
+        ]
+      },
+      {
+        "id": "nunchaku",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 7,
+            "attackInterval": 0.35,
+            "baseDamage": 44.388736000000016,
+            "critChance": 0.31320000000000003,
+            "critMultiplier": 2.6316,
+            "cooldown": 0.2675840978593272,
+            "hitsPerAttack": 2.81,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 704.3494549763692
+          },
+          {
+            "tier": 2,
+            "tierDamage": 11.5,
+            "attackInterval": 0.33,
+            "baseDamage": 50.55193600000001,
+            "critChance": 0.32320000000000004,
+            "critMultiplier": 2.924,
+            "cooldown": 0.25229357798165136,
+            "hitsPerAttack": 2.9050000000000002,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 944.0280176470915
+          },
+          {
+            "tier": 3,
+            "tierDamage": 18.5,
+            "attackInterval": 0.31,
+            "baseDamage": 60.139136000000015,
+            "critChance": 0.3432,
+            "critMultiplier": 3.2164,
+            "cooldown": 0.2370030581039755,
+            "hitsPerAttack": 3,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 1340.300188740778
+          },
+          {
+            "tier": 4,
+            "tierDamage": 30,
+            "attackInterval": 0.29,
+            "baseDamage": 75.889536,
+            "critChance": 0.3632,
+            "critMultiplier": 3.5088,
+            "cooldown": 0.22171253822629966,
+            "hitsPerAttack": 3.19,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 2086.8324954608493
+          }
+        ]
+      },
+      {
+        "id": "photon",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 39.4,
+            "attackInterval": 1.3,
+            "baseDamage": 88.763776,
+            "critChance": 0.31320000000000003,
+            "critMultiplier": 2.924,
+            "cooldown": 0.9938837920489296,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 143.12794364043074
+          },
+          {
+            "tier": 2,
+            "tierDamage": 65.7,
+            "attackInterval": 1.2,
+            "baseDamage": 124.78425600000001,
+            "critChance": 0.3432,
+            "critMultiplier": 3.2895,
+            "cooldown": 0.9174311926605504,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 242.88936931064987
+          },
+          {
+            "tier": 3,
+            "tierDamage": 105.1,
+            "attackInterval": 1.1,
+            "baseDamage": 178.74649599999998,
+            "critChance": 0.3632,
+            "critMultiplier": 3.655,
+            "cooldown": 0.8409785932721713,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 417.50293041428665
+          },
+          {
+            "tier": 4,
+            "tierDamage": 164.2,
+            "attackInterval": 1,
+            "baseDamage": 259.68985599999996,
+            "critChance": 0.4132,
+            "critMultiplier": 4.386,
+            "cooldown": 0.764525993883792,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 814.9110586199248
+          }
+        ]
+      },
+      {
+        "id": "pistol",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 26.7,
+            "attackInterval": 0.65,
+            "baseDamage": 64.40954880000001,
+            "critChance": 0.2232,
+            "critMultiplier": 2.3392,
+            "cooldown": 0.4969418960244648,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 168.3540301829209
+          },
+          {
+            "tier": 2,
+            "tierDamage": 43.3,
+            "attackInterval": 0.6,
+            "baseDamage": 87.1449088,
+            "critChance": 0.23320000000000002,
+            "critMultiplier": 2.3392,
+            "cooldown": 0.4587155963302752,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 249.3056486890609
+          },
+          {
+            "tier": 3,
+            "tierDamage": 70,
+            "attackInterval": 0.55,
+            "baseDamage": 123.7132288,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.6316,
+            "cooldown": 0.42048929663608564,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 410.95759816479904
+          },
+          {
+            "tier": 4,
+            "tierDamage": 113.3,
+            "attackInterval": 0.5,
+            "baseDamage": 183.0169088,
+            "critChance": 0.2632,
+            "critMultiplier": 2.924,
+            "cooldown": 0.382262996941896,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 721.2209603539462
+          }
+        ]
+      },
+      {
+        "id": "plasma",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 12.2,
+            "attackInterval": 0.9,
+            "baseDamage": 42.019327999999994,
+            "critChance": 0.1932,
+            "critMultiplier": 2.193,
+            "cooldown": 0.6880733944954128,
+            "hitsPerAttack": 1,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 153.59337027846786
+          },
+          {
+            "tier": 2,
+            "tierDamage": 21.4,
+            "attackInterval": 0.85,
+            "baseDamage": 54.61964799999999,
+            "critChance": 0.1932,
+            "critMultiplier": 2.193,
+            "cooldown": 0.6498470948012232,
+            "hitsPerAttack": 1,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 211.3955535713923
+          },
+          {
+            "tier": 3,
+            "tierDamage": 33.7,
+            "attackInterval": 0.8,
+            "baseDamage": 71.465728,
+            "critChance": 0.1932,
+            "critMultiplier": 2.5585,
+            "cooldown": 0.6116207951070336,
+            "hitsPerAttack": 1,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 310.74767056973667
+          },
+          {
+            "tier": 4,
+            "tierDamage": 53.6,
+            "attackInterval": 0.75,
+            "baseDamage": 98.72076799999999,
+            "critChance": 0.1932,
+            "critMultiplier": 2.924,
+            "cooldown": 0.573394495412844,
+            "hitsPerAttack": 1,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 482.72562667800383
+          }
+        ]
+      },
+      {
+        "id": "railgun",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 25,
+            "attackInterval": 1.5,
+            "baseDamage": 66.72143360000001,
+            "critChance": 0.2132,
+            "critMultiplier": 2.193,
+            "cooldown": 1.146788990825688,
+            "hitsPerAttack": 3.2,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 233.53379434020897
+          },
+          {
+            "tier": 2,
+            "tierDamage": 40,
+            "attackInterval": 1.4,
+            "baseDamage": 87.26543360000001,
+            "critChance": 0.2132,
+            "critMultiplier": 2.193,
+            "cooldown": 1.0703363914373087,
+            "hitsPerAttack": 4,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 409.0720938755661
+          },
+          {
+            "tier": 3,
+            "tierDamage": 60,
+            "attackInterval": 1.3,
+            "baseDamage": 114.6574336,
+            "critChance": 0.2132,
+            "critMultiplier": 2.5585,
+            "cooldown": 0.9938837920489296,
+            "hitsPerAttack": 4.4,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 676.25774274108
+          },
+          {
+            "tier": 4,
+            "tierDamage": 90,
+            "attackInterval": 1.2,
+            "baseDamage": 155.7454336,
+            "critChance": 0.2132,
+            "critMultiplier": 2.924,
+            "cooldown": 0.9174311926605504,
+            "hitsPerAttack": 4.800000000000001,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 1149.113117588604
+          }
+        ]
+      },
+      {
+        "id": "ratschlaege",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 7.3,
+            "attackInterval": 0.5,
+            "baseDamage": 35.51920640000001,
+            "critChance": 0.23320000000000002,
+            "critMultiplier": 2.4854,
+            "cooldown": 0.382262996941896,
+            "hitsPerAttack": 1.45,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 181.40179335140715
+          },
+          {
+            "tier": 2,
+            "tierDamage": 11.7,
+            "attackInterval": 0.47,
+            "baseDamage": 41.54544640000001,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.6316,
+            "cooldown": 0.35932721712538224,
+            "hitsPerAttack": 1.9,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 306.84760298999936
+          },
+          {
+            "tier": 3,
+            "tierDamage": 19,
+            "attackInterval": 0.44,
+            "baseDamage": 51.543526400000005,
+            "critChance": 0.2632,
+            "critMultiplier": 2.924,
+            "cooldown": 0.3363914373088685,
+            "hitsPerAttack": 2.35,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 542.420933925856
+          },
+          {
+            "tier": 4,
+            "tierDamage": 30.7,
+            "attackInterval": 0.4,
+            "baseDamage": 67.56784640000001,
+            "critChance": 0.2832,
+            "critMultiplier": 3.2164,
+            "cooldown": 0.3058103975535168,
+            "hitsPerAttack": 2.8,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 1006.9689594401744
+          }
+        ]
+      },
+      {
+        "id": "schrauber",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 13,
+            "attackInterval": 0.48,
+            "baseDamage": 69.05797120000001,
+            "critChance": 0.23320000000000002,
+            "critMultiplier": 2.193,
+            "cooldown": 0.36697247706422015,
+            "hitsPerAttack": 2.2875,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 550.2281687862866
+          },
+          {
+            "tier": 2,
+            "tierDamage": 22,
+            "attackInterval": 0.45,
+            "baseDamage": 81.38437120000002,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.193,
+            "cooldown": 0.3440366972477064,
+            "hitsPerAttack": 2.335,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 712.6218922119466
+          },
+          {
+            "tier": 3,
+            "tierDamage": 36,
+            "attackInterval": 0.42,
+            "baseDamage": 100.55877120000001,
+            "critChance": 0.2532,
+            "critMultiplier": 2.5585,
+            "cooldown": 0.3211009174311926,
+            "hitsPerAttack": 2.3825000000000003,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 1040.5543778299775
+          },
+          {
+            "tier": 4,
+            "tierDamage": 58,
+            "attackInterval": 0.38,
+            "baseDamage": 130.6899712,
+            "critChance": 0.2632,
+            "critMultiplier": 2.924,
+            "cooldown": 0.290519877675841,
+            "hitsPerAttack": 2.4775,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 1678.8792334873535
+          }
+        ]
+      },
+      {
+        "id": "schrottkanone",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 3.8,
+            "attackInterval": 0.95,
+            "baseDamage": 15.412930560000003,
+            "critChance": 0.2232,
+            "critMultiplier": 2.4854,
+            "cooldown": 0.7262996941896024,
+            "hitsPerAttack": 7,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 197.7980634635813
+          },
+          {
+            "tier": 2,
+            "tierDamage": 6.3,
+            "attackInterval": 0.9,
+            "baseDamage": 18.836930560000003,
+            "critChance": 0.23320000000000002,
+            "critMultiplier": 2.6316,
+            "cooldown": 0.6880733944954128,
+            "hitsPerAttack": 8,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 302.3419059688566
+          },
+          {
+            "tier": 3,
+            "tierDamage": 10,
+            "attackInterval": 0.84,
+            "baseDamage": 23.90445056,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.924,
+            "cooldown": 0.6422018348623852,
+            "hitsPerAttack": 10,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 546.3974511893546
+          },
+          {
+            "tier": 4,
+            "tierDamage": 16.3,
+            "attackInterval": 0.78,
+            "baseDamage": 32.532930560000004,
+            "critChance": 0.2632,
+            "critMultiplier": 3.2164,
+            "cooldown": 0.5963302752293578,
+            "hitsPerAttack": 12,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 1036.5643715624672
+          }
+        ]
+      },
+      {
+        "id": "shotgun",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 5,
+            "attackInterval": 1.05,
+            "baseDamage": 32.369126400000006,
+            "critChance": 0.2132,
+            "critMultiplier": 2.193,
+            "cooldown": 0.8027522935779816,
+            "hitsPerAttack": 4,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 202.31464345230148
+          },
+          {
+            "tier": 2,
+            "tierDamage": 8,
+            "attackInterval": 1,
+            "baseDamage": 36.47792640000001,
+            "critChance": 0.2232,
+            "critMultiplier": 2.193,
+            "cooldown": 0.764525993883792,
+            "hitsPerAttack": 5,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 302.09032435978696
+          },
+          {
+            "tier": 3,
+            "tierDamage": 13,
+            "attackInterval": 0.95,
+            "baseDamage": 43.32592640000001,
+            "critChance": 0.23320000000000002,
+            "critMultiplier": 2.5585,
+            "cooldown": 0.7262996941896024,
+            "hitsPerAttack": 6,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 488.0001757987779
+          },
+          {
+            "tier": 4,
+            "tierDamage": 21,
+            "attackInterval": 0.9,
+            "baseDamage": 54.28272640000001,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.924,
+            "cooldown": 0.6880733944954128,
+            "hitsPerAttack": 8,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 926.4421693362801
+          }
+        ]
+      },
+      {
+        "id": "shredder",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 7,
+            "attackInterval": 0.55,
+            "baseDamage": 32.78822400000001,
+            "critChance": 0.2132,
+            "critMultiplier": 2.193,
+            "cooldown": 0.42048929663608564,
+            "hitsPerAttack": 1.25,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 249.90316448445967
+          },
+          {
+            "tier": 2,
+            "tierDamage": 12,
+            "attackInterval": 0.52,
+            "baseDamage": 39.636224000000006,
+            "critChance": 0.2232,
+            "critMultiplier": 2.193,
+            "cooldown": 0.39755351681957185,
+            "hitsPerAttack": 1.25,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 322.5644511167631
+          },
+          {
+            "tier": 3,
+            "tierDamage": 19,
+            "attackInterval": 0.49,
+            "baseDamage": 49.223424,
+            "critChance": 0.23320000000000002,
+            "critMultiplier": 2.5585,
+            "cooldown": 0.37461773700305806,
+            "hitsPerAttack": 1.25,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 457.7318369655502
+          },
+          {
+            "tier": 4,
+            "tierDamage": 31,
+            "attackInterval": 0.46,
+            "baseDamage": 65.658624,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.924,
+            "cooldown": 0.3516819571865443,
+            "hitsPerAttack": 1.25,
+            "reactionFactor": 2.044,
+            "burnDps": 0,
+            "expectedDps": 700.2192318995844
+          }
+        ]
+      },
+      {
+        "id": "smg",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 4,
+            "attackInterval": 0.18,
+            "baseDamage": 28.679424000000004,
+            "critChance": 0.2132,
+            "critMultiplier": 2.193,
+            "cooldown": 0.13761467889908255,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 261.4108244234855
+          },
+          {
+            "tier": 2,
+            "tierDamage": 7,
+            "attackInterval": 0.17,
+            "baseDamage": 32.78822400000001,
+            "critChance": 0.2232,
+            "critMultiplier": 2.193,
+            "cooldown": 0.12996941896024466,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 319.4520213072764
+          },
+          {
+            "tier": 3,
+            "tierDamage": 11,
+            "attackInterval": 0.16,
+            "baseDamage": 38.26662400000001,
+            "critChance": 0.23320000000000002,
+            "critMultiplier": 2.4854,
+            "cooldown": 0.12232415902140673,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 421.1923658197264
+          },
+          {
+            "tier": 4,
+            "tierDamage": 18,
+            "attackInterval": 0.15,
+            "baseDamage": 47.853824,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.924,
+            "cooldown": 0.1146788990825688,
+            "hitsPerAttack": 1,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 612.5401687303128
+          }
+        ]
+      },
+      {
+        "id": "sniper",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 10.3,
+            "attackInterval": 1,
+            "baseDamage": 53.548620800000016,
+            "critChance": 0.3432,
+            "critMultiplier": 2.924,
+            "cooldown": 0.764525993883792,
+            "hitsPerAttack": 1.9,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 220.95335324165382
+          },
+          {
+            "tier": 2,
+            "tierDamage": 16.8,
+            "attackInterval": 0.95,
+            "baseDamage": 62.451020800000016,
+            "critChance": 0.3632,
+            "critMultiplier": 3.2164,
+            "cooldown": 0.7262996941896024,
+            "hitsPerAttack": 2.35,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 364.7269894270435
+          },
+          {
+            "tier": 3,
+            "tierDamage": 27.1,
+            "attackInterval": 0.9,
+            "baseDamage": 76.55790080000001,
+            "critChance": 0.3832,
+            "critMultiplier": 3.5088,
+            "cooldown": 0.6880733944954128,
+            "hitsPerAttack": 2.8,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 611.0451328064769
+          },
+          {
+            "tier": 4,
+            "tierDamage": 43,
+            "attackInterval": 0.85,
+            "baseDamage": 98.3345408,
+            "critChance": 0.4132,
+            "critMultiplier": 4.0935999999999995,
+            "cooldown": 0.6498470948012232,
+            "hitsPerAttack": 2.8,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 965.2930679056207
+          }
+        ]
+      },
+      {
+        "id": "sonic",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 7.5,
+            "attackInterval": 0.4,
+            "baseDamage": 33.473024,
+            "critChance": 0.2632,
+            "critMultiplier": 2.193,
+            "cooldown": 0.3058103975535168,
+            "hitsPerAttack": 3.4124999999999996,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 490.8060795129344
+          },
+          {
+            "tier": 2,
+            "tierDamage": 12,
+            "attackInterval": 0.36,
+            "baseDamage": 39.636224000000006,
+            "critChance": 0.2832,
+            "critMultiplier": 2.193,
+            "cooldown": 0.2752293577981651,
+            "hitsPerAttack": 3.8034999999999997,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 732.8090565915339
+          },
+          {
+            "tier": 3,
+            "tierDamage": 20,
+            "attackInterval": 0.32,
+            "baseDamage": 50.59302400000001,
+            "critChance": 0.31320000000000003,
+            "critMultiplier": 2.5585,
+            "cooldown": 0.24464831804281345,
+            "hitsPerAttack": 4.2059999999999995,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 1294.3635308855823
+          },
+          {
+            "tier": 4,
+            "tierDamage": 33,
+            "attackInterval": 0.28,
+            "baseDamage": 68.397824,
+            "critChance": 0.3432,
+            "critMultiplier": 2.924,
+            "cooldown": 0.21406727828746178,
+            "hitsPerAttack": 5.010999999999999,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 2658.3206388415297
+          }
+        ]
+      },
+      {
+        "id": "spear",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 25.4,
+            "attackInterval": 0.8,
+            "baseDamage": 76.5496832,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.3392,
+            "cooldown": 0.6116207951070336,
+            "hitsPerAttack": 1.5275,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 253.44602304568284
+          },
+          {
+            "tier": 2,
+            "tierDamage": 41.7,
+            "attackInterval": 0.76,
+            "baseDamage": 98.8741632,
+            "critChance": 0.2532,
+            "critMultiplier": 2.3392,
+            "cooldown": 0.581039755351682,
+            "hitsPerAttack": 1.5275,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 348.06990885969867
+          },
+          {
+            "tier": 3,
+            "tierDamage": 67,
+            "attackInterval": 0.72,
+            "baseDamage": 133.5250432,
+            "critChance": 0.2632,
+            "critMultiplier": 2.6316,
+            "cooldown": 0.5504587155963302,
+            "hitsPerAttack": 1.5750000000000002,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 546.1143502175947
+          },
+          {
+            "tier": 4,
+            "tierDamage": 108.7,
+            "attackInterval": 0.68,
+            "baseDamage": 190.6373632,
+            "critChance": 0.2832,
+            "critMultiplier": 2.924,
+            "cooldown": 0.5198776758409787,
+            "hitsPerAttack": 1.6225,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 919.1479236184772
+          }
+        ]
+      },
+      {
+        "id": "spore",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 9,
+            "attackInterval": 0.55,
+            "baseDamage": 48.39344640000001,
+            "critChance": 0.2132,
+            "critMultiplier": 2.193,
+            "cooldown": 0.42048929663608564,
+            "hitsPerAttack": 2.4,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 346.4661031794318
+          },
+          {
+            "tier": 2,
+            "tierDamage": 14,
+            "attackInterval": 0.5,
+            "baseDamage": 55.24144640000001,
+            "critChance": 0.2132,
+            "critMultiplier": 2.193,
+            "cooldown": 0.382262996941896,
+            "hitsPerAttack": 2.4,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 435.04274031253533
+          },
+          {
+            "tier": 3,
+            "tierDamage": 22,
+            "attackInterval": 0.45,
+            "baseDamage": 66.19824640000002,
+            "critChance": 0.2132,
+            "critMultiplier": 2.5585,
+            "cooldown": 0.3440366972477064,
+            "hitsPerAttack": 2.4,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 615.2419255714714
+          },
+          {
+            "tier": 4,
+            "tierDamage": 36,
+            "attackInterval": 0.4,
+            "baseDamage": 85.37264640000001,
+            "critChance": 0.2132,
+            "critMultiplier": 2.924,
+            "cooldown": 0.3058103975535168,
+            "hitsPerAttack": 2.4,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 944.8382427068489
+          }
+        ]
+      },
+      {
+        "id": "starfall",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 4.2,
+            "attackInterval": 1.1,
+            "baseDamage": 38.2337536,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.924,
+            "cooldown": 0.8409785932721713,
+            "hitsPerAttack": 3,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 200.2095048036617
+          },
+          {
+            "tier": 2,
+            "tierDamage": 6.6,
+            "attackInterval": 1,
+            "baseDamage": 41.520793600000005,
+            "critChance": 0.2632,
+            "critMultiplier": 3.2895,
+            "cooldown": 0.764525993883792,
+            "hitsPerAttack": 4,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 348.1429009913679
+          },
+          {
+            "tier": 3,
+            "tierDamage": 10.5,
+            "attackInterval": 0.9,
+            "baseDamage": 46.86223360000001,
+            "critChance": 0.2832,
+            "critMultiplier": 3.655,
+            "cooldown": 0.6880733944954128,
+            "hitsPerAttack": 5,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 596.5770530563142
+          },
+          {
+            "tier": 4,
+            "tierDamage": 16.5,
+            "attackInterval": 0.8,
+            "baseDamage": 55.07983360000001,
+            "critChance": 0.31320000000000003,
+            "critMultiplier": 4.386,
+            "cooldown": 0.6116207951070336,
+            "hitsPerAttack": 6,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 1113.3538982735638
+          }
+        ]
+      },
+      {
+        "id": "taubenschwarm",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 3.2,
+            "attackInterval": 0.62,
+            "baseDamage": 22.943539200000007,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.6316,
+            "cooldown": 0.474006116207951,
+            "hitsPerAttack": 3,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 202.83062979352636
+          },
+          {
+            "tier": 2,
+            "tierDamage": 5,
+            "attackInterval": 0.58,
+            "baseDamage": 25.408819200000007,
+            "critChance": 0.2532,
+            "critMultiplier": 2.7777999999999996,
+            "cooldown": 0.4434250764525993,
+            "hitsPerAttack": 4,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 332.37920547287575
+          },
+          {
+            "tier": 3,
+            "tierDamage": 8.2,
+            "attackInterval": 0.54,
+            "baseDamage": 29.791539200000003,
+            "critChance": 0.2732,
+            "critMultiplier": 2.924,
+            "cooldown": 0.41284403669724773,
+            "hitsPerAttack": 5,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 550.4629411117465
+          },
+          {
+            "tier": 4,
+            "tierDamage": 13.2,
+            "attackInterval": 0.5,
+            "baseDamage": 36.6395392,
+            "critChance": 0.2932,
+            "critMultiplier": 3.2164,
+            "cooldown": 0.382262996941896,
+            "hitsPerAttack": 6,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 948.8183037429926
+          }
+        ]
+      },
+      {
+        "id": "tesla",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 7.1,
+            "attackInterval": 0.3,
+            "baseDamage": 32.5033472,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.6316,
+            "cooldown": 0.2293577981651376,
+            "hitsPerAttack": 1,
+            "reactionFactor": 2.6544,
+            "burnDps": 0,
+            "expectedDps": 525.4322957453969
+          },
+          {
+            "tier": 2,
+            "tierDamage": 12,
+            "attackInterval": 0.28,
+            "baseDamage": 39.214387200000004,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.6316,
+            "cooldown": 0.21406727828746178,
+            "hitsPerAttack": 1,
+            "reactionFactor": 3.3358719999999997,
+            "burnDps": 0,
+            "expectedDps": 853.5723564433903
+          },
+          {
+            "tier": 3,
+            "tierDamage": 19.8,
+            "attackInterval": 0.26,
+            "baseDamage": 49.8972672,
+            "critChance": 0.2632,
+            "critMultiplier": 2.924,
+            "cooldown": 0.19877675840978593,
+            "hitsPerAttack": 1,
+            "reactionFactor": 3.93556736,
+            "burnDps": 0,
+            "expectedDps": 1488.1883181271671
+          },
+          {
+            "tier": 4,
+            "tierDamage": 31.8,
+            "attackInterval": 0.24,
+            "baseDamage": 66.3324672,
+            "critChance": 0.2632,
+            "critMultiplier": 2.924,
+            "cooldown": 0.18348623853211007,
+            "hitsPerAttack": 1,
+            "reactionFactor": 4.9277033635839995,
+            "burnDps": 0,
+            "expectedDps": 2683.530860892503
+          }
+        ]
+      },
+      {
+        "id": "vortex",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 2,
+            "attackInterval": 0.2,
+            "baseDamage": 30.7913472,
+            "critChance": 0.1932,
+            "critMultiplier": 2.193,
+            "cooldown": 0.1529051987767584,
+            "hitsPerAttack": 3.6,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 892.0438048673694
+          },
+          {
+            "tier": 2,
+            "tierDamage": 4,
+            "attackInterval": 0.18,
+            "baseDamage": 33.5305472,
+            "critChance": 0.1932,
+            "critMultiplier": 2.193,
+            "cooldown": 0.13761467889908255,
+            "hitsPerAttack": 3.6,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 1079.3334139293133
+          },
+          {
+            "tier": 3,
+            "tierDamage": 7,
+            "attackInterval": 0.16,
+            "baseDamage": 37.63934720000001,
+            "critChance": 0.1932,
+            "critMultiplier": 2.5585,
+            "cooldown": 0.12232415902140673,
+            "hitsPerAttack": 3.6,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 1441.2647201088798
+          },
+          {
+            "tier": 4,
+            "tierDamage": 12,
+            "attackInterval": 0.14,
+            "baseDamage": 44.48734720000001,
+            "critChance": 0.1932,
+            "critMultiplier": 2.924,
+            "cooldown": 0.10703363914373089,
+            "hitsPerAttack": 3.6,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 2052.5000486530694
+          }
+        ]
+      },
+      {
+        "id": "wrench",
+        "tiers": [
+          {
+            "tier": 1,
+            "tierDamage": 10.2,
+            "attackInterval": 0.6,
+            "baseDamage": 64.1684992,
+            "critChance": 0.2232,
+            "critMultiplier": 2.193,
+            "cooldown": 0.4587155963302752,
+            "hitsPerAttack": 2.24,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 396.7850662595006
+          },
+          {
+            "tier": 2,
+            "tierDamage": 16.9,
+            "attackInterval": 0.57,
+            "baseDamage": 73.3448192,
+            "critChance": 0.23320000000000002,
+            "critMultiplier": 2.193,
+            "cooldown": 0.4357798165137614,
+            "hitsPerAttack": 2.2875,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 492.11298985769724
+          },
+          {
+            "tier": 3,
+            "tierDamage": 27.1,
+            "attackInterval": 0.54,
+            "baseDamage": 87.3147392,
+            "critChance": 0.24320000000000003,
+            "critMultiplier": 2.5585,
+            "cooldown": 0.41284403669724773,
+            "hitsPerAttack": 2.335,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 681.022189374689
+          },
+          {
+            "tier": 4,
+            "tierDamage": 44,
+            "attackInterval": 0.5,
+            "baseDamage": 110.46097920000001,
+            "critChance": 0.2532,
+            "critMultiplier": 2.924,
+            "cooldown": 0.382262996941896,
+            "hitsPerAttack": 2.4299999999999997,
+            "reactionFactor": 1,
+            "burnDps": 0,
+            "expectedDps": 1044.262453673711
+          }
+        ]
+      }
+    ],
+    "attachmentBaseExpectedDps": 421.1923658197264,
+    "attachments": [
+      {
+        "id": "brake",
+        "name": "Mündungsbremse",
+        "dps": 421.1923658197264,
+        "deviationFromExpectedPct": 0
+      },
+      {
+        "id": "cryo",
+        "name": "Kühlmantel",
+        "dps": 442.2519841107128,
+        "deviationFromExpectedPct": 5.000000000000027
+      },
+      {
+        "id": "extmag",
+        "name": "Erweitertes Magazin",
+        "dps": 472.15664208391314,
+        "deviationFromExpectedPct": 12.099999999999977
+      },
+      {
+        "id": "giftspitzen",
+        "name": "Giftspitzen",
+        "dps": 404.3446711869373,
+        "deviationFromExpectedPct": -4.0000000000000036
+      },
+      {
+        "id": "heavybarrel",
+        "name": "Schwerer Lauf",
+        "dps": 443.51556120817185,
+        "deviationFromExpectedPct": 5.299999999999994
+      },
+      {
+        "id": "hollow",
+        "name": "Hohlspitzgeschosse",
+        "dps": 499.36607973377613,
+        "deviationFromExpectedPct": 18.560097536883834
+      },
+      {
+        "id": "incend",
+        "name": "Brandsatz",
+        "dps": 408.55659484513455,
+        "deviationFromExpectedPct": -3.0000000000000027
+      },
+      {
+        "id": "penetrator",
+        "name": "Panzerbrecher",
+        "dps": 511.9172014172954,
+        "deviationFromExpectedPct": 21.540000000000003
+      },
+      {
+        "id": "reaktorkern",
+        "name": "A.M.S. Reaktorkern",
+        "dps": 417.0022854168451,
+        "deviationFromExpectedPct": -0.994813947951434
+      },
+      {
+        "id": "resonator",
+        "name": "Resonanzkammer",
+        "dps": 424.14071238046444,
+        "deviationFromExpectedPct": 0.6999999999999895
+      },
+      {
+        "id": "scope",
+        "name": "Zielfernrohr",
+        "dps": 440.0318773738798,
+        "deviationFromExpectedPct": 4.472899578198164
+      },
+      {
+        "id": "stabilisator",
+        "name": "Gyro-Stabilisator",
+        "dps": 438.0400604525155,
+        "deviationFromExpectedPct": 4.0000000000000036
+      },
+      {
+        "id": "suppressor",
+        "name": "Schalldämpfer",
+        "dps": 408.8721260932024,
+        "deviationFromExpectedPct": -2.9250861901417124
+      },
+      {
+        "id": "vampirbohrer",
+        "name": "Vampir-Bohrer",
+        "dps": 416.47501132254536,
+        "deviationFromExpectedPct": -1.120000000000021
+      }
+    ],
+    "enemies": [
+      {
+        "id": "blinker",
+        "name": "Teleporter",
+        "threat": 9.543008370688,
+        "value": 7,
+        "deviationPct": -15.289625432040177
+      },
+      {
+        "id": "bomber",
+        "name": "Bomberdrohne",
+        "threat": 24.984925734912004,
+        "value": 8,
+        "deviationPct": 121.78356502944862
+      },
+      {
+        "id": "charger",
+        "name": "Rammer",
+        "threat": 9.685928525141332,
+        "value": 6,
+        "deviationPct": -14.020966813418468
+      },
+      {
+        "id": "elite",
+        "name": "Elite-Wache",
+        "threat": 25.44107480064,
+        "value": 15,
+        "deviationPct": 125.83266115466327
+      },
+      {
+        "id": "exploder",
+        "name": "Zünder",
+        "threat": 19.695338913792,
+        "value": 5,
+        "deviationPct": 74.82951620946264
+      },
+      {
+        "id": "flyer",
+        "name": "Drohne",
+        "threat": 8.802462867455999,
+        "value": 3,
+        "deviationPct": -21.863221988455905
+      },
+      {
+        "id": "ghost",
+        "name": "Phasenwandler",
+        "threat": 13.028760463360001,
+        "value": 8,
+        "deviationPct": 15.652332695992666
+      },
+      {
+        "id": "healer",
+        "name": "Sanitäter",
+        "threat": 5.1382590682453335,
+        "value": 7,
+        "deviationPct": -54.38924148539772
+      },
+      {
+        "id": "juggernaut",
+        "name": "Kolosswache",
+        "threat": 25.862033482752,
+        "value": 15,
+        "deviationPct": 129.56938297803222
+      },
+      {
+        "id": "leech",
+        "name": "Blutegel",
+        "threat": 18.174424339797334,
+        "value": 6,
+        "deviationPct": 61.32882143435487
+      },
+      {
+        "id": "mirror",
+        "name": "Spiegelgänger",
+        "threat": 11.781179222698666,
+        "value": 10,
+        "deviationPct": 4.577934550750085
+      },
+      {
+        "id": "mortar",
+        "name": "Mörser",
+        "threat": 9.265928525141334,
+        "value": 8,
+        "deviationPct": -17.749178708089364
+      },
+      {
+        "id": "runner",
+        "name": "Läufer",
+        "threat": 7.740545503232,
+        "value": 2,
+        "deviationPct": -31.28953853240233
+      },
+      {
+        "id": "sentinel",
+        "name": "Wächter",
+        "threat": 9.559851469823998,
+        "value": 10,
+        "deviationPct": -15.140114378368864
+      },
+      {
+        "id": "shardling",
+        "name": "Splitterling",
+        "threat": 5.981002790229334,
+        "value": 2,
+        "deviationPct": -46.90846251287394
+      },
+      {
+        "id": "shielded",
+        "name": "Schildberzerker",
+        "threat": 14.090766043818668,
+        "value": 8,
+        "deviationPct": 25.07943230854719
+      },
+      {
+        "id": "shielder",
+        "name": "Schildträger",
+        "threat": 10.33834728448,
+        "value": 8,
+        "deviationPct": -8.229644482768794
+      },
+      {
+        "id": "shooter",
+        "name": "Schütze",
+        "threat": 5.466648473096981,
+        "value": 5,
+        "deviationPct": -51.474228901464826
+      },
+      {
+        "id": "siren",
+        "name": "Sirene",
+        "threat": 5.83834728448,
+        "value": 11,
+        "deviationPct": -48.174771925671465
+      },
+      {
+        "id": "spinner",
+        "name": "Kreisel",
+        "threat": 10.349382781675683,
+        "value": 6,
+        "deviationPct": -8.13168574012938
+      },
+      {
+        "id": "spitter",
+        "name": "Spucker",
+        "threat": 3.3941344847248693,
+        "value": 5,
+        "deviationPct": -69.87130343318096
+      },
+      {
+        "id": "spliter",
+        "name": "Kristallsplitter",
+        "threat": 8.209675037354666,
+        "value": 5,
+        "deviationPct": -27.125218748455794
+      },
+      {
+        "id": "summoner",
+        "name": "Beschwörer",
+        "threat": 5.445515346261334,
+        "value": 10,
+        "deviationPct": -51.66182122251304
+      },
+      {
+        "id": "swarm",
+        "name": "Brut",
+        "threat": 4.90479341056,
+        "value": 2,
+        "deviationPct": -56.46164491868255
+      },
+      {
+        "id": "tank",
+        "name": "Panzer",
+        "threat": 13.412270229162665,
+        "value": 8,
+        "deviationPct": 19.05663191167828
+      },
+      {
+        "id": "vampire",
+        "name": "Nachtjäger",
+        "threat": 13.052595191807999,
+        "value": 8,
+        "deviationPct": 15.863906310530961
+      },
+      {
+        "id": "walker",
+        "name": "Schlurfer",
+        "threat": 6.752506975573334,
+        "value": 3,
+        "deviationPct": -40.06005517814085
+      },
+      {
+        "id": "weaver",
+        "name": "Weber",
+        "threat": 9.493008370687999,
+        "value": 6,
+        "deviationPct": -15.733460181405768
+      }
+    ],
+    "bosses": [
+      {
+        "id": "bergbahn",
+        "name": "BERGBAHN-KOLOSS",
+        "wave": 5,
+        "hp": 2600,
+        "timeToKillSeconds": 36.883720930232556,
+        "inTargetWindow": true
+      },
+      {
+        "id": "kochbrunnen",
+        "name": "KOCHBRUNNEN-GOLEM",
+        "wave": 15,
+        "hp": 11000,
+        "timeToKillSeconds": 35.588235294117645,
+        "inTargetWindow": true
+      },
+      {
+        "id": "kurhaus",
+        "name": "KURHAUS-KOLOSS",
+        "wave": 5,
+        "hp": 3400,
+        "timeToKillSeconds": 47.44186046511628,
+        "inTargetWindow": true
+      },
+      {
+        "id": "marktturm",
+        "name": "MARKTKIRCHEN-TURM",
+        "wave": 20,
+        "hp": 27000,
+        "timeToKillSeconds": 44.232081911262796,
+        "inTargetWindow": true
+      },
+      {
+        "id": "nerobahn",
+        "name": "NEROBERG-WURM",
+        "wave": 10,
+        "hp": 5700,
+        "timeToKillSeconds": 39.486033519553075,
+        "inTargetWindow": true
+      },
+      {
+        "id": "rogueki",
+        "name": "SEBBOS ROGUE-KI",
+        "wave": 20,
+        "hp": 22000,
+        "timeToKillSeconds": 35.039817974971555,
+        "inTargetWindow": true
+      },
+      {
+        "id": "sirenkollektiv",
+        "name": "SIRENEN-KOLLEKTIV",
+        "wave": 10,
+        "hp": 5400,
+        "timeToKillSeconds": 38.01117318435754,
+        "inTargetWindow": true
+      },
+      {
+        "id": "thermalquelle",
+        "name": "THERMALQUELLE",
+        "wave": 15,
+        "hp": 9500,
+        "timeToKillSeconds": 31.66666666666666,
+        "inTargetWindow": true
+      }
+    ]
+  },
+  "monteCarlo": {
+    "standardAverageT3Dps": 709.001833828305,
+    "typeAverageT3Dps": {
+      "projectile": 482.509725880445,
+      "melee": 921.7940503978313,
+      "cone": 922.7254206040783,
+      "hitscan": 676.8877668176335,
+      "aura": 1390.2608884460192,
+      "chain": 1223.434519746114,
+      "charge": 548.8346070136871
+    },
+    "attachmentBaseDps": 422.4114846291761,
+    "attachmentDeviationPct": [
+      {
+        "id": "brake",
+        "deviationPct": -0.2886092953935493
+      },
+      {
+        "id": "cryo",
+        "deviationPct": 4.696960239836789
+      },
+      {
+        "id": "extmag",
+        "deviationPct": 11.776468979863797
+      },
+      {
+        "id": "giftspitzen",
+        "deviationPct": -4.277064923577811
+      },
+      {
+        "id": "heavybarrel",
+        "deviationPct": 4.996094411950591
+      },
+      {
+        "id": "hollow",
+        "deviationPct": 18.217922074764715
+      },
+      {
+        "id": "incend",
+        "deviationPct": -3.279951016531746
+      },
+      {
+        "id": "penetrator",
+        "deviationPct": 21.18922426237868
+      },
+      {
+        "id": "reaktorkern",
+        "deviationPct": -1.2805521178193224
+      },
+      {
+        "id": "resonator",
+        "deviationPct": 0.409370439538681
+      },
+      {
+        "id": "scope",
+        "deviationPct": 4.171381078848313
+      },
+      {
+        "id": "stabilisator",
+        "deviationPct": 3.699846332790724
+      },
+      {
+        "id": "suppressor",
+        "deviationPct": -3.2052534148922396
+      },
+      {
+        "id": "vampirbohrer",
+        "deviationPct": -1.4053768712851578
+      }
+    ],
+    "weapons": [
+      {
+        "id": "arc",
+        "name": "Arc Thrower",
+        "type": "charge",
+        "legendary": false,
+        "seed": 96850,
+        "deviationPct": 0,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 245.17749158812111,
+            "measuredStderr": 0.9372484882739477
+          },
+          {
+            "tier": 2,
+            "measuredDps": 352.7855376031557,
+            "measuredStderr": 1.34795288201197
+          },
+          {
+            "tier": 3,
+            "measuredDps": 548.8346070136871,
+            "measuredStderr": 2.5903087116329475
+          },
+          {
+            "tier": 4,
+            "measuredDps": 953.1262544055696,
+            "measuredStderr": 5.2848919998253265
+          }
+        ]
+      },
+      {
+        "id": "bierwerfer",
+        "name": "Bierkastenwerfer",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 2942386659,
+        "deviationPct": -16.005590879013067,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 166.5056010244181,
+            "measuredStderr": 1.4302131301753034
+          },
+          {
+            "tier": 2,
+            "measuredDps": 254.68634075867374,
+            "measuredStderr": 2.326344005507522
+          },
+          {
+            "tier": 3,
+            "measuredDps": 405.2811932045735,
+            "measuredStderr": 3.96507776449555
+          },
+          {
+            "tier": 4,
+            "measuredDps": 714.1352489657938,
+            "measuredStderr": 7.668786525230876
+          }
+        ]
+      },
+      {
+        "id": "blitzableiter",
+        "name": "Blitzableiter",
+        "type": "chain",
+        "legendary": false,
+        "seed": 1397526167,
+        "deviationPct": -23.353444649693024,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 292.65624208346406,
+            "measuredStderr": 2.5582561888950117
+          },
+          {
+            "tier": 2,
+            "measuredDps": 486.1235554239979,
+            "measuredStderr": 4.519983376951961
+          },
+          {
+            "tier": 3,
+            "measuredDps": 937.7204163519675,
+            "measuredStderr": 9.70298816224048
+          },
+          {
+            "tier": 4,
+            "measuredDps": 1820.4541191640465,
+            "measuredStderr": 20.049892446822486
+          }
+        ]
+      },
+      {
+        "id": "chaingun",
+        "name": "Kettenkanone",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 1428010719,
+        "deviationPct": 69.57302009675317,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 515.0940024256261,
+            "measuredStderr": 3.41508650890168
+          },
+          {
+            "tier": 2,
+            "measuredDps": 628.952676265757,
+            "measuredStderr": 4.2517408182040795
+          },
+          {
+            "tier": 3,
+            "measuredDps": 818.2063144360357,
+            "measuredStderr": 5.534642229868315
+          },
+          {
+            "tier": 4,
+            "measuredDps": 1129.5983737076904,
+            "measuredStderr": 7.731586684960389
+          }
+        ]
+      },
+      {
+        "id": "chopper",
+        "name": "Chopper",
+        "type": "melee",
+        "legendary": false,
+        "seed": 751941207,
+        "deviationPct": -4.99683755532363,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 398.6613453277096,
+            "measuredStderr": 1.873340165934887
+          },
+          {
+            "tier": 2,
+            "measuredDps": 562.2026492368108,
+            "measuredStderr": 2.8266715751339486
+          },
+          {
+            "tier": 3,
+            "measuredDps": 875.7334991048136,
+            "measuredStderr": 4.929953302704735
+          },
+          {
+            "tier": 4,
+            "measuredDps": 1538.5202281874506,
+            "measuredStderr": 8.467135208132303
+          }
+        ]
+      },
+      {
+        "id": "flamer",
+        "name": "Feuerwehrflammer",
+        "type": "cone",
+        "legendary": false,
+        "seed": 3022911391,
+        "deviationPct": 17.388722379333842,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 689.9907909939336,
+            "measuredStderr": 3.175282552810822
+          },
+          {
+            "tier": 2,
+            "measuredDps": 814.3896037769872,
+            "measuredStderr": 3.7386630961479375
+          },
+          {
+            "tier": 3,
+            "measuredDps": 1083.175582316462,
+            "measuredStderr": 6.0989493017020004
+          },
+          {
+            "tier": 4,
+            "measuredDps": 1507.44220696416,
+            "measuredStderr": 10.05794168318858
+          }
+        ]
+      },
+      {
+        "id": "frost",
+        "name": "Frost Cannon",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 97705668,
+        "deviationPct": -50.026695935531265,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 93.2032949070237,
+            "measuredStderr": 0.6166969140063717
+          },
+          {
+            "tier": 2,
+            "measuredDps": 142.63470577495718,
+            "measuredStderr": 0.9517815927766634
+          },
+          {
+            "tier": 3,
+            "measuredDps": 241.1260524548694,
+            "measuredStderr": 1.9786975134783344
+          },
+          {
+            "tier": 4,
+            "measuredDps": 424.08065719933103,
+            "measuredStderr": 4.023650372736991
+          }
+        ]
+      },
+      {
+        "id": "gravgun",
+        "name": "Gravity Gun",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 280521440,
+        "deviationPct": -35.9363454876279,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 154.49744536891316,
+            "measuredStderr": 1.0073473339960348
+          },
+          {
+            "tier": 2,
+            "measuredDps": 210.1200838162174,
+            "measuredStderr": 1.3723710382344976
+          },
+          {
+            "tier": 3,
+            "measuredDps": 309.11336377664196,
+            "measuredStderr": 2.543933229620378
+          },
+          {
+            "tier": 4,
+            "measuredDps": 466.7045517848385,
+            "measuredStderr": 4.47086746504343
+          }
+        ]
+      },
+      {
+        "id": "hammer",
+        "name": "Vorschlaghammer",
+        "type": "melee",
+        "legendary": false,
+        "seed": 3070368454,
+        "deviationPct": -37.5396972182404,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 265.875608030722,
+            "measuredStderr": 1.1419411893902012
+          },
+          {
+            "tier": 2,
+            "measuredDps": 375.16104160392246,
+            "measuredStderr": 1.604021582930199
+          },
+          {
+            "tier": 3,
+            "measuredDps": 575.7553549027311,
+            "measuredStderr": 2.886492788269473
+          },
+          {
+            "tier": 4,
+            "measuredDps": 963.0978010983305,
+            "measuredStderr": 5.393074071142752
+          }
+        ]
+      },
+      {
+        "id": "kettensaege",
+        "name": "Kettensäge",
+        "type": "melee",
+        "legendary": false,
+        "seed": 2124914002,
+        "deviationPct": 46.68699935085336,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 884.3964364385776,
+            "measuredStderr": 5.434504170521
+          },
+          {
+            "tier": 2,
+            "measuredDps": 1047.6468398147272,
+            "measuredStderr": 6.875046877849449
+          },
+          {
+            "tier": 3,
+            "measuredDps": 1352.1520327232718,
+            "measuredStderr": 9.694085243985315
+          },
+          {
+            "tier": 4,
+            "measuredDps": 1831.2189537206455,
+            "measuredStderr": 14.225110792650275
+          }
+        ]
+      },
+      {
+        "id": "klingel",
+        "name": "Roller-Klingel",
+        "type": "cone",
+        "legendary": false,
+        "seed": 3665910600,
+        "deviationPct": -13.647709531180208,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 425.4748520836473,
+            "measuredStderr": 2.06684465801232
+          },
+          {
+            "tier": 2,
+            "measuredDps": 544.7640682438631,
+            "measuredStderr": 2.6657148518951317
+          },
+          {
+            "tier": 3,
+            "measuredDps": 796.7945354296728,
+            "measuredStderr": 4.803291311521691
+          },
+          {
+            "tier": 4,
+            "measuredDps": 1252.5752642457028,
+            "measuredStderr": 8.537428575119604
+          }
+        ]
+      },
+      {
+        "id": "knife",
+        "name": "Taschenmesser",
+        "type": "melee",
+        "legendary": false,
+        "seed": 102197925,
+        "deviationPct": 1.6261777228598229,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 458.55225972465684,
+            "measuredStderr": 3.088537933085431
+          },
+          {
+            "tier": 2,
+            "measuredDps": 624.2665172466375,
+            "measuredStderr": 4.445038102253354
+          },
+          {
+            "tier": 3,
+            "measuredDps": 936.784059896048,
+            "measuredStderr": 6.990550891048743
+          },
+          {
+            "tier": 4,
+            "measuredDps": 1633.6712932308433,
+            "measuredStderr": 13.048893860404583
+          }
+        ]
+      },
+      {
+        "id": "laserzirkel",
+        "name": "Laserzirkel",
+        "type": "aura",
+        "legendary": false,
+        "seed": 1536592602,
+        "deviationPct": -3.643108461207145,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 714.813979958717,
+            "measuredStderr": 2.8172502631828733
+          },
+          {
+            "tier": 2,
+            "measuredDps": 946.9055808145025,
+            "measuredStderr": 3.9944651298750014
+          },
+          {
+            "tier": 3,
+            "measuredDps": 1339.6121763861886,
+            "measuredStderr": 6.3579448921946815
+          },
+          {
+            "tier": 4,
+            "measuredDps": 2052.877184949434,
+            "measuredStderr": 10.62874505932914
+          }
+        ]
+      },
+      {
+        "id": "leg_neroberg",
+        "name": "NEROBERG-STURM",
+        "type": "chain",
+        "legendary": true,
+        "seed": 2525455613,
+        "deviationPct": 522.0563718940389,
+        "deviationBasis": "standard-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 1672.2678788203152,
+            "measuredStderr": 15.666394184424902
+          },
+          {
+            "tier": 2,
+            "measuredDps": 2644.262150937008,
+            "measuredStderr": 25.85304508843853
+          },
+          {
+            "tier": 3,
+            "measuredDps": 4410.391084174557,
+            "measuredStderr": 48.738839318037776
+          },
+          {
+            "tier": 4,
+            "measuredDps": 8062.436405888089,
+            "measuredStderr": 94.04978377423936
+          }
+        ]
+      },
+      {
+        "id": "leg_rheingold",
+        "name": "RHEINGOLD-ORGEL",
+        "type": "projectile",
+        "legendary": true,
+        "seed": 165044163,
+        "deviationPct": 1594.123821629422,
+        "deviationBasis": "standard-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 4403.534787585422,
+            "measuredStderr": 15.538190420952038
+          },
+          {
+            "tier": 2,
+            "measuredDps": 6812.504038107965,
+            "measuredStderr": 22.42577398645062
+          },
+          {
+            "tier": 3,
+            "measuredDps": 12011.368962674765,
+            "measuredStderr": 41.19168593751215
+          },
+          {
+            "tier": 4,
+            "measuredDps": 24909.97614601452,
+            "measuredStderr": 85.19172319899509
+          }
+        ]
+      },
+      {
+        "id": "leg_thermal",
+        "name": "THERMAL-DAMPFKANONE",
+        "type": "cone",
+        "legendary": true,
+        "seed": 354218598,
+        "deviationPct": 157.6977883010211,
+        "deviationBasis": "standard-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 834.1522970790733,
+            "measuredStderr": 3.474126263727938
+          },
+          {
+            "tier": 2,
+            "measuredDps": 1196.1734629195362,
+            "measuredStderr": 5.456744490351819
+          },
+          {
+            "tier": 3,
+            "measuredDps": 1827.0820447892231,
+            "measuredStderr": 8.990270250207928
+          },
+          {
+            "tier": 4,
+            "measuredDps": 3149.0376948232392,
+            "measuredStderr": 17.596215181320606
+          }
+        ]
+      },
+      {
+        "id": "loeschwasser",
+        "name": "Löschwasserstrahl",
+        "type": "cone",
+        "legendary": false,
+        "seed": 1141689837,
+        "deviationPct": -43.96664989991602,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 304.94066429848607,
+            "measuredStderr": 1.4700889290246382
+          },
+          {
+            "tier": 2,
+            "measuredDps": 383.5858968139859,
+            "measuredStderr": 1.862842461079746
+          },
+          {
+            "tier": 3,
+            "measuredDps": 517.0339653895556,
+            "measuredStderr": 3.062864021843828
+          },
+          {
+            "tier": 4,
+            "measuredDps": 726.6806639044738,
+            "measuredStderr": 5.016123883088501
+          }
+        ]
+      },
+      {
+        "id": "magnetmine",
+        "name": "Magnetmine",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 1789460157,
+        "deviationPct": -18.115211780860662,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 151.5372992387933,
+            "measuredStderr": 1.477473394349416
+          },
+          {
+            "tier": 2,
+            "measuredDps": 238.24446617275524,
+            "measuredStderr": 2.395288282419561
+          },
+          {
+            "tier": 3,
+            "measuredDps": 395.10206717395215,
+            "measuredStderr": 4.3367706682358165
+          },
+          {
+            "tier": 4,
+            "measuredDps": 671.9090121338879,
+            "measuredStderr": 8.076724454158757
+          }
+        ]
+      },
+      {
+        "id": "medgun",
+        "name": "Medi-Blaster",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 3216934900,
+        "deviationPct": -31.86231092335565,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 150.92877596779317,
+            "measuredStderr": 1.011607120320042
+          },
+          {
+            "tier": 2,
+            "measuredDps": 210.7652758427759,
+            "measuredStderr": 1.4248903463389522
+          },
+          {
+            "tier": 3,
+            "measuredDps": 328.77097678498654,
+            "measuredStderr": 2.7332063944623046
+          },
+          {
+            "tier": 4,
+            "measuredDps": 536.1714423414426,
+            "measuredStderr": 5.287984340367288
+          }
+        ]
+      },
+      {
+        "id": "musiknoten",
+        "name": "Noten-Sturm",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 3757716655,
+        "deviationPct": 14.545776753226814,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 232.3055377144479,
+            "measuredStderr": 2.0262320276996206
+          },
+          {
+            "tier": 2,
+            "measuredDps": 296.48121203422596,
+            "measuredStderr": 2.5802779739946153
+          },
+          {
+            "tier": 3,
+            "measuredDps": 552.6945134196212,
+            "measuredStderr": 3.709334141918265
+          },
+          {
+            "tier": 4,
+            "measuredDps": 1002.0915788582987,
+            "measuredStderr": 7.364985457972603
+          }
+        ]
+      },
+      {
+        "id": "nagler",
+        "name": "Nagelpistole",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 3241963653,
+        "deviationPct": 23.395136803070105,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 254.223975655423,
+            "measuredStderr": 2.340456171069401
+          },
+          {
+            "tier": 2,
+            "measuredDps": 431.551668836277,
+            "measuredStderr": 2.9511648621408018
+          },
+          {
+            "tier": 3,
+            "measuredDps": 595.3935363382936,
+            "measuredStderr": 4.526181428828014
+          },
+          {
+            "tier": 4,
+            "measuredDps": 1126.3933847936637,
+            "measuredStderr": 9.07858663274738
+          }
+        ]
+      },
+      {
+        "id": "needle",
+        "name": "Needle Gun",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 3245590671,
+        "deviationPct": 6.763472932582859,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 295.97855811414047,
+            "measuredStderr": 2.043232837371434
+          },
+          {
+            "tier": 2,
+            "measuredDps": 357.1430584403905,
+            "measuredStderr": 2.478069896984531
+          },
+          {
+            "tier": 3,
+            "measuredDps": 515.1441405874486,
+            "measuredStderr": 4.278898594312726
+          },
+          {
+            "tier": 4,
+            "measuredDps": 749.3897789415128,
+            "measuredStderr": 7.275355585042433
+          }
+        ]
+      },
+      {
+        "id": "nunchaku",
+        "name": "Nunchaku",
+        "type": "melee",
+        "legendary": false,
+        "seed": 2438154207,
+        "deviationPct": 46.12146058271804,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 705.4381661142945,
+            "measuredStderr": 3.527607280859042
+          },
+          {
+            "tier": 2,
+            "measuredDps": 944.6242273178862,
+            "measuredStderr": 5.238058783602306
+          },
+          {
+            "tier": 3,
+            "measuredDps": 1346.9389300059072,
+            "measuredStderr": 8.010959908001844
+          },
+          {
+            "tier": 4,
+            "measuredDps": 2098.164478848035,
+            "measuredStderr": 13.174815156350972
+          }
+        ]
+      },
+      {
+        "id": "photon",
+        "name": "Photon Rifle",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 3305932924,
+        "deviationPct": -11.596957473897774,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 140.65869096696247,
+            "measuredStderr": 1.3804274645021548
+          },
+          {
+            "tier": 2,
+            "measuredDps": 239.9102615026649,
+            "measuredStderr": 2.560940536856415
+          },
+          {
+            "tier": 3,
+            "measuredDps": 426.5532781626691,
+            "measuredStderr": 4.700823137416113
+          },
+          {
+            "tier": 4,
+            "measuredDps": 815.5337132015387,
+            "measuredStderr": 9.809734096110736
+          }
+        ]
+      },
+      {
+        "id": "pistol",
+        "name": "Dienstpistole",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 3306975607,
+        "deviationPct": -14.966034353392764,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 168.72245118817358,
+            "measuredStderr": 1.251912949237362
+          },
+          {
+            "tier": 2,
+            "measuredDps": 251.80510573281308,
+            "measuredStderr": 1.86350954812561
+          },
+          {
+            "tier": 3,
+            "measuredDps": 410.29715454671634,
+            "measuredStderr": 3.5672174435905744
+          },
+          {
+            "tier": 4,
+            "measuredDps": 724.7459572793118,
+            "measuredStderr": 7.0264201845225776
+          }
+        ]
+      },
+      {
+        "id": "plasma",
+        "name": "Plasma Caster",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 3309208898,
+        "deviationPct": -35.71187158129079,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 154.26642782409056,
+            "measuredStderr": 1.0183674774943436
+          },
+          {
+            "tier": 2,
+            "measuredDps": 211.39951370285985,
+            "measuredStderr": 1.401612297807615
+          },
+          {
+            "tier": 3,
+            "measuredDps": 310.1964722067823,
+            "measuredStderr": 2.5454942839915495
+          },
+          {
+            "tier": 4,
+            "measuredDps": 479.08210329430443,
+            "measuredStderr": 4.630307291593586
+          }
+        ]
+      },
+      {
+        "id": "railgun",
+        "name": "Railgun",
+        "type": "hitscan",
+        "legendary": false,
+        "seed": 973522030,
+        "deviationPct": 0,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 233.78287802170502,
+            "measuredStderr": 0.90974518916521
+          },
+          {
+            "tier": 2,
+            "measuredDps": 409.93641863250514,
+            "measuredStderr": 1.3800681005753566
+          },
+          {
+            "tier": 3,
+            "measuredDps": 676.8877668176335,
+            "measuredStderr": 2.806106919832622
+          },
+          {
+            "tier": 4,
+            "measuredDps": 1153.9131070692217,
+            "measuredStderr": 4.974062546081098
+          }
+        ]
+      },
+      {
+        "id": "ratschlaege",
+        "name": "Gute Ratschläge",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 3816120443,
+        "deviationPct": 12.12598995717391,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 181.44649087539392,
+            "measuredStderr": 1.465885616933278
+          },
+          {
+            "tier": 2,
+            "measuredDps": 307.75247770577477,
+            "measuredStderr": 1.8833901976560319
+          },
+          {
+            "tier": 3,
+            "measuredDps": 541.0188067830951,
+            "measuredStderr": 3.736691307809144
+          },
+          {
+            "tier": 4,
+            "measuredDps": 1013.041583980983,
+            "measuredStderr": 6.1781911490329255
+          }
+        ]
+      },
+      {
+        "id": "schrauber",
+        "name": "Schlagschrauber",
+        "type": "melee",
+        "legendary": false,
+        "seed": 208688321,
+        "deviationPct": 14.041181806806025,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 546.3367833847449,
+            "measuredStderr": 2.659834034983529
+          },
+          {
+            "tier": 2,
+            "measuredDps": 713.9889370440488,
+            "measuredStderr": 3.46260748476278
+          },
+          {
+            "tier": 3,
+            "measuredDps": 1051.224828898512,
+            "measuredStderr": 6.19326235803699
+          },
+          {
+            "tier": 4,
+            "measuredDps": 1679.3645795452544,
+            "measuredStderr": 11.56565509599413
+          }
+        ]
+      },
+      {
+        "id": "schrottkanone",
+        "name": "Schrottkanone",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 1951682403,
+        "deviationPct": 12.938537003406037,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 198.1623748661132,
+            "measuredStderr": 0.6015141481943532
+          },
+          {
+            "tier": 2,
+            "measuredDps": 302.6763433462845,
+            "measuredStderr": 0.9253834536465916
+          },
+          {
+            "tier": 3,
+            "measuredDps": 544.9394253085194,
+            "measuredStderr": 1.6829336018965138
+          },
+          {
+            "tier": 4,
+            "measuredDps": 1032.3942611683249,
+            "measuredStderr": 3.195031808989249
+          }
+        ]
+      },
+      {
+        "id": "shotgun",
+        "name": "Schrotflinte",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 2067209222,
+        "deviationPct": 1.620407234750898,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 203.92561263852537,
+            "measuredStderr": 0.6825398013894569
+          },
+          {
+            "tier": 2,
+            "measuredDps": 303.2067628191801,
+            "measuredStderr": 0.918009930813306
+          },
+          {
+            "tier": 3,
+            "measuredDps": 490.3283483869884,
+            "measuredStderr": 1.6680232370028512
+          },
+          {
+            "tier": 4,
+            "measuredDps": 924.5893681232424,
+            "measuredStderr": 3.190300840463621
+          }
+        ]
+      },
+      {
+        "id": "shredder",
+        "name": "Schredder",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 4025872501,
+        "deviationPct": -5.924346208646913,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 247.65003791248418,
+            "measuredStderr": 1.6861741032999809
+          },
+          {
+            "tier": 2,
+            "measuredDps": 319.74469957196754,
+            "measuredStderr": 2.191856256295317
+          },
+          {
+            "tier": 3,
+            "measuredDps": 453.9241792288942,
+            "measuredStderr": 3.832382633317445
+          },
+          {
+            "tier": 4,
+            "measuredDps": 694.8261225202206,
+            "measuredStderr": 6.820125269329767
+          }
+        ]
+      },
+      {
+        "id": "smg",
+        "name": "MP Rheingau",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 113997,
+        "deviationPct": -12.050824855994835,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 262.63451367124753,
+            "measuredStderr": 1.763819851479271
+          },
+          {
+            "tier": 2,
+            "measuredDps": 322.6191965688086,
+            "measuredStderr": 2.1707069984444134
+          },
+          {
+            "tier": 3,
+            "measuredDps": 424.3633239014518,
+            "measuredStderr": 3.4036037880903733
+          },
+          {
+            "tier": 4,
+            "measuredDps": 614.5670394105399,
+            "measuredStderr": 5.96613245240916
+          }
+        ]
+      },
+      {
+        "id": "sniper",
+        "name": "Scharfschützengewehr",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 3397178607,
+        "deviationPct": 26.142931541500293,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 223.3051789903127,
+            "measuredStderr": 1.488923070423456
+          },
+          {
+            "tier": 2,
+            "measuredDps": 366.1317537963154,
+            "measuredStderr": 2.6380406092148214
+          },
+          {
+            "tier": 3,
+            "measuredDps": 608.6519131984504,
+            "measuredStderr": 3.8000207851808727
+          },
+          {
+            "tier": 4,
+            "measuredDps": 963.7741858719195,
+            "measuredStderr": 6.454521140237149
+          }
+        ]
+      },
+      {
+        "id": "sonic",
+        "name": "Sonic Blaster",
+        "type": "cone",
+        "legendary": false,
+        "seed": 109620780,
+        "deviationPct": 40.225637051762384,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 487.74278645397277,
+            "measuredStderr": 1.9624349604844429
+          },
+          {
+            "tier": 2,
+            "measuredDps": 731.014021767414,
+            "measuredStderr": 2.549877706514911
+          },
+          {
+            "tier": 3,
+            "measuredDps": 1293.8975992806227,
+            "measuredStderr": 5.445062217074477
+          },
+          {
+            "tier": 4,
+            "measuredDps": 2647.890002406644,
+            "measuredStderr": 11.329455060601433
+          }
+        ]
+      },
+      {
+        "id": "spear",
+        "name": "Speer",
+        "type": "melee",
+        "legendary": false,
+        "seed": 109641689,
+        "deviationPct": -40.668957007518856,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 253.247407224745,
+            "measuredStderr": 1.3453259104301305
+          },
+          {
+            "tier": 2,
+            "measuredDps": 348.8098060752561,
+            "measuredStderr": 1.8539797355264092
+          },
+          {
+            "tier": 3,
+            "measuredDps": 546.9100243436706,
+            "measuredStderr": 3.3621518626174556
+          },
+          {
+            "tier": 4,
+            "measuredDps": 906.4727597253889,
+            "measuredStderr": 6.316981355300752
+          }
+        ]
+      },
+      {
+        "id": "spore",
+        "name": "Spore Launcher",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 109651813,
+        "deviationPct": 26.90027108654722,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 347.84077880191415,
+            "measuredStderr": 1.6530135480510673
+          },
+          {
+            "tier": 2,
+            "measuredDps": 438.07235423110455,
+            "measuredStderr": 2.075618760734729
+          },
+          {
+            "tier": 3,
+            "measuredDps": 612.3061501612406,
+            "measuredStderr": 3.610379750964926
+          },
+          {
+            "tier": 4,
+            "measuredDps": 928.170360447627,
+            "measuredStderr": 6.466598946888429
+          }
+        ]
+      },
+      {
+        "id": "starfall",
+        "name": "Starfall Bow",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 1316381901,
+        "deviationPct": 23.88184619696958,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 199.5860288741168,
+            "measuredStderr": 1.1258547930056164
+          },
+          {
+            "tier": 2,
+            "measuredDps": 350.3819177730015,
+            "measuredStderr": 1.8968986501183942
+          },
+          {
+            "tier": 3,
+            "measuredDps": 597.7419565006323,
+            "measuredStderr": 3.1554820405093293
+          },
+          {
+            "tier": 4,
+            "measuredDps": 1116.6132704685415,
+            "measuredStderr": 6.000415422435003
+          }
+        ]
+      },
+      {
+        "id": "taubenschwarm",
+        "name": "Taubenschwarm",
+        "type": "projectile",
+        "legendary": false,
+        "seed": 576729434,
+        "deviationPct": 14.308799873630429,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 202.38618932497053,
+            "measuredStderr": 1.0164955467226646
+          },
+          {
+            "tier": 2,
+            "measuredDps": 332.63403683605776,
+            "measuredStderr": 1.53459394185925
+          },
+          {
+            "tier": 3,
+            "measuredDps": 551.5510769274806,
+            "measuredStderr": 2.3962225229590484
+          },
+          {
+            "tier": 4,
+            "measuredDps": 946.4336239627362,
+            "measuredStderr": 4.103213415548233
+          }
+        ]
+      },
+      {
+        "id": "tesla",
+        "name": "Tesla Coil",
+        "type": "chain",
+        "legendary": false,
+        "seed": 110251287,
+        "deviationPct": 23.353444649693,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 521.4574209544887,
+            "measuredStderr": 4.560887203884211
+          },
+          {
+            "tier": 2,
+            "measuredDps": 856.9869262367852,
+            "measuredStderr": 7.409227163262084
+          },
+          {
+            "tier": 3,
+            "measuredDps": 1509.14862314026,
+            "measuredStderr": 14.49851988734179
+          },
+          {
+            "tier": 4,
+            "measuredDps": 2683.278300452174,
+            "measuredStderr": 26.144020270169015
+          }
+        ]
+      },
+      {
+        "id": "vortex",
+        "name": "Vortex Cannon",
+        "type": "aura",
+        "legendary": false,
+        "seed": 3484261550,
+        "deviationPct": 3.643108461207123,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 895.7581924503147,
+            "measuredStderr": 2.9572513375096867
+          },
+          {
+            "tier": 2,
+            "measuredDps": 1082.493299819521,
+            "measuredStderr": 3.5781428720710973
+          },
+          {
+            "tier": 3,
+            "measuredDps": 1440.9096005058495,
+            "measuredStderr": 5.903070970780639
+          },
+          {
+            "tier": 4,
+            "measuredDps": 2028.3706512575309,
+            "measuredStderr": 9.843796782321881
+          }
+        ]
+      },
+      {
+        "id": "wrench",
+        "name": "Schraubenschlüssel",
+        "type": "melee",
+        "legendary": false,
+        "seed": 3515268137,
+        "deviationPct": -25.27032768215439,
+        "deviationBasis": "type-average",
+        "tiers": [
+          {
+            "tier": 1,
+            "measuredDps": 398.86833989497046,
+            "measuredStderr": 1.9064959475619558
+          },
+          {
+            "tier": 2,
+            "measuredDps": 492.97350650895294,
+            "measuredStderr": 2.378901978734227
+          },
+          {
+            "tier": 3,
+            "measuredDps": 688.8536733076959,
+            "measuredStderr": 4.044221458117429
+          },
+          {
+            "tier": 4,
+            "measuredDps": 1045.9180365414647,
+            "measuredStderr": 7.19547254416013
+          }
+        ]
+      }
+    ],
+    "characters": [
+      {
+        "id": "blindgaenger",
+        "name": "Blindgänger",
+        "seed": 837032060,
+        "runs": 434,
+        "winRatePct": 2.995391705069124,
+        "winRateStderrPct": 0.8182351456327533,
+        "avgWave": 5.016129032258065
+      },
+      {
+        "id": "bollwerk",
+        "name": "T.Boehmer",
+        "seed": 1920716180,
+        "runs": 434,
+        "winRatePct": 90.55299539170507,
+        "winRateStderrPct": 1.4039563622811573,
+        "avgWave": 18.852534562211982
+      },
+      {
+        "id": "cyborg",
+        "name": "Cyborg",
+        "seed": 2949061816,
+        "runs": 434,
+        "winRatePct": 97.6958525345622,
+        "winRateStderrPct": 0.7201920682778715,
+        "avgWave": 19.707373271889402
+      },
+      {
+        "id": "greta",
+        "name": "Greta",
+        "seed": 98619591,
+        "runs": 434,
+        "winRatePct": 66.58986175115207,
+        "winRateStderrPct": 2.2641141985035955,
+        "avgWave": 15.605990783410139
+      },
+      {
+        "id": "ingenieur",
+        "name": "Ingenieur",
+        "seed": 1846377284,
+        "runs": 434,
+        "winRatePct": 23.04147465437788,
+        "winRateStderrPct": 2.0213365970776285,
+        "avgWave": 9.009216589861751
+      },
+      {
+        "id": "kaykit_barbarian",
+        "name": "Barbarian",
+        "seed": 1732505610,
+        "runs": 434,
+        "winRatePct": 70.04608294930875,
+        "winRateStderrPct": 2.198739981855461,
+        "avgWave": 16.14516129032258
+      },
+      {
+        "id": "kaykit_knight",
+        "name": "Knight",
+        "seed": 1446899257,
+        "runs": 434,
+        "winRatePct": 95.85253456221197,
+        "winRateStderrPct": 0.9570801822020747,
+        "avgWave": 19.495391705069125
+      },
+      {
+        "id": "kaykit_mage",
+        "name": "Mage",
+        "seed": 3366912030,
+        "runs": 434,
+        "winRatePct": 3.9170506912442393,
+        "winRateStderrPct": 0.9312320056797943,
+        "avgWave": 5.552995391705069
+      },
+      {
+        "id": "kaykit_ranger",
+        "name": "Ranger",
+        "seed": 1635446401,
+        "runs": 434,
+        "winRatePct": 10.599078341013826,
+        "winRateStderrPct": 1.4776112342218763,
+        "avgWave": 6.817972350230415
+      },
+      {
+        "id": "kaykit_rogue",
+        "name": "Rogue",
+        "seed": 1300093102,
+        "runs": 434,
+        "winRatePct": 10.829493087557603,
+        "winRateStderrPct": 1.4916599081621147,
+        "avgWave": 6.889400921658986
+      },
+      {
+        "id": "kaykit_rogue_hooded",
+        "name": "Hooded Rogue",
+        "seed": 3993227116,
+        "runs": 434,
+        "winRatePct": 39.86175115207373,
+        "winRateStderrPct": 2.350221045735735,
+        "avgWave": 11.253456221198157
+      },
+      {
+        "id": "kleeblatt",
+        "name": "Kleeblatt",
+        "seed": 1549778166,
+        "runs": 434,
+        "winRatePct": 93.77880184331798,
+        "winRateStderrPct": 1.1594298904563551,
+        "avgWave": 19.025345622119815
+      },
+      {
+        "id": "kobra",
+        "name": "Kobra",
+        "seed": 102221357,
+        "runs": 434,
+        "winRatePct": 8.755760368663594,
+        "winRateStderrPct": 1.3567655163790286,
+        "avgWave": 6.440092165898617
+      },
+      {
+        "id": "leonidas",
+        "name": "Leonidas",
+        "seed": 1971164069,
+        "runs": 434,
+        "winRatePct": 69.35483870967742,
+        "winRateStderrPct": 2.212964637104396,
+        "avgWave": 15.95852534562212
+      },
+      {
+        "id": "manni",
+        "name": "Kiosk-Manni",
+        "seed": 103662741,
+        "runs": 434,
+        "winRatePct": 97.6958525345622,
+        "winRateStderrPct": 0.7201920682778715,
+        "avgWave": 19.661290322580644
+      },
+      {
+        "id": "nova",
+        "name": "Nova",
+        "seed": 3387436,
+        "runs": 434,
+        "winRatePct": 0.9216589861751152,
+        "winRateStderrPct": 0.45870093901501713,
+        "avgWave": 4.149769585253456
+      },
+      {
+        "id": "oe",
+        "name": "Ö",
+        "seed": 3542,
+        "runs": 434,
+        "winRatePct": 34.7926267281106,
+        "winRateStderrPct": 2.286373075221989,
+        "avgWave": 10.543778801843319
+      },
+      {
+        "id": "petra",
+        "name": "Denise McKay",
+        "seed": 106558350,
+        "runs": 434,
+        "winRatePct": 73.73271889400922,
+        "winRateStderrPct": 2.112481043951674,
+        "avgWave": 16.516129032258064
+      },
+      {
+        "id": "rockstar",
+        "name": "Rockstar",
+        "seed": 3777186615,
+        "runs": 434,
+        "winRatePct": 50.69124423963134,
+        "winRateStderrPct": 2.399847432459208,
+        "avgWave": 12.951612903225806
+      },
+      {
+        "id": "scharfschuetze",
+        "name": "Ranger",
+        "seed": 4049671988,
+        "runs": 434,
+        "winRatePct": 31.105990783410135,
+        "winRateStderrPct": 2.2221219234508003,
+        "avgWave": 10.571428571428571
+      },
+      {
+        "id": "sebbo",
+        "name": "Sebbo",
+        "seed": 109311133,
+        "runs": 434,
+        "winRatePct": 21.19815668202765,
+        "winRateStderrPct": 1.9618796953203,
+        "avgWave": 8.622119815668203
+      },
+      {
+        "id": "sunny",
+        "name": "Sunny",
+        "seed": 109799703,
+        "runs": 434,
+        "winRatePct": 5.76036866359447,
+        "winRateStderrPct": 1.118399757078599,
+        "avgWave": 5.857142857142857
+      },
+      {
+        "id": "sylvia",
+        "name": "Sylvia",
+        "seed": 3407432584,
+        "runs": 434,
+        "winRatePct": 100,
+        "winRateStderrPct": 0,
+        "avgWave": 20
+      }
+    ],
+    "pairs": [
+      {
+        "id": "blindgaenger",
+        "bestWeapon": "tesla",
+        "bestDps": 903.4198694610143,
+        "worstWeapon": "frost",
+        "worstDps": 172.40733559089455,
+        "spread": 5.240031500775232
+      },
+      {
+        "id": "bollwerk",
+        "bestWeapon": "tesla",
+        "bestDps": 804.632194926728,
+        "worstWeapon": "frost",
+        "worstDps": 153.55483928058186,
+        "spread": 5.240031500775239
+      },
+      {
+        "id": "cyborg",
+        "bestWeapon": "tesla",
+        "bestDps": 906.5015646422999,
+        "worstWeapon": "frost",
+        "worstDps": 172.995441822857,
+        "spread": 5.240031500775233
+      },
+      {
+        "id": "greta",
+        "bestWeapon": "tesla",
+        "bestDps": 771.7029700819646,
+        "worstWeapon": "frost",
+        "worstDps": 147.27067384381104,
+        "spread": 5.24003150077523
+      },
+      {
+        "id": "ingenieur",
+        "bestWeapon": "tesla",
+        "bestDps": 966.75183445903,
+        "worstWeapon": "frost",
+        "worstDps": 140.3834714752411,
+        "spread": 6.8865075375311
+      },
+      {
+        "id": "kaykit_barbarian",
+        "bestWeapon": "nunchaku",
+        "bestDps": 893.8246265772799,
+        "worstWeapon": "frost",
+        "worstDps": 153.55483928058186,
+        "spread": 5.820882173202278
+      },
+      {
+        "id": "kaykit_knight",
+        "bestWeapon": "tesla",
+        "bestDps": 804.632194926728,
+        "worstWeapon": "frost",
+        "worstDps": 153.55483928058186,
+        "spread": 5.240031500775239
+      },
+      {
+        "id": "kaykit_mage",
+        "bestWeapon": "laserzirkel",
+        "bestDps": 1072.918715119101,
+        "worstWeapon": "frost",
+        "worstDps": 166.5152409754317,
+        "spread": 6.443366438015146
+      },
+      {
+        "id": "kaykit_ranger",
+        "bestWeapon": "sonic",
+        "bestDps": 1028.9046617314903,
+        "worstWeapon": "frost",
+        "worstDps": 178.8433162725816,
+        "spread": 5.753106591712375
+      },
+      {
+        "id": "kaykit_rogue",
+        "bestWeapon": "laserzirkel",
+        "bestDps": 865.9053252123576,
+        "worstWeapon": "frost",
+        "worstDps": 167.8845823120246,
+        "spread": 5.15774178478769
+      },
+      {
+        "id": "kaykit_rogue_hooded",
+        "bestWeapon": "laserzirkel",
+        "bestDps": 858.5626784190825,
+        "worstWeapon": "frost",
+        "worstDps": 162.15268509944747,
+        "spread": 5.294779287142425
+      },
+      {
+        "id": "kleeblatt",
+        "bestWeapon": "tesla",
+        "bestDps": 751.9454351751094,
+        "worstWeapon": "frost",
+        "worstDps": 143.50017458174867,
+        "spread": 5.24003150077524
+      },
+      {
+        "id": "kobra",
+        "bestWeapon": "sonic",
+        "bestDps": 950.0895768271274,
+        "worstWeapon": "frost",
+        "worstDps": 173.2797725482035,
+        "spread": 5.4829802859005285
+      },
+      {
+        "id": "leonidas",
+        "bestWeapon": "sonic",
+        "bestDps": 896.2737317628603,
+        "worstWeapon": "frost",
+        "worstDps": 168.39542236587693,
+        "spread": 5.3224352489553075
+      },
+      {
+        "id": "manni",
+        "bestWeapon": "tesla",
+        "bestDps": 804.632194926728,
+        "worstWeapon": "frost",
+        "worstDps": 153.55483928058186,
+        "spread": 5.240031500775239
+      },
+      {
+        "id": "nova",
+        "bestWeapon": "kettensaege",
+        "bestDps": 1641.564164307954,
+        "worstWeapon": "frost",
+        "worstDps": 240.62944777527076,
+        "spread": 6.821958739817445
+      },
+      {
+        "id": "oe",
+        "bestWeapon": "sonic",
+        "bestDps": 946.201066846805,
+        "worstWeapon": "frost",
+        "worstDps": 175.17173997487828,
+        "spread": 5.401562300988171
+      },
+      {
+        "id": "petra",
+        "bestWeapon": "tesla",
+        "bestDps": 879.0671122050353,
+        "worstWeapon": "frost",
+        "worstDps": 149.66671877212667,
+        "spread": 5.873497591294487
+      },
+      {
+        "id": "rockstar",
+        "bestWeapon": "tesla",
+        "bestDps": 973.1622333948873,
+        "worstWeapon": "frost",
+        "worstDps": 185.71686701709962,
+        "spread": 5.240031500775235
+      },
+      {
+        "id": "scharfschuetze",
+        "bestWeapon": "sonic",
+        "bestDps": 1008.8990914312715,
+        "worstWeapon": "frost",
+        "worstDps": 172.87284539508167,
+        "spread": 5.836076158320555
+      },
+      {
+        "id": "sebbo",
+        "bestWeapon": "tesla",
+        "bestDps": 966.75183445903,
+        "worstWeapon": "frost",
+        "worstDps": 140.3834714752411,
+        "spread": 6.8865075375311
+      },
+      {
+        "id": "sunny",
+        "bestWeapon": "tesla",
+        "bestDps": 885.6920146928783,
+        "worstWeapon": "frost",
+        "worstDps": 153.55483928058186,
+        "spread": 5.767919909541272
+      },
+      {
+        "id": "sylvia",
+        "bestWeapon": "tesla",
+        "bestDps": 738.7737452372045,
+        "worstWeapon": "frost",
+        "worstDps": 140.9865084070402,
+        "spread": 5.2400315007752445
+      }
+    ]
+  },
+  "summary": {
+    "weaponOutliers": 6,
+    "attachmentOutliers": 6,
+    "bossesOutsideWindow": 0,
+    "charactersInWinBand": 10,
+    "characterCount": 23
+  }
+}
