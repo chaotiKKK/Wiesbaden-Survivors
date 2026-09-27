@@ -36,4 +36,4 @@ Vektorgrafik von Gegnern, Bossen und Effekten. Dienste statt Assets: die STUN-Se
 Google und die öffentlichen MQTT-Broker für die Coop-Vermittlung. Nur im Trailer, nicht im
 Spiel: die Sprachausgabe (Microsoft-TTS-Stimme „Hedda").
 
-Für das Projekt selbst gibt es noch keine Lizenz — alle Rechte liegen bis dahin beim Urheber.
+Das Projekt selbst steht bewusst unter keiner offenen Lizenz: Alle Rechte sind vorbehalten (Entscheidung vom 2026-09-28). Der Quelltext ist öffentlich einsehbar, eine Weiterverwendung ist aber nicht erlaubt.
