@@ -17,8 +17,9 @@
 #   tools/pw_perf.py     timing thresholds under 6x CPU throttling; already red
 #                        on the dev machine, so on a shared CI VM it would only
 #                        teach people to ignore a red check.
-#   tools/pw_netseal.py  needs the public MQTT broker (internet) — a probe, not a
-#                        gate; it arrives with the co-op signaling fix.
+#   tools/pw_netseal.py  needs the public MQTT broker (internet), so it runs in its
+#                        own non-blocking job below: visible on every PR, but a
+#                        broker outage never blocks a deploy.
 name: CI
 
 on:
@@ -129,6 +130,28 @@ jobs:
           path: docs/pw/*.png
           retention-days: 7
           if-no-files-found: ignore
+
+  coop:
+    name: Co-op over the public broker (non-blocking)
+    runs-on: windows-latest
+    timeout-minutes: 10
+    continue-on-error: true   # external dependency: report, never block
+    env:
+      PYTHONUTF8: "1"
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Install Playwright + Chromium
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.62.0
+          python -m playwright install chromium
+      # Two browsers connect as host and guest over the real broker; an eavesdropper
+      # on this session's own topics must see neither room code nor IP.
+      - name: Sealed co-op signaling end to end (pw_netseal)
+        run: python tools/pw_netseal.py
 
   deploy:
     name: Deploy to GitHub Pages
