@@ -1,0 +1,112 @@
+# CI: every pull request and every push to main runs the regression gate and
+# the Playwright suites. GitHub Pages serves this repo straight from main, so a
+# merge is a deploy — this workflow is what stands between a PR and the live site.
+#
+# Windows runner on purpose: tools/verify.mjs drives the system Edge through raw
+# CDP and launches it via PowerShell Start-Process, exactly as on the dev
+# machine. windows-latest ships Edge, PowerShell and Git Bash.
+#
+# Deliberately NOT here:
+#   tools/pw_perf.py     timing thresholds under 6x CPU throttling; already red
+#                        on the dev machine, so on a shared CI VM it would only
+#                        teach people to ignore a red check.
+#   tools/pw_netseal.py  needs the public MQTT broker (internet) — a probe, not a
+#                        gate; it arrives with the co-op signaling fix.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    name: Gate + Playwright
+    runs-on: windows-latest
+    timeout-minutes: 25
+    env:
+      PYTHONUTF8: "1"
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # the stamp check below diffs against the base commit
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install Playwright + Chromium
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.62.0
+          python -m playwright install chromium
+
+      # If index.html changes, the service-worker cache name has to change with
+      # it, or installed players keep the old cached game. Compared as a diff, so
+      # it does not depend on how git converts line endings on checkout.
+      - name: Service-worker cache stamp moves with index.html
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then base="${{ github.event.pull_request.base.sha }}"; else base="${{ github.event.before }}"; fi
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$base" 2>/dev/null; then
+            echo "no comparable base commit — skipped"; exit 0
+          fi
+          if git diff --quiet "$base" HEAD -- index.html; then echo "index.html unchanged"; exit 0; fi
+          if git diff "$base" HEAD -- sw.js | grep -q "^+const CACHE"; then
+            echo "index.html changed and the CACHE stamp in sw.js moved with it"
+          else
+            echo "::error file=sw.js::index.html changed but the CACHE stamp in sw.js did not — installed players would keep the stale cached game"
+            exit 1
+          fi
+
+      - name: Gate — static legs, selftest, BalanceSim, throttle (tools/verify.mjs)
+        run: node tools/verify.mjs
+
+      - name: Playwright — recon (page loads, no crash)
+        if: success() || failure()
+        run: python tools/pw_recon.py
+
+      - name: Playwright — critical loop (pw_walk)
+        if: success() || failure()
+        run: python tools/pw_walk.py
+
+      - name: Playwright — volume ladder (pw_vol_probe)
+        if: success() || failure()
+        run: python tools/pw_vol_probe.py
+
+      - name: Playwright — careless-user abuse (pw_abuse)
+        if: success() || failure()
+        run: python tools/pw_abuse.py
+
+      - name: Playwright — beat-grid sync (pw_beatsync)
+        if: success() || failure()
+        run: python tools/pw_beatsync.py
+
+      - name: Playwright — danger curve (pw_danger)
+        if: success() || failure()
+        run: python tools/pw_danger.py
+
+      - name: Playwright — LUFS harness (pw_lufs)
+        if: success() || failure()
+        run: python tools/pw_lufs.py
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-screenshots
+          path: docs/pw/*.png
+          retention-days: 7
+          if-no-files-found: ignore
