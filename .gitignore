@@ -19,3 +19,7 @@ trailer/out/
 
 # TTS intermediates (regenerable via tools/trailer-audio.mjs)
 trailer/media/.vo-text/
+
+# Python-Bytecode der Playwright-Tools (tools/pw_*.py)
+__pycache__/
+*.pyc
