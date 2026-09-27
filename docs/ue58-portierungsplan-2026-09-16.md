@@ -131,11 +131,20 @@ Nanite nutzen. Alles, wofür die Engine gebaut ist, funktioniert sofort.
   Arbeitsstrang, der Monate braucht.
 - **Die Figuren fangen nicht bei null an.** 22 der 23 spielbaren Figuren
   liegen als Pixel-Art vor (Abschnitt 2), dazu die Foto-Vorlagen der Figuren-Pipeline
-  (`kandidaten.html`, `parts.html`). Sechs Figuren tragen `kaykit_*`-IDs und
-  nutzen die Atlanten `knight`, `mage`, `ranger`, `rogue`, `rogue_hooded` und
-  `barbarian` — das deutet auf das KayKit-Adventurers-Paket, das es auch als
-  3D-Modelle gibt. **Herkunft und Lizenz prüfen**, bevor darauf gebaut wird;
-  bestätigt es sich, sind sechs Figuren für Weg A schon fast fertig.
+  (`kandidaten.html`, `parts.html`). Sechs Figuren sind aus **KayKit Adventurers**
+  von Kay Lousberg gerendert (geklärt am 2026-09-28,
+  `docs/kaykit-herkunft-lizenz-2026-09-28.md`): Barbarian, Knight, Mage, Rogue und
+  Rogue_Hooded liegen im freien Paket unter **CC0 1.0** als FBX und glTF vor; der
+  Ranger kam erst mit „Adventurers 2.0", ob frei oder EXTRA ist offen. Ein
+  Testimport in **UE 5.8.2** lief fehlerfrei: FBX ergibt ein Skeletal Mesh mit
+  Skelett (41 Knochen), Physics Asset, 76 Animationen, Material und Textur; glTF
+  zerlegt die Figur, also FBX nehmen.
+- **Das KayKit-Rig als gemeinsames Skelett — eine Stilfrage.** `Rig_Medium` plus
+  133 CC0-Animationen könnten das Skelett aller Figuren werden; die 16 eigenen
+  Figuren, in KayKit-Proportionen darauf modelliert, erbten alle Animationen.
+  Das senkt den teuersten Posten dieses Wegs drastisch, legt aber den Low-Poly-
+  Chibi-Stil fest. Die Art-Bible muss vor der Figurenproduktion entscheiden:
+  KayKit-Stil für alle, oder KayKit nur als Platzhalter für den vertikalen Schnitt.
 - **Nicht alles wird Skeletal Mesh.** Siehe Abschnitt 4 — bei bis zu 50
   gleichzeitigen Gegnern ist die Wahl der Gegner-Darstellung die kritischste
   technische Entscheidung des Projekts.
