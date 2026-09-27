@@ -56,6 +56,68 @@ Short brief and plan. Licensed assets are not shipped; the browser-native presen
 
 - On a machine with the key and toolchain, generate a small starter set, place the outputs in `audio/`, and integrate only the roles that measurably improve first-run clarity and gameplay feedback.
 
+## Perzeptuelle Lautstärke-Leiter (2026-09-11)
+
+- master/sfx/music/amb steppen auf einer −4-dB-Leiter (11 Sprossen + Stille),
+  Anzeige in dB (`-4,0 dB` / `AUS (stumm)`), Links = lauter, Rechts = leiser.
+  Gespeichert bleibt weiterhin die Amplitude 0..1 — Gain-Konsumenten, Save-
+  Format und Code-Import bleiben kompatibel. Alte Saves rasten einmalig
+  (`_volMig`) per dB-Distanz auf die nächste Sprosse.
+- Defaults jetzt auf Sprossen: master/sfx −4 dB, music −8 dB (×.5-Preset),
+  amb −6 dB — das alte SFX:Musik-Verhältnis (≈10 dB) bleibt erhalten.
+- Details, Audit-Tabelle und die zwei dabei gefundenen Bugs
+  (invertierte Sprossen-Reihenfolge, Mute-Index-Lücke): siehe
+  `docs/audio-design-volume-ladder-2026-09-11.md`.
+
+## Gefahrenschicht — Mehrkanal-Kurve (2026-09-11)
+
+- Die adaptive Gefahrenschicht nimmt jetzt drei Eingänge (Maximum): HP-Kurve
+  (unverändert, 1,0-Pin bei ≤ 5 %), Gegnerdruck nahe den Spielern (Nähe
+  < ~340 px voll, entfernt 0,35; /55, quadriert — weicher Anlauf) und
+  Wellentiefe als Grundplatte, auf 0,35 gedeckelt. Volle HP vor dichtem
+  Gedränge bleibt nicht mehr stumm; Tiefe allein beansprucht nie volle
+  Intensität. Kurve als `Game._dangerChan()` ausgelagert (selftest-/probe-
+  prüfbar); `endRun()` zieht den Drone sofort herunter (`setDanger(0)`).
+- Details, Kurvenwerte und Probe: `docs/danger-curve-2026-09-11.md`.
+
+## Takt-Raster für Gameplay-Events (2026-09-11)
+
+- Wellenstarts und Boss-Wechsel feuern nicht mehr sofort/mitten im Takt:
+  `requestSwitch`/`setAmbientKeepGrid`/`beatAt` legen Song-Wechsel und
+  Stinger an die nächste Taktgrenze des laufenden Sequencers (16tel-Grid,
+  Audio-Uhr). `setAmbientCore` wechselt Stück/Hall/Drone OHNE Phase zu
+  reißen; nach einem Switch bricht der Scheduler vor dem Schritt ab und
+  liest im nächsten Frame neu — sample-genau, kein Sprung. Ohne laufende
+  Musik wird sofort geflusht; `endRun`/`startRun` räumen die Queue auf.
+- Kurzer Wellen-Stinger (Riser+Sub) auf dem Musik-Bus, Takt-synchron.
+- Details: `docs/beatsync-2026-09-11.md`.
+
+## LUFS-Messharness (2026-09-11)
+
+- `AudioSys.lufsMeasure` implementiert ITU-R BS.1770-4: K-Filterung
+  (48-kHz-Koeffizienten, inkl. −0,691-Kalibrierungs-Offset), 400-ms-Blöcke
+  mit 75 % Überlappung, Absolut-Gate −70 LUFS + Relativ-Gate −10 LU,
+  Sample-Peak. Kalibriert verifiziert: 997-Hz-Sinus bei −20 dBFS misst
+  −20,0 LUFS (±0,01).
+- `AudioSys.lufsRender(seconds)` rendert das Musik-Bett über den ECHTEN
+  Sequencer-Scheduler (`_chipTick`) in einen OfflineAudioContext (48 kHz
+  stereo). Bus-Kette liegt jetzt in `_buildBuses()` — Live-`init()` und
+  Offline-Render bauen dieselbe Produktionskette (Comp → Presence →
+  Brickwall → Soft-Clip, Music-Filter/Pump/Duck-Pfad, Hall, Echo).
+  Der Render erzeugt KEINEN AudioContext und fasset den Live-Kontext
+  nicht an (Gesten-Gate-kompatibel, auch vor erster Geste lauffähig).
+- `AudioSys.audioConformance()` misst und ordnet ins Zielband
+  **−16…−14 LUFS** ein (`LUFS_TARGET`). Außerhalb des Bandes = Warnung
+  (Toast + `console.warn '[LUFS]'`), KEIN Gate — über eine Anhebung der
+  Mischung entscheidet der Balance-Pass. Gemessener Ist-Stand:
+  **−19,8 LUFS, Peak −7,6 dBFS** (Musik-Bett, Intensität 0,6, 0 dB-
+  Pegelreferenz) — ~3,8 LU unter dem Band, docH als Befund vermerkt.
+- Oberflächen: `?qa`-Button „LUFS messen…" (Pause-Screen, Toast mit
+  Ergebnis) und Selftest-Gruppe `LUFS` (3 Checks: Plausibilität,
+  Determinismus Δ ≤ 0,5 LU, warn/inWindow-Konsistenz —async nach
+  Balance-Parity-Muster).
+- Details: `docs/lufs-harness-2026-09-11.md`.
+
 ## Aufgabe (2026-09-10)
 
 - Interview-Breakdown als Material ablegen (Oberfläche, Status-Link-Hover-Bug, startRuns/ShortCloseEdge defaultBaseDelay).
