@@ -1454,7 +1454,9 @@ const AudioSys = {
     const octx = new OfflineAudioContext(2, Math.max(48000, Math.ceil(SR * seconds)), SR);
     const live = this.ctx;
     const keys = ['master', 'comp', 'presence', 'limiter', 'masterLimiter', 'sfxGain', 'musicComp', 'musicGain', 'duck', 'crowdDuck', 'musicFilter', 'pump', 'dangerFilter', 'reverbSend', 'reverb', 'reverbWet', 'echoIn'];
-    const cacheKeys = ['_bufs', '_pwmCache', '_pwmCacheCtx'];
+    /* _irCache gehoert dazu: _makeIR cacht nur nach Profil-ID, der Puffer traegt aber
+       die Abtastrate seines Kontexts - ConvolverNode lehnt jede andere ab. */
+    const cacheKeys = ['_bufs', '_pwmCache', '_pwmCacheCtx', '_irCache'];
     const saved = {}, savedCache = {}, savedOpts = { m: OPT().master, s: OPT().sfx, mu: OPT().music };
     const savedStarted = this.started;
     for (const kk of keys) saved[kk] = this[kk];
@@ -1463,7 +1465,7 @@ const AudioSys = {
       OPT().master = 1; OPT().sfx = 1; OPT().music = 1;
       this.ctx = octx;
       this.started = true;
-      this._bufs = {}; this._pwmCache = null; this._pwmCacheCtx = null;
+      this._bufs = {}; this._pwmCache = null; this._pwmCacheCtx = null; this._irCache = null;
       this._buildBuses();
       const boss = this.bossMode;
       const TB = this._songTable(boss);
@@ -18236,9 +18238,21 @@ const SelfTest = {
   _audioLufs() {
     this._asyncPending++;
     let finished = false;
+    /* Kontext-Isolation: eine Hall-IR mit fremder Abtastrate im Cache - wie nach
+       einem Live-Start auf einem 44,1-kHz-Geraet - darf den 48-kHz-Offline-Render
+       nicht brechen, und der Live-Cache muss danach unveraendert zurueck sein.
+       Frueher fehlte _irCache in der Liste der kontextgebundenen Caches: der QA-
+       Knopf scheiterte ('Failed to set the buffer property on ConvolverNode'),
+       und ein Render vor dem Live-Start hinterliess eine 48-kHz-IR, an der
+       _buildBuses auf 44,1 kHz scheitert. Auf der CI-Maschine aufgefallen. */
+    const savedIr = AudioSys._irCache;
+    const planted = typeof AudioBuffer === 'function'
+      ? new AudioBuffer({ length: 256, numberOfChannels: 2, sampleRate: 44100 }) : null;
+    if (planted) AudioSys._irCache = { default: planted };
     const finish = () => {
       if (finished) return;
       finished = true;
+      AudioSys._irCache = savedIr;
       if (--this._asyncPending <= 0) this._render();
     };
     const guard = setTimeout(() => {
@@ -18257,6 +18271,8 @@ const SelfTest = {
       const sane = isFinite(r1.masterLufs) && isFinite(r1.peakDb) && r1.masterLufs > -60 && r1.masterLufs < 0
         && r1.peakDb <= 0.1 && r1.blocks >= 30 && r1.total >= r1.blocks;
       this._ok(sane, 'LUFS: Messung plausibel (' + bandTxt(r1) + ')');
+      if (planted) this._ok(!!AudioSys._irCache && AudioSys._irCache.default === planted,
+        'LUFS: Offline-Render laesst den Hall-Cache des Live-Kontexts unangetastet (44,1-kHz-IR bleibt, kein 48-kHz-Eintrag)');
       if (!r1.inWindow) console.warn('[LUFS] ' + r1.message);
       return AudioSys.audioConformance().then((r2) => {
         clearTimeout(guard);
