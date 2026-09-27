@@ -20,6 +20,15 @@ from playwright.sync_api import sync_playwright
 sys.path.insert(0, "tools")
 from pw_lib import Serve, new_page, wait_until
 
+# Toasts live 2.6 s in the DOM (2200 ms + 420 ms fade). Reading them from the DOM
+# races that lifetime, and the LUFS maths blocks the main thread the poll needs:
+# on the CI runner section 3 saw no toast at all within 30 s although the
+# measurement itself completes. Record every UI.toast call and poll the record.
+TOAST_HOOK = """() => { if (window.__toasts) return true; window.__toasts = [];
+  const t0 = performance.now(), orig = UI.toast.bind(UI);
+  UI.toast = function (m) { window.__toasts.push([Math.round(performance.now() - t0), String(m)]); return orig.apply(null, arguments); };
+  return true; }"""
+
 PORT = 8953
 URL = "http://127.0.0.1:%d/index.html%%s" % PORT
 
@@ -119,16 +128,19 @@ def main():
             pg3.on("pageerror", lambda e: errs3.append(str(e)))
             check("§3 qaLufs button present", pg3.locator("#qaLufsBtn").count() == 1)
             check("§3 qaLufs button navigable", "nav" in (pg3.locator("#qaLufsBtn").get_attribute("class") or ""))
+            pg3.evaluate(TOAST_HOOK)
             t0 = time.time()
             pg3.evaluate("() => UI.show('scPause')")  # qaRow lebt auf dem Pause-Screen (wie _qaNavGate)
             pg3.wait_for_selector("#qaLufsBtn:visible", timeout=8000)
             pg3.click("#qaLufsBtn")
-            ok, _ = wait_until(pg3, """() => Array.from(document.querySelectorAll('.toast'))
-                .map(t => t.textContent).find(t => t.indexOf('LUFS') >= 0) || null""",
-                lambda v: v and ("Master-Mix" in v or "fehlgeschlagen" in v), timeout_s=30)
+            ok, _ = wait_until(pg3, """() => (window.__toasts || []).map(t => t[1])
+                .filter(t => t.indexOf('LUFS') >= 0)
+                .find(t => t.indexOf('Master-Mix') >= 0 || t.indexOf('fehlgeschlagen') >= 0) || null""",
+                lambda v: bool(v), timeout_s=60)
             dt = time.time() - t0
+            timeline = pg3.evaluate("() => (window.__toasts || []).map(t => t[0] + 'ms ' + t[1].slice(0, 40))")
             check("§3 QA click → measured toast", bool(ok and "Master-Mix" in (_ or "")),
-                  "%.1fs, toast: %s" % (dt, (_ or "")[:90]))
+                  "%.1fs, toast: %s | timeline: %s" % (dt, (_ or "")[:90], timeline))
             if r1 and not r1["inWin"]:
                 check("§3 out-of-band emits console.warn", any("[LUFS]" in w for w in warns3),
                       "%d warn(s)" % len([w for w in warns3 if "[LUFS]" in w]))
