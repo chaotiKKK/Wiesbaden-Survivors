@@ -28,17 +28,24 @@ workers are blocked so the page is fetched fresh from the CDN; WebRTC mDNS
 masking is off, as in pw_netseal, because CI runners cannot resolve .local
 candidates between two browser contexts.
 
+With --serve DIR the same scenario runs against a local copy served from DIR
+(the co-op CI job does this on every PR, so a broken co-op shows up before it
+ships; the broker is still the real one).
+
 Usage: python tools/pw_live_coop.py [--url URL] [--expect index.html=<sha1>,...]
-                                    [--wait-min 15] [--attempts 3]
+                                    [--wait-min 15] [--attempts 3] [--serve DIR]
 """
 import argparse
 import hashlib
 import os
 import sys
 import time
+import contextlib
 import urllib.request
 
 from playwright.sync_api import sync_playwright
+
+from pw_lib import Serve
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -49,7 +56,11 @@ ap.add_argument("--expect", default=os.environ.get("EXPECT_SHA1", ""),
                 help="comma-separated file=sha1 pairs the live site must serve before testing")
 ap.add_argument("--wait-min", type=float, default=15)
 ap.add_argument("--attempts", type=int, default=3)
+ap.add_argument("--serve", help="serve this directory locally and test it instead of the live site")
 args = ap.parse_args()
+SERVE_PORT = 8957
+if args.serve:
+    args.url = "http://127.0.0.1:%d/" % SERVE_PORT
 BASE = args.url if args.url.endswith("/") else args.url + "/"
 IN_CI = bool(os.environ.get("GITHUB_ACTIONS"))
 
@@ -199,7 +210,7 @@ def Net_norm(s):
 NETWORK_STEPS = {"host opens a room", "host and guest connect", "scenario ran to completion"}
 
 log = []
-with sync_playwright() as p:
+with (Serve(SERVE_PORT, directory=args.serve) if args.serve else contextlib.nullcontext()), sync_playwright() as p:
     for i in range(args.attempts):
         print("\n--- try %d/%d ---" % (i + 1, args.attempts), flush=True)
         steps = attempt(p)

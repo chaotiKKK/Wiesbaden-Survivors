@@ -156,6 +156,10 @@ jobs:
       # on this session's own topics must see neither room code nor IP.
       - name: Sealed co-op signaling end to end (pw_netseal)
         run: python tools/pw_netseal.py
+      # The post-deploy check, run on this PR's own build: menus, room code typed
+      # as shown, traffic both ways (guest input -> host, host picture -> guest).
+      - name: Two players connect over co-op on this build (pw_live_coop --serve)
+        run: python tools/pw_live_coop.py --serve .
 
   deploy:
     name: Deploy to GitHub Pages
