@@ -83,6 +83,7 @@ const MARKERS = [
   ['slice-budget honest contract comment', 'Wandzeit skaliert mit der CPU-Geschwindigkeit'],
   ['context-scoped native Tab + ring sync', 'Tab ist NUR im Coop-Shop ein Gameplay-Binding'],
   ['sealed co-op signaling (NetSeal, wbns2)', "PROTO: 'wbns2'"],
+  ['8-character room codes (40 bit)', 'const NET_CODE_LEN = 8;'],
   ['sealed-signaling selftest', '_netSeal()']
 ];
 const FORBIDDEN = [
