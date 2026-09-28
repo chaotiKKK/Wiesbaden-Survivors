@@ -16995,9 +16995,19 @@ const Net = {
       else if (s === 'failed' || s === 'closed') this.onDrop(s === 'failed' ? 'Verbindung fehlgeschlagen' : 'Verbindung beendet');
       else if (s === 'disconnected') this.setStatus('Verbindung unterbrochen - warte ...');
     };
+    /* Jede Spur (Bild, Ton) kommt als eigenes track-Ereignis. Frueher ersetzte jedes
+       srcObject = ev.streams[0] das vorige; weil der Ton in einem eigenen Stream
+       kam, gewann er, und der Gast hoerte das Spiel, sah aber nichts. Jetzt landen
+       alle Spuren in EINEM Stream, auch von aelteren Hosts mit getrennten Streams. */
     pc.ontrack = ev => {
       const v = $('netVideo');
-      if (v && ev.streams[0]) { v.srcObject = ev.streams[0]; v.play().catch(() => { }); }
+      if (!v) return;
+      let ms = v.srcObject;
+      if (!(ms instanceof MediaStream)) { ms = new MediaStream(); v.srcObject = ms; }
+      /* Beendete Spuren einer frueheren Verbindung raeumen; laufende nie anfassen. */
+      for (const t of ms.getTracks()) if (t.readyState === 'ended') ms.removeTrack(t);
+      if (!ms.getTracks().includes(ev.track)) ms.addTrack(ev.track);
+      v.play().catch(() => { });
     };
     pc.ondatachannel = ev => {
       if (ev.channel.label === 'ctl') this.bindCtl(ev.channel);
@@ -17045,7 +17055,9 @@ const Net = {
     if (AudioSys.ctx) {
       this.audioDest = AudioSys.ctx.createMediaStreamDestination();
       AudioSys.limiter.connect(this.audioDest);
-      for (const tr of this.audioDest.stream.getAudioTracks()) pc.addTrack(tr, this.audioDest.stream);
+      /* Ton im SELBEN Stream wie das Bild: so sieht auch ein Gast mit aelterer
+         Spielversion (ersetzt srcObject pro Spur) Bild UND Ton. */
+      for (const tr of this.audioDest.stream.getAudioTracks()) pc.addTrack(tr, st);
     }
     await pc.setLocalDescription(await pc.createOffer());
     await this.waitIce(pc);
