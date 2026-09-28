@@ -19,7 +19,9 @@ keinen neuen Umfang mehr. Ihr Nachfolger ist ein Neubau in Unreal Engine 5.8
   vollständig, der Ton kommt dann aus der eingebauten Offline-Synthese.
 - **Lokal mit vollem Ton:** den Ordner über http ausliefern, zum Beispiel mit
   `python -m http.server`. Erst dann lädt `AudioSys.prefetchAssets()` die Cues
-  aus `audio/`, und zwar erst nach der ersten echten Nutzergeste.
+  aus `audio/`, und zwar erst nach der ersten echten Nutzergeste. Direkt aus dem
+  Repo serviert, fragt der Service-Worker immer zuerst beim Server nach, eine
+  lokale Kopie ist nach `git pull` also sofort aktuell.
 - **Koop:** Ein Spieler eröffnet einen Raum und nennt dem anderen den
   8-stelligen Code (angezeigt als `K7RM 2XQP`). Die Verbindung selbst ist WebRTC. Nur der Verbindungsaufbau
   läuft über öffentliche MQTT-Broker, und zwar versiegelt: Dort sind weder
@@ -58,10 +60,8 @@ Screenshots in `docs/pw/`. Wer sie nicht committen will, setzt sie mit
 `.github/workflows/ci.yml` läuft bei jedem Pull Request und bei jedem Push auf
 `main`:
 
-1. **Gate + Playwright** (Windows, blockierend). Der Job prüft zuerst, dass
-   sich der Cache-Stempel in `sw.js` mitbewegt hat, sobald sich `index.html`
-   ändert. Danach laufen das Gate, der Bau und Smoke-Test der Seite und alle
-   Playwright-Suiten außer `pw_netseal`.
+1. **Gate + Playwright** (Windows, blockierend). Hier laufen das Gate, der Bau
+   und Smoke-Test der Seite und alle Playwright-Suiten außer `pw_netseal`.
 2. **Koop über den öffentlichen Broker** (nicht blockierend). Der Job hängt
    von fremden Brokern ab, deshalb macht ein roter Lauf die CI nicht rot.
 3. **Deploy auf GitHub Pages**, nur bei einem Push auf `main` und nur nach
@@ -73,10 +73,12 @@ Ein Merge nach `main` ist also ein Deploy.
 
 ## Regeln beim Ändern
 
-- **Cache-Stempel:** Nach jeder Änderung an `index.html` den Stempel
-  `CACHE` in `sw.js` auf `wbns-<sha1 von index.html>` setzen, gerechnet über
-  die Datei, wie sie im Arbeitsbaum liegt (`git hash-object` ist *nicht*
-  dasselbe). Sonst behalten installierte Spieler das alte Spiel.
+- **Cache-Stempel:** Von Hand ist nichts zu tun. `tools/build-site.mjs`
+  stempelt `CACHE` in der veröffentlichten `sw.js` aus den Bytes aller
+  vorgecachten Dateien, die es veröffentlicht: `index.html`, `data.js`,
+  Manifest, Icons und Audio. Jede Änderung an einer davon erreicht also
+  installierte Spieler. Im Repo bleibt `CACHE = 'wbns-dev'` stehen.
+  `tools/site-smoke.mjs` rechnet den Stempel nach.
 - **Reihenfolge der Skripte:** `data.js` muss vor dem Engine-Skript in
   `index.html` geladen werden, und die Tabellen dürfen nicht zusätzlich inline
   stehen. Das Gate prüft beides.
