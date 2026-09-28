@@ -86,7 +86,8 @@ const MARKERS = [
   ['8-character room codes (40 bit)', 'const NET_CODE_LEN = 8;'],
   ['co-op host sends picture and sound in one stream', 'getAudioTracks()) pc.addTrack(tr, st);'],
   ['co-op guest collects all tracks in one stream', 'if (!ms.getTracks().includes(ev.track)) ms.addTrack(ev.track);'],
-  ['sealed-signaling selftest', '_netSeal()']
+  ['sealed-signaling selftest', '_netSeal()'],
+  ['online host always lets the guest pick player 2 (selftest)', '_netHostCharPick()']
 ];
 const FORBIDDEN = [
   ['removed SkinEditor cluster', 'const SkinEditor'],
