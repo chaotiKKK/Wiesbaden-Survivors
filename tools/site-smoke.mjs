@@ -8,6 +8,8 @@
 //   - the service worker installs and every SHELL file is in its cache (if one
 //     were missing, cache.addAll would reject and offline play would be gone)
 //   - every audio cue answers 200
+//   - the published sw.js carries the cache stamp of exactly the published files
+//     (recomputed here), and the browser's cache is created under that name
 //   - every file tracked in git that is NOT part of the site answers 404 —
 //     the debug and preview pages above all
 //
@@ -17,6 +19,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { EDGE_PATH, repoRoot, argOf, startStaticServer, launchEdge, killScratchEdges, connectPageCdp } from './lib/harness.mjs';
+import { DEV_CACHE, cacheOf, computeStamp } from './lib/site-stamp.mjs';
 
 const ROOT = repoRoot(import.meta.url);
 const SITE = path.resolve(ROOT, argOf(process.argv.slice(2), '--site', '_site'));
@@ -57,6 +60,10 @@ try {
   for (const a of audio) { const r = await fetch(server.url + '/' + a); if (r.status !== 200) missingAudio.push(a); }
   check(audio.length > 0 && missingAudio.length === 0, 'every audio cue answers 200', audio.length + ' cues' + (missingAudio.length ? '; missing: ' + missingAudio.join(', ') : ''));
 
+  const stamp = cacheOf(sw), want = computeStamp(SITE, sw);
+  check(stamp === want && stamp !== DEV_CACHE, 'published sw.js is stamped from the published files',
+    'CACHE ' + String(stamp).slice(0, 17) + '…' + (stamp === want ? '' : ', expected ' + want.slice(0, 17) + '…'));
+
   // ---- Browser: the game and its service worker -------------------------
   killScratchEdges('wssite-edge-');
   edge = await launchEdge({ profilePrefix: 'wssite-edge-' });
@@ -88,6 +95,7 @@ try {
     return { active: true, cache: name, urls: reqs.map(r => new URL(r.url).pathname) };
   })()`, 30000);
   const missingShell = swState.urls ? shellWant.filter(u => !swState.urls.includes(u)) : shellWant;
+  check(swState.cache === stamp, 'the browser caches under the published stamp', String(swState.cache).slice(0, 17) + '…');
   check(swState.active && !!swState.cache && missingShell.length === 0,
     'service worker installs and caches every SHELL file (offline play works)',
     swState.active ? (swState.cache ? swState.urls.length + ' cached in ' + swState.cache.slice(0, 16) + '…'

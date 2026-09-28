@@ -5,10 +5,16 @@
  *  - 跨域/非 GET（如 MQTT over WebSocket 不走 fetch）→ 直接放行
  *  - activate: 清理旧版本缓存
  */
-/* CACHE-Name wird beim Build aus dem Content-Hash von index.html gestempelt
-   (tools/build.js). Aendert sich das Spiel, aendert sich der Name -> die
-   activate-Phase raeumt den alten Cache weg. Manuelles Hochzaehlen entfaellt. */
-const CACHE = 'wbns-b43976709964a5b05a181df1a0691b51d4cfd05f';
+/* CACHE-Name: tools/build-site.mjs stempelt ihn beim Seitenbau aus dem
+   Content-Hash ALLER vorgecachten Dateien, so wie sie veroeffentlicht werden
+   (tools/lib/site-stamp.mjs). Aendert sich irgendeine davon, aendert sich der
+   Name -> die activate-Phase raeumt den alten Cache weg. Von Hand wird nichts
+   gestempelt; hier im Repo steht nur der Platzhalter 'wbns-dev'. */
+const CACHE = 'wbns-dev';
+/* Ungestempelt (Repo direkt serviert, z. B. python -m http.server): Netz zuerst,
+   Cache nur als Offline-Rueckfall. Sonst bliebe eine lokale Kopie nach git pull
+   fuer immer auf dem alten Stand, weil sich der Name nie aendert. */
+const DEV = CACHE === 'wbns-dev';
 const SHELL = ['./', './index.html', './data.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './maskable-512.png'];
 
 /* SFX-Vorcach: damit hat der ERSTE Offline-Start vollen Sound (vorher kamen
@@ -23,15 +29,21 @@ const AUDIO = [
   'audio/hurt.m4a', 'audio/step.m4a', 'audio/dash.m4a', 'audio/pick.m4a', 'audio/ui.m4a', 'audio/ok.m4a', 'audio/err.m4a',
 ];
 
+/* cache: 'reload' holt am HTTP-Cache des Browsers vorbei. Ohne das legte ein
+   neuer Worker die ALTEN Bytes unter dem NEUEN Namen ab, sobald der Browser die
+   Datei noch fuer frisch hielt (GitHub Pages: max-age=600) - der Spieler bekam
+   den Update-Hinweis und blieb trotzdem auf dem alten Stand. */
+const fresh = (u) => new Request(u, { cache: 'reload' });
+
 self.addEventListener('install', (event) => {
   /* KEIN automatisches skipWaiting: der neue Worker wartet, bis der Spieler im
      Update-Toast "Neu laden" klickt (siehe message-Handler). So springt der
      Cache nicht mitten in der Sitzung um. */
   event.waitUntil(
     caches.open(CACHE)
-      .then((cache) => cache.addAll(SHELL))
+      .then((cache) => cache.addAll(SHELL.map(fresh)))
       .then(() => caches.open(CACHE))
-      .then((cache) => Promise.all(AUDIO.map((u) => cache.add(u).catch(() => { /* Cue fehlt: Offline-Sound lueckt dort, Bake bleibt */ }))))
+      .then((cache) => Promise.all(AUDIO.map((u) => cache.add(fresh(u)).catch(() => { /* Cue fehlt: Offline-Sound lueckt dort, Bake bleibt */ }))))
   );
 });
 
@@ -53,6 +65,22 @@ self.addEventListener('fetch', (event) => {
   if (req.method !== 'GET') return; // WebSocket/POST 等直接放行
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return; // 跨域（字体 CDN 等）不拦截
+
+  if (DEV) {
+    /* no-cache: beim Server nachfragen (304, wenn unveraendert), statt eine
+       heuristisch "frische" Antwort aus dem HTTP-Cache zu nehmen. Neu gebaut,
+       weil sich ein navigate-Request nicht mit Optionen kopieren laesst. */
+    event.respondWith(
+      fetch(new Request(req.url, { cache: 'no-cache', credentials: req.credentials }))
+        .then((res) => {
+          if (res && res.ok) { const copy = res.clone(); caches.open(CACHE).then((cache) => cache.put(req, copy)); }
+          return res;
+        })
+        .catch(() => caches.match(req).then((hit) => hit
+          || (req.mode === 'navigate' ? caches.match('./index.html') : Response.error())))
+    );
+    return;
+  }
 
   event.respondWith(
     caches.match(req, { ignoreSearch: false }).then((hit) => {

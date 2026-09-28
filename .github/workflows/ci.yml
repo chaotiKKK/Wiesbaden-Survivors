@@ -20,6 +20,10 @@
 #   tools/pw_netseal.py  needs the public MQTT broker (internet), so it runs in its
 #                        own non-blocking job below: visible on every PR, but a
 #                        broker outage never blocks a deploy.
+#
+# After every deploy, the live-coop job checks the PUBLIC site the way players
+# meet it: two players connect over co-op with a real room code. That one is
+# deliberately blocking — a red run there means the live game is broken.
 name: CI
 
 on:
@@ -62,24 +66,6 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check playwright==1.62.0
           python -m playwright install chromium
-
-      # If index.html changes, the service-worker cache name has to change with
-      # it, or installed players keep the old cached game. Compared as a diff, so
-      # it does not depend on how git converts line endings on checkout.
-      - name: Service-worker cache stamp moves with index.html
-        shell: bash
-        run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then base="${{ github.event.pull_request.base.sha }}"; else base="${{ github.event.before }}"; fi
-          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$base" 2>/dev/null; then
-            echo "no comparable base commit — skipped"; exit 0
-          fi
-          if git diff --quiet "$base" HEAD -- index.html; then echo "index.html unchanged"; exit 0; fi
-          if git diff "$base" HEAD -- sw.js | grep -q "^+const CACHE"; then
-            echo "index.html changed and the CACHE stamp in sw.js moved with it"
-          else
-            echo "::error file=sw.js::index.html changed but the CACHE stamp in sw.js did not — installed players would keep the stale cached game"
-            exit 1
-          fi
 
       - name: Gate — static legs, selftest, BalanceSim, throttle (tools/verify.mjs)
         run: node tools/verify.mjs
@@ -157,6 +143,10 @@ jobs:
       # on this session's own topics must see neither room code nor IP.
       - name: Sealed co-op signaling end to end (pw_netseal)
         run: python tools/pw_netseal.py
+      # The post-deploy check, run on this PR's own build: menus, room code typed
+      # as shown, traffic both ways (guest input -> host, host picture -> guest).
+      - name: Two players connect over co-op on this build (pw_live_coop --serve)
+        run: python tools/pw_live_coop.py --serve .
 
   deploy:
     name: Deploy to GitHub Pages
@@ -170,6 +160,9 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+      published: ${{ steps.published.outputs.sha1 }}
     concurrency:
       group: pages
       cancel-in-progress: false
@@ -182,8 +175,41 @@ jobs:
       # Built from the same allowlist the gate job just smoke-tested.
       - name: Build the allowlisted site
         run: node tools/build-site.mjs
+      # Fingerprints of what goes live, so the post-deploy check can wait until
+      # the CDN really serves this build (Pages caches up to 10 minutes).
+      - id: published
+        name: Fingerprint the published files
+        run: |
+          echo "sha1=$(for f in index.html data.js sw.js; do printf '%s=%s,' "$f" "$(sha1sum "_site/$f" | cut -c1-40)"; done)" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  live-coop:
+    name: Live site — two players connect over co-op
+    needs: deploy
+    # Only after a real deploy; a failure here is loud on purpose (red run,
+    # ::error annotations, job summary, GitHub's failed-run notification).
+    if: needs.deploy.result == 'success'
+    runs-on: windows-latest   # same runner the co-op job proved WebRTC on
+    timeout-minutes: 30
+    env:
+      PYTHONUTF8: "1"
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Install Playwright + Chromium
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.62.0
+          python -m playwright install chromium
+      # Waits until the CDN serves exactly the deployed files, then host and guest
+      # connect through the menus with the room code shown on screen, and game
+      # traffic must flow both ways. Up to 3 tries with a fresh room each, because
+      # the MQTT broker is a third party; every failed try is kept as a warning.
+      - name: Two players connect over co-op on the live site (pw_live_coop)
+        run: python tools/pw_live_coop.py --url "${{ needs.deploy.outputs.page_url }}" --expect "${{ needs.deploy.outputs.published }}"
