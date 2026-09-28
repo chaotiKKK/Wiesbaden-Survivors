@@ -84,6 +84,8 @@ const MARKERS = [
   ['context-scoped native Tab + ring sync', 'Tab ist NUR im Coop-Shop ein Gameplay-Binding'],
   ['sealed co-op signaling (NetSeal, wbns2)', "PROTO: 'wbns2'"],
   ['8-character room codes (40 bit)', 'const NET_CODE_LEN = 8;'],
+  ['co-op host sends picture and sound in one stream', 'getAudioTracks()) pc.addTrack(tr, st);'],
+  ['co-op guest collects all tracks in one stream', 'if (!ms.getTracks().includes(ev.track)) ms.addTrack(ev.track);'],
   ['sealed-signaling selftest', '_netSeal()']
 ];
 const FORBIDDEN = [
