@@ -71,12 +71,23 @@ Der Beleg steht in den Zahlen oben: von 1.865 Zeichen-Methodenaufrufen sind
 **6** `drawImage`. Der Rest ist prozedurale Vektorgrafik — 385× `beginPath`,
 275× `fill`, 250× `lineTo`, 246× `fillRect`, 216× `arc`, 175× `moveTo`, 122×
 `stroke`, 48× `ellipse`. Dazu 417× `fillStyle` und 259× `globalAlpha`, also
-Farbe und Deckkraft ebenfalls im Code statt in Materialien. Die 66 eingebetteten
-PNGs sind im Wesentlichen ein paar Lauf-Sprites.
+Farbe und Deckkraft ebenfalls im Code statt in Materialien.
 
-Das heißt: **es existiert praktisch kein Asset-Bestand, den man mitnehmen
-könnte.** Jede Figur, jeder Gegner, jeder Effekt ist Code, der Pfade zeichnet.
-Dafür gibt es in Unreal keine Entsprechung, die man „übersetzen" kann.
+Die Ausnahme sind die 66 eingebetteten PNGs, und die betreffen genau die
+Spielfiguren (korrigiert am 2026-09-27, siehe Abschnitt 9): 57 animierte
+Pixel-Art-Sheets in `CHAR_SPR` (19 Figuren à `idle`/`walk`/`punch`; 16 davon
+spielbar, `titan`, `marathon` und `nachtfalter` sind in `CHARS` nicht vergeben),
+sechs Klassen-Atlanten in `CHAR_ATLAS_SRC` für die sechs `kaykit_*`-Figuren und
+ein Props-Atlas (`PROP_ATLAS_SRC`) für Arena-Deko. Vier der sechs `drawImage`
+zeichnen genau diese. Damit erscheinen **22 der 23 spielbaren Figuren** im Spiel
+als Pixel-Art; nur Sebbo hat keinen Atlas — sein Bildstreifen `SEBBO_SRC` ziert
+nur den Titelbildschirm.
+
+Das heißt: **für Gegner, Bosse, Effekte und Arenen existiert kein
+Asset-Bestand.** Das ist alles Code, der Pfade zeichnet, und dafür gibt es in
+Unreal keine Entsprechung, die man „übersetzen" kann. **Die Spielfiguren
+dagegen haben einen fertigen 2D-Bestand:** als Vorlage für Silhouette, Farbe
+und Kostüm wertvoll, als 3D-Asset nicht direkt verwendbar.
 
 | Übertragbar | Nicht übertragbar |
 | --- | --- |
@@ -86,6 +97,7 @@ Dafür gibt es in Unreal keine Entsprechung, die man „übersetzen" kann.
 | Gegner-Verhaltensmuster (konzeptionell) | `Net` + `MqttWire` (494 Z.) — entfällt ersatzlos |
 | `BalanceSim` als Methode | `AudioSys` (2.614 Z.) — wird MetaSounds |
 | Die Test-Disziplin aus `SelfTest` + Gate | `Save` (87 Z.) — wird `USaveGame` |
+| Figuren-Sprites als Vorlage für die 3D-Modelle | die Sprites selbst (2D-Pixel-Art) |
 
 Konzeptionell überträgt sich grob ein Drittel der 17.249 Zeilen Systemcode,
 **wörtlich null Zeilen**. Wer den Umbau als Übersetzung plant, plant falsch.
@@ -117,6 +129,22 @@ Nanite nutzen. Alles, wofür die Engine gebaut ist, funktioniert sofort.
   Platzhaltern (UE-Mannequin, Grundkörper). Wer den vertikalen Schnitt an
   fertige Assets koppelt, blockiert die gesamte Gameplay-Arbeit hinter einem
   Arbeitsstrang, der Monate braucht.
+- **Die Figuren fangen nicht bei null an.** 22 der 23 spielbaren Figuren
+  liegen als Pixel-Art vor (Abschnitt 2), dazu die Foto-Vorlagen der Figuren-Pipeline
+  (`kandidaten.html`, `parts.html`). Sechs Figuren sind aus **KayKit Adventurers**
+  von Kay Lousberg gerendert (geklärt am 2026-09-28,
+  `docs/kaykit-herkunft-lizenz-2026-09-28.md`): Barbarian, Knight, Mage, Rogue und
+  Rogue_Hooded liegen im freien Paket unter **CC0 1.0** als FBX und glTF vor; der
+  Ranger kam erst mit „Adventurers 2.0", ob frei oder EXTRA ist offen. Ein
+  Testimport in **UE 5.8.2** lief fehlerfrei: FBX ergibt ein Skeletal Mesh mit
+  Skelett (41 Knochen), Physics Asset, 76 Animationen, Material und Textur; glTF
+  zerlegt die Figur, also FBX nehmen.
+- **Das KayKit-Rig als gemeinsames Skelett — eine Stilfrage.** `Rig_Medium` plus
+  133 CC0-Animationen könnten das Skelett aller Figuren werden; die 16 eigenen
+  Figuren, in KayKit-Proportionen darauf modelliert, erbten alle Animationen.
+  Das senkt den teuersten Posten dieses Wegs drastisch, legt aber den Low-Poly-
+  Chibi-Stil fest. Die Art-Bible muss vor der Figurenproduktion entscheiden:
+  KayKit-Stil für alle, oder KayKit nur als Platzhalter für den vertikalen Schnitt.
 - **Nicht alles wird Skeletal Mesh.** Siehe Abschnitt 4 — bei bis zu 50
   gleichzeitigen Gegnern ist die Wahl der Gegner-Darstellung die kritischste
   technische Entscheidung des Projekts.
@@ -129,12 +157,14 @@ Nanite nutzen. Alles, wofür die Engine gebaut ist, funktioniert sofort.
 
 ### Abgewogen und verworfen: B — Paper2D / PaperZD
 
-Optisch am nächsten am heutigen Spiel. Aber: das heutige Spiel hat **keine
-Sprites**, es zeichnet Vektoren (6 `drawImage` gegen 1.865 Zeichenaufrufe). Man
-müsste 23 Charaktere mit vollständigen Animationssätzen als Sprites erst
-herstellen. Paper2D ist zudem der am schwächsten gepflegte Teil der Engine;
-Beleuchtung, Sortierung und Performance sind Handarbeit. Der Weg kombiniert den
-Art-Aufwand von A mit den Engine-Nachteilen von 2D.
+Optisch am nächsten am heutigen Spiel, und für die Spielfiguren gäbe es sogar
+fertige Sprites (Abschnitt 2). *Korrigiert am 2026-09-27:* Die erste Fassung
+behauptete hier, das Spiel habe „keine Sprites"; das war für die Figuren falsch.
+Die Abwägung kippt dadurch trotzdem nicht: Gegner, Bosse, Effekte und Arenen
+sind reine Vektorgrafik und müssten auch für Paper2D erst als Sprites entstehen,
+und die vorhandenen Figuren-Sheets haben nur drei Animationen (`idle`, `walk`,
+`punch`). Paper2D ist zudem der am schwächsten gepflegte Teil der Engine;
+Beleuchtung, Sortierung und Performance sind Handarbeit.
 
 ### Abgewogen und verworfen: C — Prozedural in 3D
 
@@ -398,10 +428,10 @@ Neu gewichtet nach den Entscheidungen vom 2026-09-16.
 | **Mehrspieler-Aufschlag (neu, bewusst eingekauft)** | Serverautoritatives Design kostet pro System spürbar Mehraufwand gegenüber einer reinen Einzelspielerlogik. Das ist der Preis dafür, Phase 6 der alten Fassung nicht als Umbau zu bezahlen. |
 | **Feature-Parität als Pflicht (neu)** | Weil das HTML-Spiel abgelöst wird, ist Parität kein Ziel mehr, sondern Abnahmebedingung: 207 Datensätze, Online-Coop, Progression, Achievements. Ein UE-Bau mit 80 % der Inhalte löst nichts ab. |
 | **Scope-Falle** | 207 Datensätze klingen nach „nur Daten". Jede Waffe braucht Modell, Effekt, Sound und Trefferfeedback. 42 Waffen sind 42 kleine Projekte — unter Weg A mit Art-Anteil. |
-| **Verlust der Testabdeckung** | Heute rund 134 Selbsttest-Assertions plus ein Gate in etwa 15 Sekunden. Das UE-Äquivalent ist langsamer und aufwendiger. Läuft es nicht ab Phase 0 mit, entsteht es nie. |
+| **Verlust der Testabdeckung** | Stand 2026-09-27: rund 160 Selbsttest-Assertions, ein Gate in etwa 15 Sekunden und sieben Playwright-Suiten, die seit PR #3 bei jedem PR laufen. Das UE-Äquivalent ist langsamer und aufwendiger. Läuft es nicht ab Phase 0 mit, entsteht es nie. |
 | **UE-5.8-Spezifika** | Die Architektur ist versionsstabil, die konkreten Signaturen sind es nicht: Mass Entity, CommonUI und die Animation-Optimierungspfade haben sich zwischen 5.x-Versionen bewegt. Gegen die 5.8-Doku prüfen, bevor darauf gebaut wird. |
 | **Doppelpflege (entschärft)** | War in der ersten Fassung ein Hauptrisiko. Durch die Ablöse-Entscheidung entfällt es: das HTML-Spiel wird eingefroren gepflegt, nicht weiterentwickelt. Es bleibt bis zur Ablösung Referenz-Orakel für die Balance. |
-| **Spielstände der Bestandsspieler (neu, offen)** | Das HTML-Spiel speichert Freischaltungen, Mastery und Statistiken in `localStorage`. Bei einer Ablösung gehen die ohne Migrationspfad verloren. Siehe Abschnitt 8. |
+| **Spielstände der Bestandsspieler (entschärft)** | Das HTML-Spiel speichert Freischaltungen, Mastery und Statistiken in `localStorage`. Einen Migrationspfad gibt es aber schon: den Spielstand-Code `WS1` (Abschnitt 8). Es fehlt nur der Importer auf UE-Seite. |
 
 ---
 
@@ -441,18 +471,22 @@ Neu gewichtet nach den Entscheidungen vom 2026-09-16.
 1. **Spielstände der Bestandsspieler.** Das HTML-Spiel hält Freischaltungen,
    Mastery, Perks, Quests und Statistiken in `localStorage` (`Save`, 87 Z.).
    Bei Ablösung sind sie ohne Zutun weg. Drei Möglichkeiten:
-   - **Export/Import-Code.** Das Spiel kann bereits Zustand als
-     deflate+base64-Code aus- und eingeben (`Net.b64`/`unb64` für die
-     Offline-Verbindung). Derselbe Mechanismus ließe sich für einen
-     Spielstand-Code nutzen: im HTML-Spiel exportieren, im UE-Bau importieren.
-     Technisch der sauberste Weg, Aufwand überschaubar.
+   - **Export/Import-Code — existiert schon.** *Korrigiert am 2026-09-27:* Die
+     erste Fassung schlug vor, dafür den Base64-Weg aus `Net` umzubauen. Dabei
+     hat das Spiel längst einen eigenen Spielstand-Export: `Save.exportCode()`
+     liefert `WS1:` + Base64 des kompletten Save-JSON, `Save.importCode()`
+     prüft beim Einlesen auf `unlockedChars`, mit eigenen Knöpfen im Spiel
+     („Code erzeugen" / „Code importieren"); `tools/pw_abuse.py` testet den
+     Hin- und Rückweg. Für den UE-Bau fehlt nur der Importer: Präfix prüfen,
+     Base64 decodieren, JSON parsen, Felder auf `UWbnSaveGame` abbilden.
    - **Bewusst verwerfen.** Alle fangen neu an. Legitim, wenn die Spielerbasis
      klein ist — aber es ist eine Produktentscheidung, keine technische.
    - **Startbonus statt Migration.** Kein echter Import, aber ein Ausgleich für
      Bestandsspieler. Umgeht das Problem, statt es zu lösen.
 
-   *Empfehlung:* Export/Import-Code, falls überhaupt nennenswert Spielstände
-   existieren. Die Frage blockiert nichts vor Phase 3.
+   *Empfehlung:* WS1-Importer im UE-Bau, als Teil des Save-Schritts in
+   Phase 3. Offen ist nur noch, ob man ihn überhaupt anbieten will; das ist eine
+   Produktfrage, keine technische mehr.
 
 2. **Sitzungsvermittlung für den Coop.** Das HTML-Spiel nutzt MQTT-Signaling
    plus manuellen Code-Austausch. In UE stehen Steam-Sessions, ein eigener
@@ -493,3 +527,18 @@ neun Register summiert.
 Aussage von Abschnitt 2 wird dadurch nicht schwächer, sondern stärker. Ebenso
 ersetzt die Code-Konstante `_maxSimultaneous = 50` die frühere, aus einem
 Screenshot abgelesene Gegnerzahl.
+
+**Korrekturen vom 2026-09-27** (aus dem Audit, `docs/audit-brainstorm-2026-09-27.md`):
+
+- *Asset-Bestand (Abschnitte 2 und 3).* „Die 66 PNGs sind ein paar Lauf-Sprites"
+  und „das Spiel hat keine Sprites" waren falsch. Die PNGs sind 57 animierte
+  Figuren-Sheets, sechs Klassen-Atlanten und ein Props-Atlas; 22 der 23
+  spielbaren Figuren erscheinen als Pixel-Art. Nur Gegner, Bosse, Effekte und
+  Arenen sind reine Vektorgrafik. Gemessen mit
+  `grep -c "src:'data:image/png"` über den `CHAR_SPR`-Block, `CHAR_ATLAS_SRC` und
+  dem `sprite`-Feld der `CHARS` in `data.js`. Die Wahl von Weg A bleibt davon
+  unberührt; die Begründung gegen Paper2D ist entsprechend neu gefasst.
+- *Spielstände (Abschnitte 6 und 8).* Ein Migrationspfad existiert bereits:
+  `Save.exportCode()`/`importCode()` mit dem Format `WS1:`.
+- *Testabdeckung (Abschnitt 6).* Die Zahl 134 war vom 2026-09-16; seither sind
+  es rund 160 Assertions, und die Suiten laufen in der CI.
