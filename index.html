@@ -17363,6 +17363,10 @@ const Net = {
         acts: [{ id: 'relicSkip', label: 'Ueberspringen' }]
       };
     }
+    if (G.state === 'paused') {
+      return { t: 'menu', title: 'Pause', sub: 'Das Spiel ist angehalten. Escape oder "Weiter" setzt fort.', items: [],
+        acts: [{ id: 'resume', label: 'Weiter' }] };
+    }
     if (G.state === 'shop' && p2) {
       const acts = [{ id: 'reroll', label: 'Neuwurf (' + ShopSystem.rerollCost(G.wave) + ' MAT)' }];
       p2.weapons.forEach((w, i) => acts.push({ id: 'sell:' + i, label: 'verkaufen: ' + WEAPON_BY_ID[w.id].name + ' T' + (w.tier + 1) }));
@@ -17413,6 +17417,7 @@ const Net = {
       if (p && p.index === 1) { if (k === 'relic') G.chooseRelic(p, v); else G.skipRelic(); }
       return;
     }
+    if (k === 'resume') { if (G.state === 'paused') this.hostPause(); return; }
     if (G.state !== 'shop' || !p2) return;
     if (k === 'buy') ShopSystem.buy(+v, p2);
     else if (k === 'sell') { if (p2.weapons[+v]) { G.materials += p2.sellWeapon(+v); AudioSys.sfx('buy'); UI.renderShop(); } }
@@ -17477,6 +17482,7 @@ const SelfTest = {
     try { this._audioLufs(); } catch (e) { this._ok(false, 'LUFS (Fehler: ' + e.message + ')'); }
     try { this._net(); } catch (e) { this._ok(false, 'Net (Fehler: ' + e.message + ')'); }
     try { this._netHostCharPick(); } catch (e) { this._ok(false, 'Net-Figurenwahl (Fehler: ' + e.message + ')'); }
+    try { this._netPauseMirror(); } catch (e) { this._ok(false, 'Net-Pause (Fehler: ' + e.message + ')'); }
     /* Gesten-Gate-Gruppe bewusst als LETZTE Sync-Gruppe: der Fetch-Zeuge ist
        ab run()-Start armiert und deckt damit das gesamte Sync-Fenster ab —
        jede Gruppe, die unabsichtlich Assets laden wuerde, faellt hier auf. */
@@ -18503,6 +18509,30 @@ const SelfTest = {
      der verbundene Host den Lauf beginnt. Gedrueckt werden die echten Knoepfe;
      Net.send faengt ab, was an den Gast ginge. Ohne Verbindung bleibt "Spiel
      starten" ein Einzelspieler-Lauf. */
+  /* Online-Koop: pausiert das Spiel, sieht der Gast das - sein Bild ist sonst nur
+     eingefroren, der Pause-Bildschirm des Hosts liegt nicht im Video. "Weiter" im
+     Gast-Menue setzt fort, danach schliesst sich das Menue. */
+  _netPauseMirror() {
+    const keep = { role: Net.role, phase: Net.phase, send: Net.send, last: Net._lastMenu, cur: UI.cur, state: Game.state };
+    const sent = [];
+    const menu = () => [...sent].reverse().find(m => m.t === 'menu');
+    try {
+      Net.role = 'host'; Net.phase = 'connected'; Net._lastMenu = null;
+      Net.send = m => { sent.push(m); return true; };
+      Game.state = 'play'; UI.show(null);
+      Net.hostPause();
+      const m = menu();
+      this._ok(Game.state === 'paused' && m && m.title === 'Pause' && (m.acts || []).some(a => a.id === 'resume'),
+        'Net-Pause: pausiert der Host, bekommt der Gast ein Pause-Menue mit "Weiter" - tatsaechlich: ' + (m ? m.title + ' / ' + (m.acts || []).map(a => a.id).join(',') : 'kein Menue'));
+      Net.applyPick('resume');
+      const after = menu();
+      this._ok(Game.state === 'play' && UI.cur === null && after && after.title === '',
+        'Net-Pause: "Weiter" vom Gast setzt fort und schliesst sein Menue - tatsaechlich: ' + Game.state + ', Menue "' + (after ? after.title : '-') + '"');
+    } finally {
+      Net.role = keep.role; Net.phase = keep.phase; Net.send = keep.send; Net._lastMenu = keep.last;
+      Game.state = keep.state; UI.show(keep.cur || 'scTitle');
+    }
+  },
   _netHostCharPick() {
     const keep = { role: Net.role, phase: Net.phase, send: Net.send, last: Net._lastMenu, cur: UI.cur,
       coop: Game.coop, daily: Game.daily, csi: Game.charSelIdx, seed: Game.manualSeed, input: $('seedInput').value };
