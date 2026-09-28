@@ -1059,16 +1059,16 @@ h2.hd{font-family:var(--amt);color:var(--formular);letter-spacing:.18em}
 
     <div id="netRoomBox" class="hidden" style="margin-top:12px">
       <div class="sub">Raumcode — dem Mitspieler durchgeben:</div>
-      <div id="netCodeOut" style="font:700 34px/1.25 var(--disp);letter-spacing:.22em;color:var(--gold)">------</div>
+      <div id="netCodeOut" style="font:700 34px/1.25 var(--disp);letter-spacing:.22em;color:var(--gold)">---- ----</div>
       <button class="btn small nav" data-act="netCopyCode">Code kopieren</button>
     </div>
 
     <div id="netJoinBox" class="hidden" style="margin-top:12px">
       <div class="sub">Raumcode des Hosts eingeben:</div>
       <div class="row">
-        <input id="netCodeIn" type="text" maxlength="7" placeholder="z. B. K7RM2X" spellcheck="false"
+        <input id="netCodeIn" type="text" maxlength="12" placeholder="z. B. K7RM 2XQP" spellcheck="false"
           style="background:#0b1020;color:var(--gold);border:1px solid #25406b;border-radius:8px;padding:8px 10px;
-                 font:700 22px/1.2 var(--disp);letter-spacing:.2em;text-transform:uppercase;width:200px;text-align:center">
+                 font:700 22px/1.2 var(--disp);letter-spacing:.2em;text-transform:uppercase;width:250px;text-align:center">
         <button class="btn small nav" data-act="netJoinGo">Verbinden</button>
       </div>
     </div>
@@ -11972,7 +11972,7 @@ const UI = {
     if (!$('netStatus')) return;
     $('netStatus').textContent = Net.status;
     $('netRoomBox').classList.toggle('hidden', !(Net.role === 'host' && Net.code));
-    $('netCodeOut').textContent = Net.code || '------';
+    $('netCodeOut').textContent = Net.showCode(Net.code);
     $('netJoinBox').classList.toggle('hidden', this.netMode !== 'join');
     $('netManualBox').classList.toggle('hidden', this.netMode !== 'manual');
     $('netHangUp').classList.toggle('hidden', Net.phase === 'idle');
@@ -16817,6 +16817,7 @@ const TUNE = {
 const NET_ICE = [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }];
 const NET_BROKERS = ['wss://broker.emqx.io:8084/mqtt', 'wss://test.mosquitto.org:8081/mqtt'];
 const NET_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';   /* ohne I/O/0/1 - vorlesbar */
+const NET_CODE_LEN = 8;   /* 32^8 = 40 Bit: macht eine Vorab-Tabelle ueber alle Codes (fixes Salz) unbezahlbar */
 const NET_HZ = 30;
 const NET_NO_P2P = 'Direktverbindung kam nicht zustande - vermutlich blockt eine Firewall oder ein strenges NAT. '
   + 'Im selben WLAN klappt es fast immer; sonst den Offline-Weg nutzen.';
@@ -16945,12 +16946,14 @@ const Net = {
   isGuest() { return this.role === 'client' && this.phase === 'connected'; },
 
   roomCode() {
-    const a = crypto.getRandomValues(new Uint8Array(6));
+    const a = crypto.getRandomValues(new Uint8Array(NET_CODE_LEN));
     let s = '';
-    for (let i = 0; i < 6; i++) s += NET_ALPHABET[a[i] % NET_ALPHABET.length];
+    for (let i = 0; i < NET_CODE_LEN; i++) s += NET_ALPHABET[a[i] % NET_ALPHABET.length];
     return s;
   },
-  normCode(s) { return String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6); },
+  normCode(s) { return String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, NET_CODE_LEN); },
+  /* Anzeige in Vierergruppen ("K7RM 2XQP"); normCode entfernt den Trenner beim Eintippen wieder */
+  showCode(c) { return c ? c.replace(/(.{4})(?=.)/g, '$1 ') : '---- ----'; },
 
   /* ---------- Code fuer den Offline-Weg: deflate + base64 ---------- */
   b64(u8) { let s = ''; for (let i = 0; i < u8.length; i++) s += String.fromCharCode(u8[i]); return btoa(s).replace(/=+$/, ''); },
@@ -17133,7 +17136,7 @@ const Net = {
   },
   async joinRoom(code) {
     const c = this.normCode(code);
-    if (c.length !== 6) { UI.toast('Bitte den 6-stelligen Raumcode eingeben'); return; }
+    if (c.length !== NET_CODE_LEN) { UI.toast('Bitte den ' + NET_CODE_LEN + '-stelligen Raumcode eingeben'); return; }
     this.reset();
     this.role = 'client'; this.myId = Math.random().toString(36).slice(2, 8);
     this.code = c; this.wsIdx = 0;
@@ -18448,8 +18451,10 @@ const SelfTest = {
      Zusicherung, dass Ferneingaben nur mit Verbindung bei Spieler 2 ankommen. */
   _net() {
     const code = Net.roomCode();
-    this._ok(code.length === 6 && /^[A-Z0-9]+$/.test(code) && !/[IO01]/.test(code), 'Net: Raumcode 6 Zeichen ohne I/O/0/1');
-    this._ok(Net.normCode(' k7-m 2x abcd ') === 'K7M2XA', 'Net: normCode saeubert und kuerzt auf 6');
+    this._ok(NET_CODE_LEN === 8 && code.length === 8 && /^[A-Z0-9]+$/.test(code) && !/[IO01]/.test(code), 'Net: Raumcode 8 Zeichen ohne I/O/0/1');
+    this._ok(Net.normCode(' k7-m 2x abcd ef ') === 'K7M2XABC', 'Net: normCode saeubert und kuerzt auf 8');
+    this._ok(Net.showCode('K7RM2XQP') === 'K7RM 2XQP' && Net.normCode(Net.showCode('K7RM2XQP')) === 'K7RM2XQP',
+      'Net: Anzeige in Vierergruppen, eingetippt wieder derselbe Code');
     const bytes = new Uint8Array([0, 1, 127, 128, 255, 65, 66]);
     this._ok(Array.from(Net.unb64(Net.b64(bytes))).join() === Array.from(bytes).join(), 'Net: base64 Roundtrip inkl. fehlendem Padding');
     /* Nutzlast > 127 Byte erzwingt einen mehrbyte-Varint - genau der Fall echter SDPs. */

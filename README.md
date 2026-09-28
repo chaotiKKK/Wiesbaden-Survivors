@@ -21,7 +21,7 @@ keinen neuen Umfang mehr. Ihr Nachfolger ist ein Neubau in Unreal Engine 5.8
   `python -m http.server`. Erst dann lädt `AudioSys.prefetchAssets()` die Cues
   aus `audio/`, und zwar erst nach der ersten echten Nutzergeste.
 - **Koop:** Ein Spieler eröffnet einen Raum und nennt dem anderen den
-  6-stelligen Code. Die Verbindung selbst ist WebRTC. Nur der Verbindungsaufbau
+  8-stelligen Code (angezeigt als `K7RM 2XQP`). Die Verbindung selbst ist WebRTC. Nur der Verbindungsaufbau
   läuft über öffentliche MQTT-Broker, und zwar versiegelt: Dort sind weder
   Raumcodes noch IP-Adressen zu lesen. Details stehen in
   [`docs/netseal-coop-signaling-2026-09-27.md`](docs/netseal-coop-signaling-2026-09-27.md).

@@ -49,7 +49,7 @@ PBKDF2 gemessen: 107 ms (Desktop, headless Chromium), ECDH 4 ms.
   bei 600.000 Iterationen grob GPU-Stunden, der Raum ist höchstens 3 Minuten offen. Weil das Salz
   fix sein muss (der Gast kennt nur den Code), wäre eine einmalige Tabelle über alle Codes
   denkbar (grob ein GPU-Tag, ~16 GB) — damit ließen sich Codes erkennen und Räume betreten.
-  **IPs bleiben auch dann geschützt** (ECDH). Gegenmittel, falls nötig: längere Codes.
+  **IPs bleiben auch dann geschützt** (ECDH). Gegenmittel, falls nötig: längere Codes. → umgesetzt am 2026-09-28, siehe Nachtrag.
 - **Gecachte Altversionen** sprechen das alte Protokoll, bis der Spieler im Update-Toast
   „Neu laden" klickt. Alt und Neu finden sich nicht (Zeitüberschreitung, neue Fehlermeldung
   nennt den Grund). Dass dabei keine IP abfließt, ist aus dem Protokoll abgeleitet — ein SDP
@@ -60,3 +60,22 @@ PBKDF2 gemessen: 107 ms (Desktop, headless Chromium), ECDH 4 ms.
 
 `index.html` (NetSeal, Net, Selbsttestgruppe `_netSeal`), `sw.js` (Cache-Stempel = sha1(index.html)),
 `tools/verify.mjs` (zwei Marker), `tools/pw_netseal.py` (neu).
+
+## Nachtrag 2026-09-28: Raumcodes mit 8 Zeichen
+
+Entscheidung des Projektinhabers: Die Codes wachsen von 6 auf 8 Zeichen (`NET_CODE_LEN = 8`).
+Das Alphabet bleibt gleich (32 Zeichen, ohne I/O/0/1), das Protokoll `wbns2` ebenfalls.
+
+- **Entropie:** 32^8 = 2^40 statt 2^30, also 1024-mal mehr Codes. Die Vorab-Tabelle über
+  alle Codes würde statt grob eines GPU-Tages grob drei GPU-Jahre und rund 16 TB kosten.
+  Einen einzelnen offenen Raum in seinen 3 Minuten zu erraten, ist damit aussichtslos.
+- **Lesbarkeit:** Der Code wird in Vierergruppen angezeigt (`K7RM 2XQP`). `normCode`
+  entfernt Leerzeichen und Bindestriche beim Eintippen, und das Eingabefeld nimmt bis
+  zu 12 Zeichen mit Trennern an. „Code kopieren“ kopiert den Code ohne Trenner.
+- **Gemischte Versionen:** Ein alter Client (6 Zeichen) findet einen neuen Host nicht,
+  und ein neuer Client weist einen 6-stelligen Code mit Hinweis ab. Keiner der beiden
+  Fälle leakt etwas, denn ohne passenden Tag entsteht kein SDP.
+- **Gepinnt durch:** den Selftest `_netSeal` (Länge 8, Kürzen auf 8, Gruppierung
+  hin und zurück), den Gate-Marker `const NET_CODE_LEN = 8;` und `pw_netseal` gegen
+  den echten Broker, der unabhängig von der Länge prüft, dass der Code nie auf dem
+  Draht erscheint.

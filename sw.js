@@ -8,7 +8,7 @@
 /* CACHE-Name wird beim Build aus dem Content-Hash von index.html gestempelt
    (tools/build.js). Aendert sich das Spiel, aendert sich der Name -> die
    activate-Phase raeumt den alten Cache weg. Manuelles Hochzaehlen entfaellt. */
-const CACHE = 'wbns-c3f1ec25d828265d53299dd9ea48674e9a105318';
+const CACHE = 'wbns-beb746b63716ff3f40d6f3f1b8e12a08e96c8694';
 const SHELL = ['./', './index.html', './data.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './maskable-512.png'];
 
 /* SFX-Vorcach: damit hat der ERSTE Offline-Start vollen Sound (vorher kamen
