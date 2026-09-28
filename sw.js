@@ -23,15 +23,21 @@ const AUDIO = [
   'audio/hurt.m4a', 'audio/step.m4a', 'audio/dash.m4a', 'audio/pick.m4a', 'audio/ui.m4a', 'audio/ok.m4a', 'audio/err.m4a',
 ];
 
+/* cache: 'reload' holt am HTTP-Cache des Browsers vorbei. Ohne das legte ein
+   neuer Worker die ALTEN Bytes unter dem NEUEN Namen ab, sobald der Browser die
+   Datei noch fuer frisch hielt (GitHub Pages: max-age=600) - der Spieler bekam
+   den Update-Hinweis und blieb trotzdem auf dem alten Stand. */
+const fresh = (u) => new Request(u, { cache: 'reload' });
+
 self.addEventListener('install', (event) => {
   /* KEIN automatisches skipWaiting: der neue Worker wartet, bis der Spieler im
      Update-Toast "Neu laden" klickt (siehe message-Handler). So springt der
      Cache nicht mitten in der Sitzung um. */
   event.waitUntil(
     caches.open(CACHE)
-      .then((cache) => cache.addAll(SHELL))
+      .then((cache) => cache.addAll(SHELL.map(fresh)))
       .then(() => caches.open(CACHE))
-      .then((cache) => Promise.all(AUDIO.map((u) => cache.add(u).catch(() => { /* Cue fehlt: Offline-Sound lueckt dort, Bake bleibt */ }))))
+      .then((cache) => Promise.all(AUDIO.map((u) => cache.add(fresh(u)).catch(() => { /* Cue fehlt: Offline-Sound lueckt dort, Bake bleibt */ }))))
   );
 });
 
