@@ -58,7 +58,7 @@ PBKDF2 gemessen: 107 ms (Desktop, headless Chromium), ECDH 4 ms.
 
 ## Dateien
 
-`index.html` (NetSeal, Net, Selbsttestgruppe `_netSeal`), `sw.js` (Cache-Stempel = sha1(index.html)),
+`index.html` (NetSeal, Net, Selbsttestgruppe `_netSeal`), `sw.js` (Cache-Stempel damals von Hand = sha1(index.html); seit 2026-09-28 stempelt ihn `tools/build-site.mjs`),
 `tools/verify.mjs` (zwei Marker), `tools/pw_netseal.py` (neu).
 
 ## Nachtrag 2026-09-28: Raumcodes mit 8 Zeichen

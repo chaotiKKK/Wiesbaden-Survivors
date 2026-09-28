@@ -63,24 +63,6 @@ jobs:
           python -m pip install --disable-pip-version-check playwright==1.62.0
           python -m playwright install chromium
 
-      # If index.html changes, the service-worker cache name has to change with
-      # it, or installed players keep the old cached game. Compared as a diff, so
-      # it does not depend on how git converts line endings on checkout.
-      - name: Service-worker cache stamp moves with index.html
-        shell: bash
-        run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then base="${{ github.event.pull_request.base.sha }}"; else base="${{ github.event.before }}"; fi
-          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$base" 2>/dev/null; then
-            echo "no comparable base commit — skipped"; exit 0
-          fi
-          if git diff --quiet "$base" HEAD -- index.html; then echo "index.html unchanged"; exit 0; fi
-          if git diff "$base" HEAD -- sw.js | grep -q "^+const CACHE"; then
-            echo "index.html changed and the CACHE stamp in sw.js moved with it"
-          else
-            echo "::error file=sw.js::index.html changed but the CACHE stamp in sw.js did not — installed players would keep the stale cached game"
-            exit 1
-          fi
-
       - name: Gate — static legs, selftest, BalanceSim, throttle (tools/verify.mjs)
         run: node tools/verify.mjs
 

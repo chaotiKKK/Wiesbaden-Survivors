@@ -17,11 +17,16 @@
 //   - every relative src= / href= in index.html
 //   - every icon in manifest.webmanifest
 //
+// The published sw.js gets its cache stamp here, computed from the published files
+// (tools/lib/site-stamp.mjs). Nobody stamps sw.js by hand; the repository copy keeps
+// the 'wbns-dev' placeholder.
+//
 // Usage: node tools/build-site.mjs [--out _site]
 
-import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { repoRoot, argOf } from './lib/harness.mjs';
+import { CACHE_LINE, DEV_CACHE, cacheOf, computeStamp } from './lib/site-stamp.mjs';
 
 const ROOT = repoRoot(import.meta.url);
 const OUT = path.resolve(ROOT, argOf(process.argv.slice(2), '--out', '_site'));
@@ -68,5 +73,14 @@ for (const f of site) {
   copyFileSync(path.join(ROOT, f), dst);
   bytes += statSync(dst).size;
 }
+
+// Stamp the published sw.js from the published bytes.
+const swOut = path.join(OUT, 'sw.js');
+const swSrc = readFileSync(swOut, 'utf8');
+const before = cacheOf(swSrc);
+if (before === null) { console.error("FAIL  sw.js has no \"const CACHE = '...';\" line to stamp"); process.exit(1); }
+if (before !== DEV_CACHE) console.warn('NOTE  sw.js in the repository carries ' + before + ' instead of ' + DEV_CACHE + '; the build overwrites it anyway');
+const stamp = computeStamp(OUT, swSrc);
+writeFileSync(swOut, swSrc.replace(CACHE_LINE, (line) => line.replace(before, stamp)));
 console.log('site: ' + site.size + ' files (' + FILES.length + ' core + ' + AUDIO.length + ' audio cues), '
-  + Math.round(bytes / 1024) + ' KB -> ' + path.relative(ROOT, OUT));
+  + Math.round(bytes / 1024) + ' KB -> ' + path.relative(ROOT, OUT) + ', cache ' + stamp.slice(0, 17) + '...');
