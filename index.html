@@ -16819,6 +16819,7 @@ const NET_BROKERS = ['wss://broker.emqx.io:8084/mqtt', 'wss://test.mosquitto.org
 const NET_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';   /* ohne I/O/0/1 - vorlesbar */
 const NET_CODE_LEN = 8;   /* 32^8 = 40 Bit: macht eine Vorab-Tabelle ueber alle Codes (fixes Salz) unbezahlbar */
 const NET_HZ = 30;
+const NET_SILENT_MS = 3000;   /* so lange ohne Paket vom Gast (sonst NET_HZ pro Sekunde) -> Host pausiert */
 const NET_NO_P2P = 'Direktverbindung kam nicht zustande - vermutlich blockt eine Firewall oder ein strenges NAT. '
   + 'Im selben WLAN klappt es fast immer; sonst den Offline-Weg nutzen.';
 
@@ -17254,7 +17255,7 @@ const Net = {
     this.pc = null; this.ctl = null; this.inp = null; this.peerId = null; this.audioDest = null;
     this.room = null; this.eph = null; this.sk = null; this._offerTaken = false;
     this.acts = {}; this.remote = { mx: 0, my: 0, ax: 0, ay: 0, aim: 0, sk: 0, t: 0 };
-    this._lastMenu = ''; this.ping = 0;
+    this._lastMenu = ''; this.ping = 0; this._silencePaused = false;
   },
   hangUp() {
     const wasGuest = this.role === 'client';
@@ -17314,9 +17315,21 @@ const Net = {
           h: av.has ? 1 : 0, s: Input.skillDown(0) ? 1 : 0, t: Date.now()
         }, true);
       }
-    } else if (Date.now() - this.lastRx > 900) {
-      /* Achsen altern aus, falls der Gast verstummt - sonst laeuft P2 endlos weiter. */
-      this.remote.mx = 0; this.remote.my = 0; this.remote.aim = 0; this.remote.sk = 0;
+    } else {
+      const silent = Date.now() - this.lastRx;
+      if (silent > 900) {
+        /* Achsen altern aus, falls der Gast verstummt - sonst laeuft P2 endlos weiter. */
+        this.remote.mx = 0; this.remote.my = 0; this.remote.aim = 0; this.remote.sk = 0;
+      }
+      /* Ein harter Abbruch meldet WebRTC erst nach ~15 s. Schweigt der Gast laenger als
+         NET_SILENT_MS, pausiert der Host schon vorher - einmal pro Stille, damit er
+         danach auch allein weiterspielen kann. */
+      if (silent < NET_SILENT_MS) this._silencePaused = false;
+      else if (!this._silencePaused && Game.state === 'play') {
+        this._silencePaused = true;
+        Game.state = 'paused'; UI.navIdx = 0; UI.show('scPause');
+        UI.toast('Mitspieler antwortet nicht - Spiel pausiert');
+      }
     }
   },
   /* Gast-Tasten werden nur als Ereignisse verschickt, nie lokal simuliert. */
@@ -17483,6 +17496,7 @@ const SelfTest = {
     try { this._net(); } catch (e) { this._ok(false, 'Net (Fehler: ' + e.message + ')'); }
     try { this._netHostCharPick(); } catch (e) { this._ok(false, 'Net-Figurenwahl (Fehler: ' + e.message + ')'); }
     try { this._netPauseMirror(); } catch (e) { this._ok(false, 'Net-Pause (Fehler: ' + e.message + ')'); }
+    try { this._netSilence(); } catch (e) { this._ok(false, 'Net-Stille (Fehler: ' + e.message + ')'); }
     /* Gesten-Gate-Gruppe bewusst als LETZTE Sync-Gruppe: der Fetch-Zeuge ist
        ab run()-Start armiert und deckt damit das gesamte Sync-Fenster ab —
        jede Gruppe, die unabsichtlich Assets laden wuerde, faellt hier auf. */
@@ -18530,6 +18544,32 @@ const SelfTest = {
         'Net-Pause: "Weiter" vom Gast setzt fort und schliesst sein Menue - tatsaechlich: ' + Game.state + ', Menue "' + (after ? after.title : '-') + '"');
     } finally {
       Net.role = keep.role; Net.phase = keep.phase; Net.send = keep.send; Net._lastMenu = keep.last;
+      Game.state = keep.state; UI.show(keep.cur || 'scTitle');
+    }
+  },
+  /* Online-Koop: bricht der Gast weg, meldet WebRTC das erst nach ~15 s. So lange
+     liefe das Spiel ungeschuetzt weiter. Schweigt der Gast (sonst 30 Pakete/s) 3 s
+     lang, pausiert der Host und sagt es - einmal pro Stille, damit er danach auch
+     allein weiterspielen kann. */
+  _netSilence() {
+    const keep = { role: Net.role, phase: Net.phase, send: Net.send, last: Net._lastMenu, cur: UI.cur, state: Game.state, rx: Net.lastRx };
+    const toast = () => { const t = [...document.querySelectorAll('.toast')].pop(); return t ? t.textContent : ''; };
+    const tick = () => Net.tick(0.02);
+    try {
+      Net.role = 'host'; Net.phase = 'connected'; Net.send = () => true;
+      Game.state = 'play'; UI.show(null);
+      Net.lastRx = Date.now() - 500; tick();
+      this._ok(Game.state === 'play', 'Net-Stille: eine halbe Sekunde ohne Paket pausiert nicht');
+      Net.lastRx = Date.now() - 4000; tick();
+      this._ok(Game.state === 'paused' && UI.cur === 'scPause' && /antwortet nicht/.test(toast()),
+        'Net-Stille: 4 s ohne Paket vom Gast pausiert den Host mit Hinweis - tatsaechlich: ' + Game.state + ', ' + UI.cur + ', "' + toast() + '"');
+      Game.state = 'play'; UI.show(null); tick();
+      this._ok(Game.state === 'play', 'Net-Stille: setzt der Host bei anhaltender Stille fort, spielt er allein weiter (keine Pause-Schleife)');
+      Net.lastRx = Date.now(); tick();
+      Net.lastRx = Date.now() - 4000; tick();
+      this._ok(Game.state === 'paused', 'Net-Stille: kommen wieder Pakete und schweigt der Gast erneut, pausiert es wieder');
+    } finally {
+      Net.role = keep.role; Net.phase = keep.phase; Net.send = keep.send; Net._lastMenu = keep.last; Net.lastRx = keep.rx;
       Game.state = keep.state; UI.show(keep.cur || 'scTitle');
     }
   },
