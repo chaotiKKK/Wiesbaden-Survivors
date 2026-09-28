@@ -187,15 +187,19 @@ export async function connectPageCdp(port) {
   ws.onmessage = (m) => {
     const d = JSON.parse(m.data);
     if (d.id && pending.has(d.id)) {
-      const p = pending.get(d.id); pending.delete(d.id);
+      const p = pending.get(d.id); pending.delete(d.id); clearTimeout(p.timer);
       d.error ? p.reject(new Error(d.error.message)) : p.resolve(d.result);
     } else if (d.method && eventHandler) eventHandler(d);
   };
 
+  // The timeout timer is cleared when the answer arrives. A leftover timer keeps
+  // Node alive until it fires: a tool that ends without process.exit() then sat
+  // out the full timeout after its work was done (3 min for the balance export).
   const cdp = (method, params = {}, tmo = 25000) => new Promise((resolve, reject) => {
-    const id = ++msgId; pending.set(id, { resolve, reject });
+    const id = ++msgId;
+    const timer = setTimeout(() => { if (pending.has(id)) { pending.delete(id); reject(new Error('CDP timeout: ' + method)); } }, tmo);
+    pending.set(id, { resolve, reject, timer });
     ws.send(JSON.stringify({ id, method, params }));
-    setTimeout(() => { if (pending.has(id)) { pending.delete(id); reject(new Error('CDP timeout: ' + method)); } }, tmo);
   });
 
   const ev = async (expression, tmo) => {

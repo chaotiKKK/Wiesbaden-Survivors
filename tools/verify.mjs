@@ -130,6 +130,17 @@ try {
   else fail('gate self-marker: throttled leg', 'verify.mjs no longer contains the CPU-throttle leg — the gate itself was reverted?');
 } catch (e) { fail('gate self-marker', String(e.message)); }
 
+// ---- harness: CDP timeout timers must be cleared on the answer ----
+// A leftover timer keeps Node alive until it fires, so any tool that ends without
+// process.exit() sat out its full CDP timeout after the work was done (the
+// balance export took 203 s instead of 3.5 s). The gate exits explicitly and
+// would never notice at runtime, hence the static check.
+try {
+  const hsrc = readFileSync(path.join(ROOT, 'tools', 'lib', 'harness.mjs'), 'utf8');
+  if (hsrc.includes('clearTimeout(p.timer)')) pass('harness: CDP timeout timers cleared on response');
+  else fail('harness: CDP timer leak', 'tools/lib/harness.mjs no longer clears the per-call timeout — tools without process.exit() hang for the full timeout');
+} catch (e) { fail('harness timer check', String(e.message)); }
+
 // ---- data.js split leg (extraction pass) ----
 try {
   const djs = readFileSync(path.join(ROOT, 'data.js'), 'utf8');
