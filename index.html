@@ -940,6 +940,7 @@ h2.hd{font-family:var(--amt);color:var(--formular);letter-spacing:.18em}
 <!-- ================= PAUSE ================= -->
 <div class="screen transparent hidden" id="scPause">
   <h2 class="hd">Pause</h2>
+  <div class="sub hidden" id="pauseNet" role="status" style="color:var(--cyan);max-width:520px;text-align:center"></div>
   <div class="menu">
     <button class="btn prim nav" data-act="resume">Weiter</button>
     <button class="btn nav" data-act="pauseOptions">Optionen</button>
@@ -11969,6 +11970,14 @@ const UI = {
   /* ---------- Online-Koop: Verbindungsbildschirm + Gast-Ansichten ---------- */
   netMode: 'none',
   renderNet() {
+    const pn = $('pauseNet');
+    if (pn) {
+      /* In der Pause: solange der Raum auf den zurueckkehrenden Gast wartet, steht hier der Code. */
+      const waiting = Net.role === 'host' && !!Net.code && Net.phase !== 'connected' && Game.coop;
+      pn.classList.toggle('hidden', !waiting);
+      if (waiting) pn.textContent = Net.phase === 'connecting' ? 'Mitspieler tritt wieder bei ...'
+        : 'Mitspieler getrennt. Mit dem Code ' + Net.showCode(Net.code) + ' tritt er wieder bei und uebernimmt Spieler 2.';
+    }
     if (!$('netStatus')) return;
     $('netStatus').textContent = Net.status;
     $('netRoomBox').classList.toggle('hidden', !(Net.role === 'host' && Net.code));
@@ -16991,7 +17000,10 @@ const Net = {
   makePeer() {
     const pc = new RTCPeerConnection({ iceServers: NET_ICE });
     this.pc = pc;
+    /* Ereignisse einer abgeloesten Verbindung (reset() hat this.pc schon ersetzt) zaehlen
+       nicht mehr - sonst braeche ihr spaetes 'closed' einen neu geoeffneten Raum ab. */
     pc.onconnectionstatechange = () => {
+      if (this.pc !== pc) return;
       const s = pc.connectionState;
       if (s === 'connected') this.onOpen();
       else if (s === 'failed' || s === 'closed') this.onDrop(s === 'failed' ? 'Verbindung fehlgeschlagen' : 'Verbindung beendet');
@@ -17012,6 +17024,7 @@ const Net = {
       v.play().catch(() => { });
     };
     pc.ondatachannel = ev => {
+      if (this.pc !== pc) return;
       if (ev.channel.label === 'ctl') this.bindCtl(ev.channel);
       else this.bindInp(ev.channel);
     };
@@ -17019,12 +17032,17 @@ const Net = {
   },
   bindCtl(ch) {
     this.ctl = ch;
-    ch.onmessage = e => { this.lastRx = Date.now(); this.onCtl(JSON.parse(e.data)); };
-    ch.onclose = () => this.onDrop('Datenkanal geschlossen');
+    /* Nur der aktuelle Kanal zaehlt: reset() setzt this.ctl auf null, das spaete close
+       des alten Kanals verpufft dann. */
+    ch.onmessage = e => { if (this.ctl !== ch) return; this.lastRx = Date.now(); this.onCtl(JSON.parse(e.data)); };
+    ch.onclose = () => { if (this.ctl === ch) this.onDrop('Datenkanal geschlossen'); };
+    /* onOpen kann vor dem offenen Kanal kommen; dann ging das Menue ins Leere - jetzt nachschicken. */
+    ch.onopen = () => { if (this.ctl === ch && this.role === 'host') this.syncMenu(true); };
   },
   bindInp(ch) {
     this.inp = ch;
     ch.onmessage = e => {
+      if (this.inp !== ch) return;
       this.lastRx = Date.now();
       const d = JSON.parse(e.data);
       /* Unordered: ein aelteres Paket darf ein neueres nicht ueberschreiben. */
@@ -17138,10 +17156,10 @@ const Net = {
     }
   },
 
-  async hostRoom() {
+  async hostRoom(code) {
     this.reset();
     this.role = 'host'; this.myId = Math.random().toString(36).slice(2, 8);
-    this.code = this.roomCode(); this.wsIdx = 0;
+    this.code = code || this.roomCode(); this.wsIdx = 0;   /* code: nach Abbruch derselbe Raum */
     if (!(await this.sealRoom())) return;
     this.brokerConnect('c2h', () => {
       this.setStatus('Raum offen - Code an den Mitspieler geben.', 'signaling');
@@ -17156,9 +17174,15 @@ const Net = {
     this.code = c; this.wsIdx = 0;
     if (!(await this.sealRoom())) return;
     this.brokerConnect('h2c', () => {
-      this.run(this.pub('c2h', { t: 'hello', id: this.myId, pub: this.eph.pub }), 'Vermittlung fehlgeschlagen');
+      const hello = () => this.run(this.pub('c2h', { t: 'hello', id: this.myId, pub: this.eph.pub }), 'Vermittlung fehlgeschlagen');
+      hello();
+      /* Wiederholen, bis der Host antwortet: nach einem Abbruch oeffnet er den Raum erst
+         neu, wenn WebRTC aufgibt - ein sofort zurueckkehrender Gast riefe sonst ins Leere.
+         Der Host nimmt ohnehin nur das erste hello an. */
+      clearInterval(this._helloT);
+      this._helloT = setInterval(() => { if (this._offerTaken || this.phase !== 'signaling') clearInterval(this._helloT); else hello(); }, 3000);
       this.setStatus('Suche Raum ' + c + ' ...', 'signaling');
-      this.arm(20, 'Raum ' + c + ' antwortet nicht. Code pruefen - der Host hat den Raum vielleicht noch nicht geoeffnet, '
+      this.arm(30, 'Raum ' + c + ' antwortet nicht. Code pruefen - der Host hat den Raum vielleicht noch nicht geoeffnet, '
         + 'oder einer von euch spielt eine alte Version (Seite neu laden).');
     });
   },
@@ -17242,17 +17266,22 @@ const Net = {
     if (this.phase !== 'connected') { this.fail(why + ' - ' + NET_NO_P2P); return; }
     this.phase = 'closed';
     this.setStatus(why + ' - erneut verbinden moeglich.');
+    const code = this.code;
     if (this.role === 'host') {
       if (Game.state === 'play') { Game.state = 'paused'; UI.navIdx = 0; UI.show('scPause'); }
-      UI.toast('Mitspieler getrennt - Spiel pausiert');
+      /* Denselben Raum wieder oeffnen: der Gast kann zurueck und Spieler 2 uebernehmen. */
+      UI.toast('Mitspieler getrennt - Spiel pausiert, Raum ' + this.showCode(code) + ' ist wieder offen');
+      this.run(this.hostRoom(code), 'Raum konnte nicht neu geoeffnet werden');
     } else {
-      UI.toast('Verbindung zum Host verloren');
+      /* Unfreiwillig getrennt: gleich zurueck in den Beitreten-Dialog, Code schon eingetragen. */
       this.toMenu();
+      UI.netMode = 'join'; $('netCodeIn').value = this.showCode(code); UI.renderNet(); UI.show('scNet');
+      UI.toast('Verbindung zum Host verloren - "Verbinden" tritt wieder bei');
     }
   },
   reset() {
     this.phase = 'idle';   /* zuerst: sonst gilt unser eigenes close() als Verbindungsabbruch */
-    clearTimeout(this._wd); clearInterval(this._ka);
+    clearTimeout(this._wd); clearInterval(this._ka); clearInterval(this._helloT);
     if (this.pc) this.pc.close();
     if (this.audioDest) AudioSys.limiter.disconnect(this.audioDest);
     if (this.ws) { this.ws.close(); this.ws = null; }
@@ -17516,6 +17545,9 @@ const SelfTest = {
     try { this._netPauseMirror(); } catch (e) { this._ok(false, 'Net-Pause (Fehler: ' + e.message + ')'); }
     try { this._netSilence(); } catch (e) { this._ok(false, 'Net-Stille (Fehler: ' + e.message + ')'); }
     try { this._netGuestSilence(); } catch (e) { this._ok(false, 'Net-Host-Stille (Fehler: ' + e.message + ')'); }
+    try { this._netRejoin(); } catch (e) { this._ok(false, 'Net-Wiederbeitritt (Fehler: ' + e.message + ')'); }
+    try { this._netStaleEvents(); } catch (e) { this._ok(false, 'Net-Altlast (Fehler: ' + e.message + ')'); }
+    try { this._netMenuOnOpen(); } catch (e) { this._ok(false, 'Net-Kanal-offen (Fehler: ' + e.message + ')'); }
     /* Gesten-Gate-Gruppe bewusst als LETZTE Sync-Gruppe: der Fetch-Zeuge ist
        ab run()-Start armiert und deckt damit das gesamte Sync-Fenster ab —
        jede Gruppe, die unabsichtlich Assets laden wuerde, faellt hier auf. */
@@ -18621,6 +18653,85 @@ const SelfTest = {
     } finally {
       Net.role = keep.role; Net.phase = keep.phase; Net.send = keep.send; Net.lastRx = keep.rx; Net.status = keep.status;
       Game.state = keep.state; UI.show(keep.cur || 'scTitle');
+    }
+  },
+  /* Online-Koop: bricht die Verbindung mitten im Lauf ab, kann der Gast zurueck und
+     Spieler 2 wieder uebernehmen. Der Host oeffnet den Raum mit DEMSELBEN Code neu
+     (hostRoom ist hier gestubbt - kein Netz im Selbsttest) und zeigt ihn in der
+     Pause; der Gast landet mit eingetragenem Code im Beitreten-Dialog. */
+  /* Oeffnet der Host nach einem Abbruch neu, kommen die close-Ereignisse der ALTEN
+     Verbindung erst danach an. Sie duerfen den neuen Raum nicht abbrechen. */
+  /* Beim Verbinden schickt der Host sein Menue sofort - der Datenkanal ist dann aber oft
+     noch nicht offen. Aendert sich beim Host danach nichts (etwa in der Pause, in die
+     ein Gast zurueckkehrt), bekaeme der Gast sonst nie ein Menue. */
+  _netMenuOnOpen() {
+    const keep = { role: Net.role, phase: Net.phase, status: Net.status, ctl: Net.ctl, last: Net._lastMenu, state: Game.state, coop: Game.coop, cur: UI.cur, ws: Net.ws };
+    const sent = [];
+    try {
+      const ch = { readyState: 'connecting', send(d) { sent.push(JSON.parse(d)); }, close() {} };
+      Net.bindCtl(ch);
+      Net.role = 'host'; Net.phase = 'connecting'; Net._lastMenu = ''; Net.ws = null;
+      Game.state = 'paused'; UI.show('scPause');
+      Net.onOpen();
+      ch.readyState = 'open';
+      if (ch.onopen) ch.onopen();
+      const m = sent.filter(x => x.t === 'menu').pop();
+      this._ok(!!m && m.title === 'Pause', 'Net-Kanal-offen: oeffnet sich der Datenkanal nach dem Verbinden, bekommt der Gast das Menue des Hosts - tatsaechlich: ' + (m ? m.title : 'nichts gesendet'));
+    } finally {
+      Net.role = keep.role; Net.phase = keep.phase; Net.status = keep.status; Net.ctl = keep.ctl; Net._lastMenu = keep.last; Net.ws = keep.ws;
+      Game.state = keep.state; Game.coop = keep.coop; UI.show(keep.cur || 'scTitle');
+    }
+  },
+  _netStaleEvents() {
+    const keep = { role: Net.role, phase: Net.phase, status: Net.status, pc: Net.pc, ctl: Net.ctl, wd: Net._wd };
+    let pc = null;
+    try {
+      const oldCh = { close() {} };
+      Net.bindCtl(oldCh);
+      pc = Net.makePeer();
+      Net.pc = null; Net.ctl = null;             /* was reset() beim Neuoeffnen tut */
+      Net.role = 'host'; Net.phase = 'signaling'; Net.status = 'Raum offen - Code an den Mitspieler geben.';
+      oldCh.onclose();
+      this._ok(Net.phase === 'signaling', 'Net-Altlast: das close des alten Datenkanals bricht den neu geoeffneten Raum nicht ab - tatsaechlich: ' + Net.phase + ' / ' + Net.status);
+      Net.role = 'host'; Net.phase = 'signaling';
+      pc.close();                                 /* jetzt connectionState 'closed' */
+      pc.onconnectionstatechange();
+      this._ok(Net.phase === 'signaling', 'Net-Altlast: ein Zustandswechsel der alten Peer-Verbindung bricht ihn auch nicht ab - tatsaechlich: ' + Net.phase + ' / ' + Net.status);
+    } finally {
+      if (pc) { pc.onconnectionstatechange = null; pc.close(); }
+      clearTimeout(Net._wd);
+      Net.role = keep.role; Net.phase = keep.phase; Net.status = keep.status; Net.pc = keep.pc; Net.ctl = keep.ctl; Net._wd = keep.wd;
+    }
+  },
+  _netRejoin() {
+    const keep = { role: Net.role, phase: Net.phase, send: Net.send, code: Net.code, host: Net.hostRoom, cur: UI.cur,
+      mode: UI.netMode, state: Game.state, coop: Game.coop, status: Net.status, input: $('netCodeIn').value };
+    const toast = () => { const t = [...document.querySelectorAll('.toast')].pop(); return t ? t.textContent : ''; };
+    const reopened = [];
+    try {
+      Net.send = () => true;
+      Net.hostRoom = c => { reopened.push(c); return Promise.resolve(); };
+      Net.role = 'host'; Net.phase = 'connected'; Net.code = 'K7RM2XQP';
+      Game.state = 'play'; Game.coop = true; UI.show(null);
+      Net.onDrop('Datenkanal geschlossen');
+      this._ok(Game.state === 'paused' && reopened.length === 1 && reopened[0] === 'K7RM2XQP',
+        'Net-Wiederbeitritt: verliert der Host den Gast mitten im Lauf, pausiert er und oeffnet den Raum mit demselben Code neu - tatsaechlich: ' + Game.state + ', ' + JSON.stringify(reopened));
+      Net.role = 'host'; Net.code = 'K7RM2XQP';
+      Net.setStatus('Raum offen - Code an den Mitspieler geben.', 'signaling');
+      const info = $('pauseNet');
+      this._ok(UI.cur === 'scPause' && info && !info.classList.contains('hidden') && info.textContent.includes('K7RM 2XQP'),
+        'Net-Wiederbeitritt: die Pause des Hosts zeigt den Code zum Wiederbeitreten - tatsaechlich: ' + (info ? (info.classList.contains('hidden') ? '(versteckt)' : info.textContent) : '(fehlt)'));
+      Net.setStatus('Verbunden - Mitspieler ist Spieler 2.', 'connected');
+      this._ok(!info || info.classList.contains('hidden'), 'Net-Wiederbeitritt: ist der Gast wieder da, verschwindet der Hinweis');
+      Net.role = 'client'; Net.phase = 'connected'; Net.code = 'K7RM2XQP'; Game.state = 'net';
+      $('netCodeIn').value = '';
+      Net.onDrop('Verbindung fehlgeschlagen');
+      this._ok(UI.cur === 'scNet' && UI.netMode === 'join' && Net.normCode($('netCodeIn').value) === 'K7RM2XQP' && /wieder/.test(toast()),
+        'Net-Wiederbeitritt: der Gast landet mit eingetragenem Code im Beitreten-Dialog - tatsaechlich: ' + UI.cur + ', ' + UI.netMode + ', "' + $('netCodeIn').value + '", "' + toast() + '"');
+    } finally {
+      Net.role = keep.role; Net.phase = keep.phase; Net.send = keep.send; Net.code = keep.code; Net.hostRoom = keep.host; Net.status = keep.status;
+      UI.netMode = keep.mode; Game.state = keep.state; Game.coop = keep.coop; $('netCodeIn').value = keep.input;
+      $('netStage').classList.add('hidden'); UI.renderNet(); UI.show(keep.cur || 'scTitle');
     }
   },
   _netHostCharPick() {

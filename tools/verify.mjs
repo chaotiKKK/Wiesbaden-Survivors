@@ -90,7 +90,10 @@ const MARKERS = [
   ['online host always lets the guest pick player 2 (selftest)', '_netHostCharPick()'],
   ['guest sees the pause (selftest)', '_netPauseMirror()'],
   ['host pauses when the guest falls silent (selftest)', '_netSilence()'],
-  ['guest is told when the host falls silent (selftest)', '_netGuestSilence()']
+  ['guest is told when the host falls silent (selftest)', '_netGuestSilence()'],
+  ['dropped guest can rejoin the running game (selftest)', '_netRejoin()'],
+  ['late events of a replaced connection are ignored (selftest)', '_netStaleEvents()'],
+  ['host menu follows once the data channel opens (selftest)', '_netMenuOnOpen()']
 ];
 const FORBIDDEN = [
   ['removed SkinEditor cluster', 'const SkinEditor'],

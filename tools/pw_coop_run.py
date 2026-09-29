@@ -24,6 +24,12 @@ and the risky moments in between:
   dropped link    in wave 2 the guest's browser disappears without hanging up:
                   the host pauses within seconds and says why, can play on alone,
                   and is told the partner is gone once WebRTC gives up
+  rejoin          a third session: the guest's browser disappears mid-run and the
+                  player opens the game again straight away, typing the same
+                  code before the host has even noticed; the host reopens the
+                  room with that code (shown on its pause screen), the guest
+                  gets back in, sees the pause, resumes, and controls the SAME
+                  player 2 again (character and weapons unchanged)
   host drops      a second session: mid-run the HOST's browser disappears; the
                   guest is told within seconds ("Host antwortet nicht") instead
                   of staring at a frozen picture, and "Verlassen" takes it to
@@ -187,6 +193,7 @@ class Run:
         hp, gp = h.evaluate("() => Net.phase"), g.evaluate("() => Net.phase")
         if hp != "connected" or gp != "connected":
             return False, "host %s (%s) / guest %s (%s)" % (hp, h.evaluate("() => Net.status"), gp, g.evaluate("() => Net.status"))
+        self.code_shown = shown
         return True, shown
 
     # ---- helpers during play --------------------------------------------------
@@ -296,9 +303,59 @@ class Run:
             else:
                 time.sleep(0.5)
         st = h.evaluate("() => ({ phase: Net.phase, status: Net.status, state: Game.state })")
-        check(st["phase"] == "closed" and ("getrennt" in self.toast(h) or "erneut verbinden" in st["status"]),
-              "once WebRTC gives up, the host is told the partner is gone",
+        msg = self.toast(h)
+        check(st["phase"] != "connected" and "getrennt" in msg and "wieder offen" in msg,
+              "once WebRTC gives up, the host is told the partner is gone and reopens the room",
               "after %.0f s more: %s, %s, toast '%s'" % (time.time() - t0, st["phase"], st["status"], self.toast(h)))
+
+    def rejoin(self):
+        """Third session: the guest drops hard and comes straight back with the same code."""
+        h, g = self.h, self.g
+        h.click('[data-act="netBack"]')
+        h.click('[data-act="coop"]')
+        h.click('[data-act="charConfirm"]')
+        ok, gs = self.guest_menu("Spieler 2")
+        need(ok, "rejoin: the guest picks player 2", gs["title"])
+        g.locator("#netMenuCards .lvlCard.nav").nth(2).click()
+        h.click('[data-act="charConfirm"]')
+        if until(h, "() => UI.cur", lambda v: v == "scControls", 3)[0]:
+            h.click('[data-act="controlsOK"]')
+        ok, st = until(h, "() => Game.state", lambda v: v == "play", 10)
+        need(ok, "rejoin: the run is under way", st)
+        ok, how = self.moved(g, 1)
+        need(ok, "rejoin: the guest controls player 2 before the drop", how)
+        before = h.evaluate(PLAYER, 1)
+        self.ctx["guest"].close()          # the guest's browser goes away without a hang-up
+        t0 = time.time()
+        g = self.g = self.page("guest again")   # and the player opens the game again at once
+        g.click('[data-act="netOpen"]')
+        g.click('[data-act="netJoinMode"]')
+        g.locator("#netCodeIn").press_sequentially(self.code_shown, delay=30)
+        g.click('[data-act="netJoinGo"]')
+        joined_at = time.time() - t0
+        shown_code, t1 = "", time.time()
+        while time.time() - t1 < 45:
+            if h.evaluate("() => Net.phase") == "connected" and g.evaluate("() => Net.phase") == "connected":
+                break
+            txt = h.evaluate("() => { const e = document.getElementById('pauseNet'); return e && !e.classList.contains('hidden') ? e.textContent : ''; }")
+            if self.code_shown in txt:
+                shown_code = txt
+            time.sleep(0.4)
+        check(bool(shown_code), "while waiting, the host's pause screen shows the same code", shown_code or "(never shown)")
+        hp, gp = h.evaluate("() => Net.phase"), g.evaluate("() => Net.phase")
+        need(hp == "connected" and gp == "connected", "the guest gets back in with the same code",
+             "joined %.1f s after the drop, back after %.1f s; host %s, guest %s (%s)" % (joined_at, time.time() - t0, hp, gp, g.evaluate("() => Net.status")))
+        ok, gs = self.guest_menu("Pause", 5)
+        need(ok, "back in, the guest sees the game is paused", gs["title"] or str(gs["scr"]))
+        g.locator("#netMenuActs button").filter(has_text="Weiter").click()
+        ok, st = until(h, "() => Game.state", lambda v: v == "play", 3)
+        need(ok, "the returning guest's 'Weiter' resumes the run", st)
+        after = h.evaluate(PLAYER, 1)
+        need(after["char"] == before["char"] and after["weapons"] == before["weapons"], "it is the same player 2",
+             "%s %s -> %s %s" % (before["name"], before["weapons"], after["name"], after["weapons"]))
+        ok, how = self.moved(g, 1)
+        need(ok, "the returning guest controls player 2 again", how)
+        check(not self.errors, "rejoin: no page errors", "; ".join(self.errors[:3]))
 
     def host_drop(self):
         """Second session: the host's browser goes away mid-run."""
@@ -325,6 +382,17 @@ class Run:
         ok, st = until(g, "() => [UI.cur, Net.phase, Game.state]", lambda v: v == ["scTitle", "idle", "title"], 3)
         need(ok, "'Verlassen' takes the guest back to the title", str(st))
         check(not self.errors, "host drop: no page errors", "; ".join(self.errors[:3]))
+
+    def moved(self, page, idx):
+        """Control, not a direction: try right, and left if right is blocked (arena edge)."""
+        for key in ("KeyD", "KeyA"):
+            before = self.h.evaluate(PLAYER, idx)["x"]
+            page.keyboard.down(key)
+            ok, after = until(self.h, PLAYER, lambda p: abs(p["x"] - before) > 25, 2, arg=idx)
+            page.keyboard.up(key)
+            if ok:
+                return True, "%+d px (%s)" % (after["x"] - before, key[-1])
+        return False, "no movement with D or A (x %d)" % before
 
     def guest_menu(self, title_prefix, secs=10):
         return until(self.g, GUEST_ST, lambda s: s["scr"] == "scNetMenu" and s["title"].startswith(title_prefix), secs)
@@ -532,6 +600,7 @@ def session(p, label, scenario):
 with (Serve(PORT, directory=SERVE) if SERVE else contextlib.nullcontext()), sync_playwright() as p:
     print("site: %s" % BASE, flush=True)
     session(p, "run", Run.play)
+    session(p, "rejoin", Run.rejoin)
     session(p, "host drop", Run.host_drop)
 
 fails = [r for r in results if not r[1]]
