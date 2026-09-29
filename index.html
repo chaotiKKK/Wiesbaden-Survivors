@@ -13606,7 +13606,7 @@ Object.assign(Game, {
       const b = e.target.closest('[data-act]'); if (!b) return;
       const a = b.dataset.act; AudioSys.init(); AudioSys.sfx('ok');
       switch (a) {
-        case 'play': this.daily = false; this.coop = false; this.charSelIdx = 0; this.danger = OPT().difficulty; this.manualSeed = 0; UI.renderChars(0); UI.show('scChar'); break;
+        case 'play': this.daily = false; this.coop = Net.isHost(); this.charSelIdx = 0; this.danger = OPT().difficulty; this.manualSeed = 0; UI.renderChars(0); UI.show('scChar'); break;
         case 'coop': this.daily = false; this.coop = true; this.charSelIdx = 0; this.danger = OPT().difficulty; this.manualSeed = 0; UI.renderChars(0); UI.show('scChar'); break;
         /* --- Online-Koop --- */
         case 'netOpen': UI.netMode = 'none'; UI.renderNet(); UI.show('scNet'); break;
@@ -13621,7 +13621,7 @@ Object.assign(Game, {
         case 'netCopyCode': UI.copyText(Net.code || ''); break;
         case 'netCopyManual': UI.copyText($('netManualOut').value); break;
         case 'netHangUp': Net.hangUp(); UI.renderNet(); break;
-        case 'daily': this.daily = true; this.coop = false; this.charSelIdx = 0; this.danger = OPT().difficulty; this.manualSeed = 0; UI.renderChars(0); UI.show('scChar'); break;
+        case 'daily': this.daily = true; this.coop = Net.isHost(); this.charSelIdx = 0; this.danger = OPT().difficulty; this.manualSeed = 0; UI.renderChars(0); UI.show('scChar'); break;
         case 'tutSkip': this.hideTutorial(); break;
         case 'options': UI.renderOptions(); UI.push('scOptions'); break;
         case 'pauseOptions': UI.renderOptions(); UI.push('scOptions'); break;
@@ -13738,7 +13738,7 @@ Object.assign(Game, {
           const sv = $('seedInput').value.trim();
           this.manualSeed = (parseInt(sv, 10) || 0) >>> 0;
           if (!/^[0-9]{1,10}$/.test(sv)) { UI.toast('Bitte eine Zahl als Seed eingeben (0-9)'); break; }
-          this.daily = false; this.coop = false; this.charSelIdx = 0; this.danger = OPT().difficulty;
+          this.daily = false; this.coop = Net.isHost(); this.charSelIdx = 0; this.danger = OPT().difficulty;
           UI.renderChars(0); UI.show('scChar');
           break;
         case 'stats': UI.renderStats(); UI.show('scStats'); break;
@@ -16819,6 +16819,7 @@ const NET_BROKERS = ['wss://broker.emqx.io:8084/mqtt', 'wss://test.mosquitto.org
 const NET_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';   /* ohne I/O/0/1 - vorlesbar */
 const NET_CODE_LEN = 8;   /* 32^8 = 40 Bit: macht eine Vorab-Tabelle ueber alle Codes (fixes Salz) unbezahlbar */
 const NET_HZ = 30;
+const NET_SILENT_MS = 3000;   /* so lange ohne Paket vom Gast (sonst NET_HZ pro Sekunde) -> Host pausiert */
 const NET_NO_P2P = 'Direktverbindung kam nicht zustande - vermutlich blockt eine Firewall oder ein strenges NAT. '
   + 'Im selben WLAN klappt es fast immer; sonst den Offline-Weg nutzen.';
 
@@ -17221,6 +17222,9 @@ const Net = {
     AudioSys.sfx('level');
     if (this.role === 'host') {
       Game.coop = true;
+      /* Kam der Gast spaet und der Host steht schon vor dem Lauf bei der Steuerung,
+         war die Wahl fuer Spieler 2 vorbei: zurueck zu ihr, der Gast waehlt selbst. */
+      if (UI.cur === 'scControls') { Game.charSelIdx = 1; UI.renderChars(1); UI.show('scChar'); }
       UI.toast('Online-Koop verbunden - Mitspieler steuert Spieler 2');
       this.syncMenu(true);
     } else {
@@ -17254,7 +17258,7 @@ const Net = {
     this.pc = null; this.ctl = null; this.inp = null; this.peerId = null; this.audioDest = null;
     this.room = null; this.eph = null; this.sk = null; this._offerTaken = false;
     this.acts = {}; this.remote = { mx: 0, my: 0, ax: 0, ay: 0, aim: 0, sk: 0, t: 0 };
-    this._lastMenu = ''; this.ping = 0;
+    this._lastMenu = ''; this.ping = 0; this._silencePaused = false;
   },
   hangUp() {
     const wasGuest = this.role === 'client';
@@ -17314,9 +17318,21 @@ const Net = {
           h: av.has ? 1 : 0, s: Input.skillDown(0) ? 1 : 0, t: Date.now()
         }, true);
       }
-    } else if (Date.now() - this.lastRx > 900) {
-      /* Achsen altern aus, falls der Gast verstummt - sonst laeuft P2 endlos weiter. */
-      this.remote.mx = 0; this.remote.my = 0; this.remote.aim = 0; this.remote.sk = 0;
+    } else {
+      const silent = Date.now() - this.lastRx;
+      if (silent > 900) {
+        /* Achsen altern aus, falls der Gast verstummt - sonst laeuft P2 endlos weiter. */
+        this.remote.mx = 0; this.remote.my = 0; this.remote.aim = 0; this.remote.sk = 0;
+      }
+      /* Ein harter Abbruch meldet WebRTC erst nach ~15 s. Schweigt der Gast laenger als
+         NET_SILENT_MS, pausiert der Host schon vorher - einmal pro Stille, damit er
+         danach auch allein weiterspielen kann. */
+      if (silent < NET_SILENT_MS) this._silencePaused = false;
+      else if (!this._silencePaused && Game.state === 'play') {
+        this._silencePaused = true;
+        Game.state = 'paused'; UI.navIdx = 0; UI.show('scPause');
+        UI.toast('Mitspieler antwortet nicht - Spiel pausiert');
+      }
     }
   },
   /* Gast-Tasten werden nur als Ereignisse verschickt, nie lokal simuliert. */
@@ -17362,6 +17378,10 @@ const Net = {
         items: (G._curRelics || []).map(r => ({ id: 'relic:' + r.id, label: r.name, sub: 'Relikt', desc: r.fl, col: r.col })),
         acts: [{ id: 'relicSkip', label: 'Ueberspringen' }]
       };
+    }
+    if (G.state === 'paused') {
+      return { t: 'menu', title: 'Pause', sub: 'Das Spiel ist angehalten. Escape oder "Weiter" setzt fort.', items: [],
+        acts: [{ id: 'resume', label: 'Weiter' }] };
     }
     if (G.state === 'shop' && p2) {
       const acts = [{ id: 'reroll', label: 'Neuwurf (' + ShopSystem.rerollCost(G.wave) + ' MAT)' }];
@@ -17413,6 +17433,7 @@ const Net = {
       if (p && p.index === 1) { if (k === 'relic') G.chooseRelic(p, v); else G.skipRelic(); }
       return;
     }
+    if (k === 'resume') { if (G.state === 'paused') this.hostPause(); return; }
     if (G.state !== 'shop' || !p2) return;
     if (k === 'buy') ShopSystem.buy(+v, p2);
     else if (k === 'sell') { if (p2.weapons[+v]) { G.materials += p2.sellWeapon(+v); AudioSys.sfx('buy'); UI.renderShop(); } }
@@ -17476,6 +17497,9 @@ const SelfTest = {
     try { this._volLadder(); } catch (e) { this._ok(false, 'Lautleiter (Fehler: ' + e.message + ')'); }
     try { this._audioLufs(); } catch (e) { this._ok(false, 'LUFS (Fehler: ' + e.message + ')'); }
     try { this._net(); } catch (e) { this._ok(false, 'Net (Fehler: ' + e.message + ')'); }
+    try { this._netHostCharPick(); } catch (e) { this._ok(false, 'Net-Figurenwahl (Fehler: ' + e.message + ')'); }
+    try { this._netPauseMirror(); } catch (e) { this._ok(false, 'Net-Pause (Fehler: ' + e.message + ')'); }
+    try { this._netSilence(); } catch (e) { this._ok(false, 'Net-Stille (Fehler: ' + e.message + ')'); }
     /* Gesten-Gate-Gruppe bewusst als LETZTE Sync-Gruppe: der Fetch-Zeuge ist
        ab run()-Start armiert und deckt damit das gesamte Sync-Fenster ab —
        jede Gruppe, die unabsichtlich Assets laden wuerde, faellt hier auf. */
@@ -18497,6 +18521,105 @@ const SelfTest = {
       'Net: fail() raeumt ab, vergisst die Rolle und meldet den Grund');
     Net.status = status; Net.phase = 'idle';
     Net.role = role; Net.phase = phase; Net.remote = remote; Net.acts = acts;
+  },
+  /* Online-Koop: der Gast waehlt die Figur von Spieler 2 - egal, mit welchem Knopf
+     der verbundene Host den Lauf beginnt. Gedrueckt werden die echten Knoepfe;
+     Net.send faengt ab, was an den Gast ginge. Ohne Verbindung bleibt "Spiel
+     starten" ein Einzelspieler-Lauf. */
+  /* Online-Koop: pausiert das Spiel, sieht der Gast das - sein Bild ist sonst nur
+     eingefroren, der Pause-Bildschirm des Hosts liegt nicht im Video. "Weiter" im
+     Gast-Menue setzt fort, danach schliesst sich das Menue. */
+  _netPauseMirror() {
+    const keep = { role: Net.role, phase: Net.phase, send: Net.send, last: Net._lastMenu, cur: UI.cur, state: Game.state };
+    const sent = [];
+    const menu = () => [...sent].reverse().find(m => m.t === 'menu');
+    try {
+      Net.role = 'host'; Net.phase = 'connected'; Net._lastMenu = null;
+      Net.send = m => { sent.push(m); return true; };
+      Game.state = 'play'; UI.show(null);
+      Net.hostPause();
+      const m = menu();
+      this._ok(Game.state === 'paused' && m && m.title === 'Pause' && (m.acts || []).some(a => a.id === 'resume'),
+        'Net-Pause: pausiert der Host, bekommt der Gast ein Pause-Menue mit "Weiter" - tatsaechlich: ' + (m ? m.title + ' / ' + (m.acts || []).map(a => a.id).join(',') : 'kein Menue'));
+      Net.applyPick('resume');
+      const after = menu();
+      this._ok(Game.state === 'play' && UI.cur === null && after && after.title === '',
+        'Net-Pause: "Weiter" vom Gast setzt fort und schliesst sein Menue - tatsaechlich: ' + Game.state + ', Menue "' + (after ? after.title : '-') + '"');
+    } finally {
+      Net.role = keep.role; Net.phase = keep.phase; Net.send = keep.send; Net._lastMenu = keep.last;
+      Game.state = keep.state; UI.show(keep.cur || 'scTitle');
+    }
+  },
+  /* Online-Koop: bricht der Gast weg, meldet WebRTC das erst nach ~15 s. So lange
+     liefe das Spiel ungeschuetzt weiter. Schweigt der Gast (sonst 30 Pakete/s) 3 s
+     lang, pausiert der Host und sagt es - einmal pro Stille, damit er danach auch
+     allein weiterspielen kann. */
+  _netSilence() {
+    const keep = { role: Net.role, phase: Net.phase, send: Net.send, last: Net._lastMenu, cur: UI.cur, state: Game.state, rx: Net.lastRx };
+    const toast = () => { const t = [...document.querySelectorAll('.toast')].pop(); return t ? t.textContent : ''; };
+    const tick = () => Net.tick(0.02);
+    try {
+      Net.role = 'host'; Net.phase = 'connected'; Net.send = () => true;
+      Game.state = 'play'; UI.show(null);
+      Net.lastRx = Date.now() - 500; tick();
+      this._ok(Game.state === 'play', 'Net-Stille: eine halbe Sekunde ohne Paket pausiert nicht');
+      Net.lastRx = Date.now() - 4000; tick();
+      this._ok(Game.state === 'paused' && UI.cur === 'scPause' && /antwortet nicht/.test(toast()),
+        'Net-Stille: 4 s ohne Paket vom Gast pausiert den Host mit Hinweis - tatsaechlich: ' + Game.state + ', ' + UI.cur + ', "' + toast() + '"');
+      Game.state = 'play'; UI.show(null); tick();
+      this._ok(Game.state === 'play', 'Net-Stille: setzt der Host bei anhaltender Stille fort, spielt er allein weiter (keine Pause-Schleife)');
+      Net.lastRx = Date.now(); tick();
+      Net.lastRx = Date.now() - 4000; tick();
+      this._ok(Game.state === 'paused', 'Net-Stille: kommen wieder Pakete und schweigt der Gast erneut, pausiert es wieder');
+    } finally {
+      Net.role = keep.role; Net.phase = keep.phase; Net.send = keep.send; Net._lastMenu = keep.last; Net.lastRx = keep.rx;
+      Game.state = keep.state; UI.show(keep.cur || 'scTitle');
+    }
+  },
+  _netHostCharPick() {
+    const keep = { role: Net.role, phase: Net.phase, send: Net.send, last: Net._lastMenu, cur: UI.cur, status: Net.status, rx: Net.lastRx,
+      coop: Game.coop, daily: Game.daily, csi: Game.charSelIdx, seed: Game.manualSeed, input: $('seedInput').value };
+    const click = act => document.querySelector('[data-act="' + act + '"]').click();
+    const sent = [];
+    try {
+      Net.role = 'host'; Net.phase = 'connected';
+      Net.send = m => { sent.push(m); return true; };
+      for (const [act, label] of [['play', 'Spiel starten'], ['daily', 'Taeglicher Run'], ['seedPlay', 'Mit Seed starten']]) {
+        UI.renderTitle(); UI.show('scTitle'); sent.length = 0; Net._lastMenu = null;
+        if (act === 'seedPlay') $('seedInput').value = '4242';
+        click(act); click('charConfirm');
+        this._ok(UI.cur === 'scChar' && Game.charSelIdx === 1,
+          'Net-Figurenwahl: Online-Host ueber "' + label + '" kommt nach Spieler 1 zur Wahl fuer Spieler 2 - tatsaechlich: ' + UI.cur + ', Spieler ' + (Game.charSelIdx + 1));
+        this._ok(sent.some(m => m.t === 'menu' && /^Spieler 2/.test(m.title) && m.items.length > 0),
+          'Net-Figurenwahl: ueber "' + label + '" bekommt der Gast die Figurenwahl fuer Spieler 2');
+      }
+      Net.role = null; Net.phase = 'idle';
+      UI.renderTitle(); UI.show('scTitle');
+      click('play'); click('charConfirm');
+      this._ok(!Game.coop && UI.cur === 'scControls', 'Net-Figurenwahl: ohne Verbindung bleibt "Spiel starten" ein Einzelspieler-Lauf');
+      /* Der Gast kommt spaet: der Host ist mit offenem Raum schon allein bis zur Steuerung gegangen. */
+      sent.length = 0; Net._lastMenu = null;
+      Net.role = 'host'; Net.phase = 'signaling';
+      Net.onOpen();
+      this._ok(UI.cur === 'scChar' && Game.charSelIdx === 1,
+        'Net-Figurenwahl: verbindet sich der Gast, waehrend der Host schon bei der Steuerung ist, geht es zurueck zur Wahl fuer Spieler 2 - tatsaechlich: ' + UI.cur + ', Spieler ' + (Game.charSelIdx + 1));
+      this._ok(sent.some(m => m.t === 'menu' && /^Spieler 2/.test(m.title) && m.items.length > 0),
+        'Net-Figurenwahl: der spaet verbundene Gast bekommt die Figurenwahl fuer Spieler 2');
+      /* Absicherung: verbindet er sich, waehrend der Host noch Spieler 1 waehlt, fuehrt Bestaetigen zu Spieler 2. */
+      Net.role = null; Net.phase = 'idle'; Net._lastMenu = null;
+      UI.renderTitle(); UI.show('scTitle');
+      click('play');
+      Net.role = 'host'; Net.phase = 'signaling';
+      Net.onOpen();
+      click('charConfirm');
+      this._ok(UI.cur === 'scChar' && Game.charSelIdx === 1,
+        'Net-Figurenwahl: verbindet sich der Gast waehrend der Wahl fuer Spieler 1, fuehrt Bestaetigen zu Spieler 2 - tatsaechlich: ' + UI.cur + ', Spieler ' + (Game.charSelIdx + 1));
+    } finally {
+      Net.role = keep.role; Net.phase = keep.phase; Net.send = keep.send; Net._lastMenu = keep.last; Net.status = keep.status; Net.lastRx = keep.rx;
+      Game.coop = keep.coop; Game.daily = keep.daily; Game.charSelIdx = keep.csi; Game.manualSeed = keep.seed;
+      $('seedInput').value = keep.input;
+      UI.renderTitle(); UI.show(keep.cur || 'scTitle');
+    }
   },
   _render() {
     let el = $('selfTestPanel');
