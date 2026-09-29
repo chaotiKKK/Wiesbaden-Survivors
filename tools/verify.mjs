@@ -91,7 +91,8 @@ const MARKERS = [
   ['guest sees the pause (selftest)', '_netPauseMirror()'],
   ['host pauses when the guest falls silent (selftest)', '_netSilence()'],
   ['guest is told when the host falls silent (selftest)', '_netGuestSilence()'],
-  ['dropped guest can rejoin the running game (selftest)', '_netRejoin()']
+  ['dropped guest can rejoin the running game (selftest)', '_netRejoin()'],
+  ['late events of a replaced connection are ignored (selftest)', '_netStaleEvents()']
 ];
 const FORBIDDEN = [
   ['removed SkinEditor cluster', 'const SkinEditor'],

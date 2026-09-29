@@ -17000,7 +17000,10 @@ const Net = {
   makePeer() {
     const pc = new RTCPeerConnection({ iceServers: NET_ICE });
     this.pc = pc;
+    /* Ereignisse einer abgeloesten Verbindung (reset() hat this.pc schon ersetzt) zaehlen
+       nicht mehr - sonst braeche ihr spaetes 'closed' einen neu geoeffneten Raum ab. */
     pc.onconnectionstatechange = () => {
+      if (this.pc !== pc) return;
       const s = pc.connectionState;
       if (s === 'connected') this.onOpen();
       else if (s === 'failed' || s === 'closed') this.onDrop(s === 'failed' ? 'Verbindung fehlgeschlagen' : 'Verbindung beendet');
@@ -17021,6 +17024,7 @@ const Net = {
       v.play().catch(() => { });
     };
     pc.ondatachannel = ev => {
+      if (this.pc !== pc) return;
       if (ev.channel.label === 'ctl') this.bindCtl(ev.channel);
       else this.bindInp(ev.channel);
     };
@@ -17028,12 +17032,15 @@ const Net = {
   },
   bindCtl(ch) {
     this.ctl = ch;
-    ch.onmessage = e => { this.lastRx = Date.now(); this.onCtl(JSON.parse(e.data)); };
-    ch.onclose = () => this.onDrop('Datenkanal geschlossen');
+    /* Nur der aktuelle Kanal zaehlt: reset() setzt this.ctl auf null, das spaete close
+       des alten Kanals verpufft dann. */
+    ch.onmessage = e => { if (this.ctl !== ch) return; this.lastRx = Date.now(); this.onCtl(JSON.parse(e.data)); };
+    ch.onclose = () => { if (this.ctl === ch) this.onDrop('Datenkanal geschlossen'); };
   },
   bindInp(ch) {
     this.inp = ch;
     ch.onmessage = e => {
+      if (this.inp !== ch) return;
       this.lastRx = Date.now();
       const d = JSON.parse(e.data);
       /* Unordered: ein aelteres Paket darf ein neueres nicht ueberschreiben. */
@@ -17534,6 +17541,7 @@ const SelfTest = {
     try { this._netSilence(); } catch (e) { this._ok(false, 'Net-Stille (Fehler: ' + e.message + ')'); }
     try { this._netGuestSilence(); } catch (e) { this._ok(false, 'Net-Host-Stille (Fehler: ' + e.message + ')'); }
     try { this._netRejoin(); } catch (e) { this._ok(false, 'Net-Wiederbeitritt (Fehler: ' + e.message + ')'); }
+    try { this._netStaleEvents(); } catch (e) { this._ok(false, 'Net-Altlast (Fehler: ' + e.message + ')'); }
     /* Gesten-Gate-Gruppe bewusst als LETZTE Sync-Gruppe: der Fetch-Zeuge ist
        ab run()-Start armiert und deckt damit das gesamte Sync-Fenster ab —
        jede Gruppe, die unabsichtlich Assets laden wuerde, faellt hier auf. */
@@ -18645,6 +18653,29 @@ const SelfTest = {
      Spieler 2 wieder uebernehmen. Der Host oeffnet den Raum mit DEMSELBEN Code neu
      (hostRoom ist hier gestubbt - kein Netz im Selbsttest) und zeigt ihn in der
      Pause; der Gast landet mit eingetragenem Code im Beitreten-Dialog. */
+  /* Oeffnet der Host nach einem Abbruch neu, kommen die close-Ereignisse der ALTEN
+     Verbindung erst danach an. Sie duerfen den neuen Raum nicht abbrechen. */
+  _netStaleEvents() {
+    const keep = { role: Net.role, phase: Net.phase, status: Net.status, pc: Net.pc, ctl: Net.ctl, wd: Net._wd };
+    let pc = null;
+    try {
+      const oldCh = { close() {} };
+      Net.bindCtl(oldCh);
+      pc = Net.makePeer();
+      Net.pc = null; Net.ctl = null;             /* was reset() beim Neuoeffnen tut */
+      Net.role = 'host'; Net.phase = 'signaling'; Net.status = 'Raum offen - Code an den Mitspieler geben.';
+      oldCh.onclose();
+      this._ok(Net.phase === 'signaling', 'Net-Altlast: das close des alten Datenkanals bricht den neu geoeffneten Raum nicht ab - tatsaechlich: ' + Net.phase + ' / ' + Net.status);
+      Net.role = 'host'; Net.phase = 'signaling';
+      pc.close();                                 /* jetzt connectionState 'closed' */
+      pc.onconnectionstatechange();
+      this._ok(Net.phase === 'signaling', 'Net-Altlast: ein Zustandswechsel der alten Peer-Verbindung bricht ihn auch nicht ab - tatsaechlich: ' + Net.phase + ' / ' + Net.status);
+    } finally {
+      if (pc) { pc.onconnectionstatechange = null; pc.close(); }
+      clearTimeout(Net._wd);
+      Net.role = keep.role; Net.phase = keep.phase; Net.status = keep.status; Net.pc = keep.pc; Net.ctl = keep.ctl; Net._wd = keep.wd;
+    }
+  },
   _netRejoin() {
     const keep = { role: Net.role, phase: Net.phase, send: Net.send, code: Net.code, host: Net.hostRoom, cur: UI.cur,
       mode: UI.netMode, state: Game.state, coop: Game.coop, status: Net.status, input: $('netCodeIn').value };
