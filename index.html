@@ -17222,6 +17222,9 @@ const Net = {
     AudioSys.sfx('level');
     if (this.role === 'host') {
       Game.coop = true;
+      /* Kam der Gast spaet und der Host steht schon vor dem Lauf bei der Steuerung,
+         war die Wahl fuer Spieler 2 vorbei: zurueck zu ihr, der Gast waehlt selbst. */
+      if (UI.cur === 'scControls') { Game.charSelIdx = 1; UI.renderChars(1); UI.show('scChar'); }
       UI.toast('Online-Koop verbunden - Mitspieler steuert Spieler 2');
       this.syncMenu(true);
     } else {
@@ -18574,7 +18577,7 @@ const SelfTest = {
     }
   },
   _netHostCharPick() {
-    const keep = { role: Net.role, phase: Net.phase, send: Net.send, last: Net._lastMenu, cur: UI.cur,
+    const keep = { role: Net.role, phase: Net.phase, send: Net.send, last: Net._lastMenu, cur: UI.cur, status: Net.status, rx: Net.lastRx,
       coop: Game.coop, daily: Game.daily, csi: Game.charSelIdx, seed: Game.manualSeed, input: $('seedInput').value };
     const click = act => document.querySelector('[data-act="' + act + '"]').click();
     const sent = [];
@@ -18594,8 +18597,25 @@ const SelfTest = {
       UI.renderTitle(); UI.show('scTitle');
       click('play'); click('charConfirm');
       this._ok(!Game.coop && UI.cur === 'scControls', 'Net-Figurenwahl: ohne Verbindung bleibt "Spiel starten" ein Einzelspieler-Lauf');
+      /* Der Gast kommt spaet: der Host ist mit offenem Raum schon allein bis zur Steuerung gegangen. */
+      sent.length = 0; Net._lastMenu = null;
+      Net.role = 'host'; Net.phase = 'signaling';
+      Net.onOpen();
+      this._ok(UI.cur === 'scChar' && Game.charSelIdx === 1,
+        'Net-Figurenwahl: verbindet sich der Gast, waehrend der Host schon bei der Steuerung ist, geht es zurueck zur Wahl fuer Spieler 2 - tatsaechlich: ' + UI.cur + ', Spieler ' + (Game.charSelIdx + 1));
+      this._ok(sent.some(m => m.t === 'menu' && /^Spieler 2/.test(m.title) && m.items.length > 0),
+        'Net-Figurenwahl: der spaet verbundene Gast bekommt die Figurenwahl fuer Spieler 2');
+      /* Absicherung: verbindet er sich, waehrend der Host noch Spieler 1 waehlt, fuehrt Bestaetigen zu Spieler 2. */
+      Net.role = null; Net.phase = 'idle'; Net._lastMenu = null;
+      UI.renderTitle(); UI.show('scTitle');
+      click('play');
+      Net.role = 'host'; Net.phase = 'signaling';
+      Net.onOpen();
+      click('charConfirm');
+      this._ok(UI.cur === 'scChar' && Game.charSelIdx === 1,
+        'Net-Figurenwahl: verbindet sich der Gast waehrend der Wahl fuer Spieler 1, fuehrt Bestaetigen zu Spieler 2 - tatsaechlich: ' + UI.cur + ', Spieler ' + (Game.charSelIdx + 1));
     } finally {
-      Net.role = keep.role; Net.phase = keep.phase; Net.send = keep.send; Net._lastMenu = keep.last;
+      Net.role = keep.role; Net.phase = keep.phase; Net.send = keep.send; Net._lastMenu = keep.last; Net.status = keep.status; Net.lastRx = keep.rx;
       Game.coop = keep.coop; Game.daily = keep.daily; Game.charSelIdx = keep.csi; Game.manualSeed = keep.seed;
       $('seedInput').value = keep.input;
       UI.renderTitle(); UI.show(keep.cur || 'scTitle');
