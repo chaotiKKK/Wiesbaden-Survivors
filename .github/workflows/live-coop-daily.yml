@@ -1,0 +1,103 @@
+# Daily live co-op check: between releases, two players connect over co-op on
+# the PUBLIC site, exactly as the post-deploy job in ci.yml does. Co-op depends on
+# things that change without a deploy: the public MQTT brokers, the STUN servers,
+# and the browsers. This notices when one of them breaks it.
+#
+# A red run is not enough when nobody is watching, so a failure also opens an
+# issue labelled `live-coop` (one at a time: later failures comment on the open
+# issue instead of opening another), and the next green run closes it.
+#
+# The check retries only the broker-dependent part (up to 3 tries, fresh room
+# each); anything after the pair is connected fails at once. See
+# tools/pw_live_coop.py.
+#
+# Note: GitHub disables scheduled workflows after 60 days without activity in
+# the repository. The Actions tab then shows a button to re-enable it.
+name: Live co-op (daily)
+
+on:
+  schedule:
+    - cron: "17 5 * * *"     # 05:17 UTC every day, off the top of the hour
+  workflow_dispatch:
+  # A PR that changes this workflow or the check runs it once, without issues,
+  # so it has been exercised on GitHub before the first scheduled run.
+  pull_request:
+    paths:
+      - .github/workflows/live-coop-daily.yml
+      - tools/pw_live_coop.py
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: live-coop-daily
+  cancel-in-progress: false
+
+jobs:
+  live-coop:
+    name: Live site — two players connect over co-op
+    runs-on: windows-latest   # same runner the co-op jobs proved WebRTC on
+    timeout-minutes: 20
+    env:
+      PYTHONUTF8: "1"
+      PYTHONIOENCODING: utf-8
+      LIVE_URL: https://chaotikkk.github.io/Wiesbaden-Survivors/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Install Playwright + Chromium
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.62.0
+          python -m playwright install chromium
+
+      # No --expect: between releases there is no fresh deploy to wait for; the
+      # check tests whatever the live site serves right now.
+      - name: Two players connect over co-op on the live site (pw_live_coop)
+        id: check
+        shell: bash
+        run: |
+          set -o pipefail
+          python tools/pw_live_coop.py --url "$LIVE_URL" 2>&1 | tee live-coop.log
+
+      - name: Open or update the live co-op issue
+        if: failure() && github.event_name != 'pull_request'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh label create live-coop --color B60205 --description "The live co-op check is failing" --force
+          {
+            echo "The daily live co-op check failed on $(date -u '+%Y-%m-%d %H:%M UTC'): $RUN_URL"
+            echo
+            echo "Site: $LIVE_URL"
+            echo
+            echo '```'
+            if [ -f live-coop.log ]; then grep -E '^(PASS|FAIL|wait|note) \||^--- try|LIVE CO-OP|not retried' live-coop.log | tail -40
+            else echo "the check did not produce a log (it failed before or while starting)"; fi
+            echo '```'
+            echo
+            echo "This issue closes itself on the next green run."
+          } > issue.md
+          open=$(gh issue list --label live-coop --state open --json number --jq '.[0].number // empty')
+          if [ -n "$open" ]; then
+            gh issue comment "$open" --body-file issue.md
+            echo "commented on #$open"
+          else
+            gh issue create --title "Live co-op is broken (daily check)" --label live-coop --body-file issue.md
+          fi
+
+      - name: Close the live co-op issue after a green run
+        if: success() && github.event_name != 'pull_request'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          # no label yet means no issue yet
+          for n in $(gh issue list --label live-coop --state open --json number --jq '.[].number' 2>/dev/null || true); do
+            gh issue close "$n" --comment "Live co-op works again: $RUN_URL"
+          done
