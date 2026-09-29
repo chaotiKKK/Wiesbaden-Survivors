@@ -60,7 +60,9 @@ outage must not hold up releases, but a game bug that stops the pair from
 connecting must. With --broker-outage-ok, when connecting fails on every try the
 suite asks the public brokers directly (the game's own MqttWire CONNECT, waiting
 for CONNACK). None reachable: a loud ::warning, the session is SKIPPED, exit 0.
-Any reachable: the brokers are fine, so it is the game - FAIL. The test hook
+Any reachable: outages are short and may just have ended, so the game gets one
+more try right away, with the brokers proven up; only if that fails too is it
+the game - FAIL. The test hook
 --simulate-broker-outage points the pages' MQTT WebSockets at a dead address to
 prove that path (it changes the browser, never the game).
 
@@ -604,7 +606,10 @@ class Run:
 
 def session(p, label, scenario):
     """Connect (retried: the broker is a third party), then run one scenario (not retried)."""
-    for i in range(args.attempts):
+    proven_up = False
+    for i in range(args.attempts + 1):
+        if i == args.attempts and not proven_up:
+            break
         run = Run(p)
         try:
             ok, info = run.connect()
@@ -614,6 +619,11 @@ def session(p, label, scenario):
                     print("::warning title=Co-op run (%s): connect try %d failed::%s" % (label, i + 1, info))
                 if i + 1 == args.attempts:
                     reachable = run.h.evaluate(BROKER_PROBE)
+                    if reachable:
+                        # The brokers answer now; an outage may just have ended. One more try decides.
+                        print("%s: brokers reachable now (%s) - one more try with the brokers proven up" % (label, ", ".join(reachable)), flush=True)
+                        proven_up = True
+                        continue
                     if not reachable and args.broker_outage_ok:
                         msg = "%s: no public broker reachable (%d tries) - a third-party outage, not the game; session skipped" % (label, args.attempts)
                         print("SKIP | " + msg, flush=True)
@@ -621,9 +631,10 @@ def session(p, label, scenario):
                             print("::warning title=Co-op run skipped: broker outage::" + msg)
                         skipped.append(label)
                     else:
-                        check(False, "%s: host and guest connect" % label,
-                              "%s | brokers reachable: %s%s" % (info, ", ".join(reachable) or "none",
-                                                               " - so the game is at fault" if reachable else ""))
+                        check(False, "%s: host and guest connect" % label, "%s | brokers reachable: none" % info)
+                elif i == args.attempts:
+                    check(False, "%s: host and guest connect" % label,
+                          "%s | failed again although the brokers answered just before - so the game is at fault" % info)
                 continue
             check(True, "%s: host and guest connect" % label, "room code %s typed as shown" % info)
             scenario(run)
