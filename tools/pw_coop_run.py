@@ -29,7 +29,9 @@ and the risky moments in between:
                   code before the host has even noticed; the host reopens the
                   room with that code (shown on its pause screen), the guest
                   gets back in, sees the pause, resumes, and controls the SAME
-                  player 2 again (character and weapons unchanged)
+                  player 2 again (character and weapons unchanged); the daily
+                  live check plays this session alone against the public site
+                  (--url ... --sessions rejoin; --sessions picks sessions, default all)
   host drops      a second session: mid-run the HOST's browser disappears; the
                   guest is told within seconds ("Host antwortet nicht") instead
                   of staring at a frozen picture, and "Verlassen" takes it to
@@ -72,6 +74,8 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 ap = argparse.ArgumentParser()
+ap.add_argument("--sessions", default="run,rejoin,host drop",
+                help="comma-separated sessions to play: run, rejoin, host drop (default: all)")
 ap.add_argument("--serve", default=None, help="serve this directory (default: the repository)")
 ap.add_argument("--url", default=None, help="test a deployed site instead of serving one")
 ap.add_argument("--attempts", type=int, default=3)
@@ -599,9 +603,16 @@ def session(p, label, scenario):
 
 with (Serve(PORT, directory=SERVE) if SERVE else contextlib.nullcontext()), sync_playwright() as p:
     print("site: %s" % BASE, flush=True)
-    session(p, "run", Run.play)
-    session(p, "rejoin", Run.rejoin)
-    session(p, "host drop", Run.host_drop)
+    SESSIONS = {"run": Run.play, "rejoin": Run.rejoin, "host drop": Run.host_drop}
+    wanted = [x.strip() for x in args.sessions.split(",") if x.strip()]
+    unknown = [x for x in wanted if x not in SESSIONS]
+    if unknown or not wanted:
+        # a typo must not turn into "nothing tested, green"
+        check(False, "known sessions requested", "unknown: %s (known: %s)" % (", ".join(unknown) or "none given", ", ".join(SESSIONS)))
+    else:
+        for label in SESSIONS:
+            if label in wanted:
+                session(p, label, SESSIONS[label])
 
 fails = [r for r in results if not r[1]]
 print("\n%d/%d checks passed" % (len(results) - len(fails), len(results)))

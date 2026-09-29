@@ -1,5 +1,7 @@
 # Daily live co-op check: between releases, two players connect over co-op on
-# the PUBLIC site, exactly as the post-deploy job in ci.yml does. Co-op depends on
+# the PUBLIC site, exactly as the post-deploy job in ci.yml does, and then a
+# guest drops mid-run and rejoins, taking player 2 back - the rejoin path proven
+# where players actually use it. Co-op depends on
 # things that change without a deploy: the public MQTT brokers, the STUN servers,
 # and the browsers. This notices when one of them breaks it.
 #
@@ -25,6 +27,7 @@ on:
     paths:
       - .github/workflows/live-coop-daily.yml
       - tools/pw_live_coop.py
+      - tools/pw_coop_run.py
 
 permissions:
   contents: read
@@ -62,6 +65,17 @@ jobs:
           set -o pipefail
           python tools/pw_live_coop.py --url "$LIVE_URL" 2>&1 | tee live-coop.log
 
+      # A guest's browser disappears mid-run on the public site, the player opens
+      # the game again and types the same code; the host must reopen the room,
+      # the guest must get back in, resume and control the SAME player 2. No
+      # outage skip here: if the brokers are down, co-op is down for players too.
+      - name: A guest drops mid-run and rejoins on the live site (pw_coop_run --sessions rejoin)
+        id: rejoin
+        shell: bash
+        run: |
+          set -o pipefail
+          python tools/pw_coop_run.py --url "$LIVE_URL" --sessions rejoin 2>&1 | tee live-rejoin.log
+
       - name: Open or update the live co-op issue
         if: failure() && github.event_name != 'pull_request'
         shell: bash
@@ -75,10 +89,13 @@ jobs:
             echo
             echo "Site: $LIVE_URL"
             echo
-            echo '```'
-            if [ -f live-coop.log ]; then grep -E '^(PASS|FAIL|wait|note) \||^--- try|LIVE CO-OP|not retried' live-coop.log | tail -40
-            else echo "the check did not produce a log (it failed before or while starting)"; fi
-            echo '```'
+            for f in live-coop.log live-rejoin.log; do
+              echo "**$f**"
+              echo '```'
+              if [ -f "$f" ]; then grep -E '^(PASS|FAIL|SKIP|NOTE|wait|note) \||^--- try|LIVE CO-OP|not retried|checks passed|connecting failed|reachable now' "$f" | tail -40
+              else echo "no log: this step did not run (an earlier step failed) or failed while starting"; fi
+              echo '```'
+            done
             echo
             echo "This issue closes itself on the next green run."
           } > issue.md

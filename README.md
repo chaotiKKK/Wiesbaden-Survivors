@@ -78,7 +78,9 @@ Screenshots in `docs/pw/`. Wer sie nicht committen will, setzt sie mit
 Ein Merge nach `main` ist also ein Deploy.
 
 Zusätzlich läuft `.github/workflows/live-coop-daily.yml` **jeden Tag um
-05:17 UTC** (und auf Knopfdruck unter *Actions*) denselben Live-Koop-Check.
+05:17 UTC** (und auf Knopfdruck unter *Actions*) denselben Live-Koop-Check
+und danach einen Abbruch mit Wiederbeitritt mitten im Lauf auf der öffentlichen
+Seite (`pw_coop_run --sessions rejoin`).
 Koop hängt an Dingen, die sich ohne Deploy ändern: öffentliche Broker,
 STUN-Server und Browser. Scheitert der Check, öffnet der Workflow ein Issue
 mit dem Label `live-coop`. Weitere Fehlschläge kommentieren dasselbe Issue,
