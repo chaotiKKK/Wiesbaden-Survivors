@@ -50,7 +50,7 @@ Voraussetzungen:
 | `python tools/pw_danger.py` | Die Gefahrenkurve. |
 | `python tools/pw_lufs.py` | Die Lautheit. |
 | `python tools/pw_netseal.py` | Koop über den echten öffentlichen Broker, ob Raumcode oder IP mitzulesen sind. |
-| `python tools/pw_coop_run.py` | Ein ganzer Online-Koop-Lauf mit zwei Browsern: Figurenwahl, Welle 1, Level-ups, Shop, Welle 2. Beide müssen dasselbe Spiel sehen (Live-Bilder, HUD, Menüs) und steuern (Bewegung, Wahl, Käufe). Dazu die riskanten Momente: Pause von beiden Seiten, ein Spieler fällt aus und kommt zur nächsten Welle zurück, die Verbindung bricht mitten im Lauf ab. |
+| `python tools/pw_coop_run.py` | Ein ganzer Online-Koop-Lauf mit zwei Browsern: Figurenwahl, Welle 1, Level-ups, Shop, Welle 2. Beide müssen dasselbe Spiel sehen (Live-Bilder, HUD, Menüs) und steuern (Bewegung, Wahl, Käufe). Dazu die riskanten Momente: Pause von beiden Seiten, ein Spieler fällt aus und kommt zur nächsten Welle zurück, die Verbindung bricht mitten im Lauf ab, zuerst auf Seiten des Gastes, in einer zweiten Sitzung auf Seiten des Hosts. |
 
 Hinweis: `pw_walk`, `pw_vol_probe` und `pw_recon` überschreiben die
 Screenshots in `docs/pw/`. Wer sie nicht committen will, setzt sie mit

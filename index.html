@@ -12017,7 +12017,8 @@ const UI = {
       const b = document.createElement('button');
       b.className = 'btn small nav';
       b.textContent = a.label;
-      b.addEventListener('click', () => { Net.send({ t: 'pick', id: a.id }); AudioSys.sfx('ui'); });
+      /* local: Knoepfe, die der Gast selbst ausfuehrt (etwa "Verlassen", wenn der Host schweigt) */
+      b.addEventListener('click', () => { if (a.local) a.local(); else Net.send({ t: 'pick', id: a.id }); AudioSys.sfx('ui'); });
       ab.appendChild(b);
     });
     this.navIdx = 0;
@@ -17258,7 +17259,7 @@ const Net = {
     this.pc = null; this.ctl = null; this.inp = null; this.peerId = null; this.audioDest = null;
     this.room = null; this.eph = null; this.sk = null; this._offerTaken = false;
     this.acts = {}; this.remote = { mx: 0, my: 0, ax: 0, ay: 0, aim: 0, sk: 0, t: 0 };
-    this._lastMenu = ''; this.ping = 0; this._silencePaused = false;
+    this._lastMenu = ''; this.ping = 0; this._silencePaused = false; this._silenceShown = false; this._hostMenu = null;
   },
   hangUp() {
     const wasGuest = this.role === 'client';
@@ -17289,7 +17290,7 @@ const Net = {
     else if (m.t === 'pick') this.applyPick(m.id);
     else if (m.t === 'ping') this.send({ t: 'pong', s: m.s });
     else if (m.t === 'pong') this.ping = Math.max(0, Date.now() - m.s);
-    else if (m.t === 'menu') UI.renderNetMenu(m);
+    else if (m.t === 'menu') { this._hostMenu = m; UI.renderNetMenu(m); }
     else if (m.t === 'hud') UI.renderNetHud(m);
     else if (m.t === 'toast') UI.toast(m.m);
   },
@@ -17317,6 +17318,20 @@ const Net = {
           a: [+av.x.toFixed(3), +av.y.toFixed(3)],
           h: av.has ? 1 : 0, s: Input.skillDown(0) ? 1 : 0, t: Date.now()
         }, true);
+      }
+      /* Verschwindet der Host, meldet WebRTC das erst nach ~15 s - bis dahin stuende
+         nur das Bild. Er pingt jede Sekunde, in jedem Zustand: schweigt er
+         NET_SILENT_MS lang, erfaehrt der Gast das und kann gehen. Kommen wieder
+         Pakete, ist das zuletzt gesendete Menue des Hosts wieder da. */
+      const silent = Date.now() - this.lastRx;
+      if (silent >= NET_SILENT_MS && !this._silenceShown) {
+        this._silenceShown = true;
+        UI.renderNetMenu({ t: 'menu', title: 'Host antwortet nicht',
+          sub: 'Vom Host kommt nichts mehr an, darum steht das Bild. Meldet er sich wieder, geht es weiter.', items: [],
+          acts: [{ id: 'leave', label: 'Verlassen', local: () => this.hangUp() }] });
+      } else if (silent < NET_SILENT_MS && this._silenceShown) {
+        this._silenceShown = false;
+        UI.renderNetMenu(this._hostMenu || { t: 'menu', title: '', items: [] });
       }
     } else {
       const silent = Date.now() - this.lastRx;
@@ -17500,6 +17515,7 @@ const SelfTest = {
     try { this._netHostCharPick(); } catch (e) { this._ok(false, 'Net-Figurenwahl (Fehler: ' + e.message + ')'); }
     try { this._netPauseMirror(); } catch (e) { this._ok(false, 'Net-Pause (Fehler: ' + e.message + ')'); }
     try { this._netSilence(); } catch (e) { this._ok(false, 'Net-Stille (Fehler: ' + e.message + ')'); }
+    try { this._netGuestSilence(); } catch (e) { this._ok(false, 'Net-Host-Stille (Fehler: ' + e.message + ')'); }
     /* Gesten-Gate-Gruppe bewusst als LETZTE Sync-Gruppe: der Fetch-Zeuge ist
        ab run()-Start armiert und deckt damit das gesamte Sync-Fenster ab —
        jede Gruppe, die unabsichtlich Assets laden wuerde, faellt hier auf. */
@@ -18573,6 +18589,37 @@ const SelfTest = {
       this._ok(Game.state === 'paused', 'Net-Stille: kommen wieder Pakete und schweigt der Gast erneut, pausiert es wieder');
     } finally {
       Net.role = keep.role; Net.phase = keep.phase; Net.send = keep.send; Net._lastMenu = keep.last; Net.lastRx = keep.rx;
+      Game.state = keep.state; UI.show(keep.cur || 'scTitle');
+    }
+  },
+  /* Online-Koop, Gegenrichtung: verschwindet der Host, meldet WebRTC das dem Gast
+     erst nach ~15 s - so lange saehe er nur ein stehendes Bild. Der Host pingt jede
+     Sekunde, in jedem Zustand. Schweigt er 3 s, erfaehrt der Gast das und kann
+     gehen; kommen wieder Pakete, ist das Menue des Hosts wieder da. */
+  _netGuestSilence() {
+    const keep = { role: Net.role, phase: Net.phase, send: Net.send, cur: UI.cur, state: Game.state, rx: Net.lastRx, status: Net.status };
+    const title = () => UI.cur === 'scNetMenu' ? $('netMenuTitle').textContent : '(' + UI.cur + ')';
+    const leave = () => [...document.querySelectorAll('#netMenuActs button')].find(b => /verlassen/i.test(b.textContent));
+    const tick = () => Net.tick(0.02);
+    try {
+      Net.role = 'client'; Net.phase = 'connected'; Net.send = () => true;
+      Game.state = 'net'; UI.show(null);
+      Net.lastRx = Date.now();
+      Net.onCtl({ t: 'menu', title: 'Shop - Welle 1', sub: '', items: [], acts: [] });
+      Net.lastRx = Date.now() - 500; tick();
+      this._ok(title() === 'Shop - Welle 1', 'Net-Host-Stille: eine halbe Sekunde ohne Paket aendert nichts - tatsaechlich: ' + title());
+      Net.lastRx = Date.now() - 4000; tick();
+      this._ok(title() === 'Host antwortet nicht' && !!leave(),
+        'Net-Host-Stille: 4 s ohne Paket vom Host zeigt dem Gast "Host antwortet nicht" mit "Verlassen" - tatsaechlich: ' + title());
+      Net.lastRx = Date.now(); tick();
+      this._ok(title() === 'Shop - Welle 1', 'Net-Host-Stille: kommen wieder Pakete, ist das Menue des Hosts wieder da - tatsaechlich: ' + title());
+      Net.lastRx = Date.now() - 4000; tick();
+      const b = leave();
+      if (b) b.click();
+      this._ok(Net.phase === 'idle' && Net.role === null && UI.cur === 'scTitle',
+        'Net-Host-Stille: "Verlassen" trennt und fuehrt zum Titel - tatsaechlich: ' + Net.phase + ', ' + Net.role + ', ' + UI.cur);
+    } finally {
+      Net.role = keep.role; Net.phase = keep.phase; Net.send = keep.send; Net.lastRx = keep.rx; Net.status = keep.status;
       Game.state = keep.state; UI.show(keep.cur || 'scTitle');
     }
   },

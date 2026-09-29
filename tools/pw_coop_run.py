@@ -24,6 +24,10 @@ and the risky moments in between:
   dropped link    in wave 2 the guest's browser disappears without hanging up:
                   the host pauses within seconds and says why, can play on alone,
                   and is told the partner is gone once WebRTC gives up
+  host drops      a second session: mid-run the HOST's browser disappears; the
+                  guest is told within seconds ("Host antwortet nicht") instead
+                  of staring at a frozen picture, and "Verlassen" takes it to
+                  the title right away
 
 and checks that both players SEE the same game (the guest's video matches the
 host's canvas, the guest's HUD and menus match the host's state) and CONTROL
@@ -296,6 +300,32 @@ class Run:
               "once WebRTC gives up, the host is told the partner is gone",
               "after %.0f s more: %s, %s, toast '%s'" % (time.time() - t0, st["phase"], st["status"], self.toast(h)))
 
+    def host_drop(self):
+        """Second session: the host's browser goes away mid-run."""
+        h, g = self.h, self.g
+        h.click('[data-act="netBack"]')
+        h.click('[data-act="coop"]')
+        h.click('[data-act="charConfirm"]')
+        ok, gs = self.guest_menu("Spieler 2")
+        need(ok, "host drop: the guest picks player 2", gs["title"])
+        g.locator("#netMenuCards .lvlCard.nav").first.click()
+        h.click('[data-act="charConfirm"]')
+        if until(h, "() => UI.cur", lambda v: v == "scControls", 3)[0]:
+            h.click('[data-act="controlsOK"]')
+        ok, st = until(h, "() => Game.state", lambda v: v == "play", 10)
+        need(ok, "host drop: the run is under way", st)
+        time.sleep(2)
+        t0 = time.time()
+        self.ctx["host"].close()           # no hang-up: the host's browser just goes away
+        ok, gs = until(g, GUEST_ST, lambda v: v["scr"] == "scNetMenu" and v["title"] == "Host antwortet nicht", 12)
+        dt = time.time() - t0
+        need(ok and dt <= 6, "the guest is told within seconds when the host drops", "%.1f s: %s" % (dt, gs["title"] or gs["scr"]))
+        need(any(a.lower() == "verlassen" for a in gs["acts"]), "the guest can leave right away", ", ".join(gs["acts"]))
+        g.locator("#netMenuActs button").filter(has_text="Verlassen").click()
+        ok, st = until(g, "() => [UI.cur, Net.phase, Game.state]", lambda v: v == ["scTitle", "idle", "title"], 3)
+        need(ok, "'Verlassen' takes the guest back to the title", str(st))
+        check(not self.errors, "host drop: no page errors", "; ".join(self.errors[:3]))
+
     def guest_menu(self, title_prefix, secs=10):
         return until(self.g, GUEST_ST, lambda s: s["scr"] == "scNetMenu" and s["title"].startswith(title_prefix), secs)
 
@@ -474,29 +504,35 @@ class Run:
         self.browser.close()
 
 
-with (Serve(PORT, directory=SERVE) if SERVE else contextlib.nullcontext()), sync_playwright() as p:
-    print("site: %s" % BASE, flush=True)
+def session(p, label, scenario):
+    """Connect (retried: the broker is a third party), then run one scenario (not retried)."""
     for i in range(args.attempts):
         run = Run(p)
         try:
             ok, info = run.connect()
             if not ok:
-                print("try %d/%d: connecting failed (%s)" % (i + 1, args.attempts, info), flush=True)
+                print("%s try %d/%d: connecting failed (%s)" % (label, i + 1, args.attempts, info), flush=True)
                 if IN_CI:
-                    print("::warning title=Co-op run: connect try %d failed::%s" % (i + 1, info))
+                    print("::warning title=Co-op run (%s): connect try %d failed::%s" % (label, i + 1, info))
                 if i + 1 == args.attempts:
-                    check(False, "host and guest connect", info)
+                    check(False, "%s: host and guest connect" % label, info)
                 continue
-            check(True, "host and guest connect", "room code %s typed as shown" % info)
-            run.play()
-            break
+            check(True, "%s: host and guest connect" % label, "room code %s typed as shown" % info)
+            scenario(run)
+            return
         except Broken:
-            break
+            return
         except Exception as e:
-            check(False, "the run completed", str(e).splitlines()[0][:200])
-            break
+            check(False, "%s: the scenario completed" % label, str(e).splitlines()[0][:200])
+            return
         finally:
             run.close()
+
+
+with (Serve(PORT, directory=SERVE) if SERVE else contextlib.nullcontext()), sync_playwright() as p:
+    print("site: %s" % BASE, flush=True)
+    session(p, "run", Run.play)
+    session(p, "host drop", Run.host_drop)
 
 fails = [r for r in results if not r[1]]
 print("\n%d/%d checks passed" % (len(results) - len(fails), len(results)))
