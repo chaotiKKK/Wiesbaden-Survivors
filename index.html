@@ -17036,6 +17036,8 @@ const Net = {
        des alten Kanals verpufft dann. */
     ch.onmessage = e => { if (this.ctl !== ch) return; this.lastRx = Date.now(); this.onCtl(JSON.parse(e.data)); };
     ch.onclose = () => { if (this.ctl === ch) this.onDrop('Datenkanal geschlossen'); };
+    /* onOpen kann vor dem offenen Kanal kommen; dann ging das Menue ins Leere - jetzt nachschicken. */
+    ch.onopen = () => { if (this.ctl === ch && this.role === 'host') this.syncMenu(true); };
   },
   bindInp(ch) {
     this.inp = ch;
@@ -17542,6 +17544,7 @@ const SelfTest = {
     try { this._netGuestSilence(); } catch (e) { this._ok(false, 'Net-Host-Stille (Fehler: ' + e.message + ')'); }
     try { this._netRejoin(); } catch (e) { this._ok(false, 'Net-Wiederbeitritt (Fehler: ' + e.message + ')'); }
     try { this._netStaleEvents(); } catch (e) { this._ok(false, 'Net-Altlast (Fehler: ' + e.message + ')'); }
+    try { this._netMenuOnOpen(); } catch (e) { this._ok(false, 'Net-Kanal-offen (Fehler: ' + e.message + ')'); }
     /* Gesten-Gate-Gruppe bewusst als LETZTE Sync-Gruppe: der Fetch-Zeuge ist
        ab run()-Start armiert und deckt damit das gesamte Sync-Fenster ab —
        jede Gruppe, die unabsichtlich Assets laden wuerde, faellt hier auf. */
@@ -18655,6 +18658,27 @@ const SelfTest = {
      Pause; der Gast landet mit eingetragenem Code im Beitreten-Dialog. */
   /* Oeffnet der Host nach einem Abbruch neu, kommen die close-Ereignisse der ALTEN
      Verbindung erst danach an. Sie duerfen den neuen Raum nicht abbrechen. */
+  /* Beim Verbinden schickt der Host sein Menue sofort - der Datenkanal ist dann aber oft
+     noch nicht offen. Aendert sich beim Host danach nichts (etwa in der Pause, in die
+     ein Gast zurueckkehrt), bekaeme der Gast sonst nie ein Menue. */
+  _netMenuOnOpen() {
+    const keep = { role: Net.role, phase: Net.phase, status: Net.status, ctl: Net.ctl, last: Net._lastMenu, state: Game.state, coop: Game.coop, cur: UI.cur, ws: Net.ws };
+    const sent = [];
+    try {
+      const ch = { readyState: 'connecting', send(d) { sent.push(JSON.parse(d)); }, close() {} };
+      Net.bindCtl(ch);
+      Net.role = 'host'; Net.phase = 'connecting'; Net._lastMenu = ''; Net.ws = null;
+      Game.state = 'paused'; UI.show('scPause');
+      Net.onOpen();
+      ch.readyState = 'open';
+      if (ch.onopen) ch.onopen();
+      const m = sent.filter(x => x.t === 'menu').pop();
+      this._ok(!!m && m.title === 'Pause', 'Net-Kanal-offen: oeffnet sich der Datenkanal nach dem Verbinden, bekommt der Gast das Menue des Hosts - tatsaechlich: ' + (m ? m.title : 'nichts gesendet'));
+    } finally {
+      Net.role = keep.role; Net.phase = keep.phase; Net.status = keep.status; Net.ctl = keep.ctl; Net._lastMenu = keep.last; Net.ws = keep.ws;
+      Game.state = keep.state; Game.coop = keep.coop; UI.show(keep.cur || 'scTitle');
+    }
+  },
   _netStaleEvents() {
     const keep = { role: Net.role, phase: Net.phase, status: Net.status, pc: Net.pc, ctl: Net.ctl, wd: Net._wd };
     let pc = null;
