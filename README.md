@@ -63,13 +63,18 @@ Screenshots in `docs/pw/`. Wer sie nicht committen will, setzt sie mit
 
 1. **Gate + Playwright** (Windows, blockierend). Hier laufen das Gate, der Bau
    und Smoke-Test der Seite und alle Playwright-Suiten außer `pw_netseal`.
-2. **Koop über den öffentlichen Broker** (nicht blockierend). Der Job hängt
-   von fremden Brokern ab, deshalb macht ein roter Lauf die CI nicht rot.
-3. **Deploy auf GitHub Pages**, nur bei einem Push auf `main` und nur nach
-   grünem Job 1. Ausgeliefert wird ausschließlich die Allowlist aus
+2. **Ganzer Online-Koop-Lauf** (Windows, blockierend, `tools/pw_coop_run.py`).
+   Er braucht einen öffentlichen Broker. Scheitert das Verbinden in jedem
+   Versuch, fragt er die Broker direkt: Ist keiner erreichbar, ist das ein
+   Ausfall bei Dritten, und der Lauf wird mit Warnung übersprungen. Ist einer
+   erreichbar, liegt es am Spiel, und der Job wird rot.
+3. **Koop über den öffentlichen Broker** (nicht blockierend): `pw_netseal`
+   und der Zwei-Spieler-Check auf dem eigenen Build.
+4. **Deploy auf GitHub Pages**, nur bei einem Push auf `main` und nur nach
+   grünem Job 1 **und** 2. Ausgeliefert wird ausschließlich die Allowlist aus
    `tools/build-site.mjs`: Spiel, `data.js`, Audio, PWA-Dateien und Lizenzen.
    Debug-, Vorschau- und Doku-Seiten sind nicht öffentlich.
-4. **Live-Koop nach dem Deploy** (blockierend). Zuerst wartet der Job, bis
+5. **Live-Koop nach dem Deploy** (blockierend). Zuerst wartet der Job, bis
    das CDN genau die ausgelieferten Dateien liefert. Dann verbinden sich
    auf der öffentlichen Seite zwei Spieler über Koop, mit dem angezeigten
    Raumcode, und Eingaben und Bild müssen in beide Richtungen ankommen

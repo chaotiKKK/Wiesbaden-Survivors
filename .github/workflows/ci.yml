@@ -21,6 +21,14 @@
 #                        own non-blocking job below: visible on every PR, but a
 #                        broker outage never blocks a deploy.
 #
+# The full online co-op run (tools/pw_coop_run.py) DOES block the deploy, in its
+# own coop-run job: 22/22 clean CI runs before it was promoted, 9/9 of the
+# current three-session version (six of them in parallel on the same broker),
+# no connection retry needed once. It still needs a third-party broker, so it
+# runs with --broker-outage-ok: if connecting fails on every try it asks the
+# brokers directly; none reachable -> a loud warning and a skip (an outage must
+# not hold up releases), any reachable -> the game is at fault -> red.
+#
 # After every deploy, the live-coop job checks the PUBLIC site the way players
 # meet it: two players connect over co-op with a real room code. That one is
 # deliberately blocking — a red run there means the live game is broken.
@@ -134,11 +142,6 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check playwright==1.62.0
           python -m playwright install chromium
-      # A whole online co-op run on this build: character pick, wave 1, level-ups,
-      # shop, wave 2. Both players must see (live frames, HUD, menus) and control
-      # (movement, picks, purchases) the same game.
-      - name: Full online co-op run (pw_coop_run)
-        run: python tools/pw_coop_run.py
       # Two browsers connect as host and guest over the real broker; an eavesdropper
       # on this session's own topics must see neither room code nor IP.
       - name: Sealed co-op signaling end to end (pw_netseal)
@@ -148,9 +151,34 @@ jobs:
       - name: Two players connect over co-op on this build (pw_live_coop --serve)
         run: python tools/pw_live_coop.py --serve .
 
+  coop-run:
+    name: Full online co-op run (blocking)
+    runs-on: windows-latest   # same runner the co-op jobs proved WebRTC on
+    timeout-minutes: 20
+    env:
+      PYTHONUTF8: "1"
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Install Playwright + Chromium
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.62.0
+          python -m playwright install chromium
+      # A whole online co-op run on this build: character pick, wave 1, level-ups,
+      # shop, wave 2, a pause from each side, player 2 going down and coming back,
+      # the guest dropping, rejoining and taking player 2 back, the host dropping.
+      # Both players must see (live frames, HUD, menus) and control (movement,
+      # picks, purchases) the same game. A broker outage skips loudly, a game bug
+      # fails (see the header).
+      - name: Full online co-op run (pw_coop_run)
+        run: python tools/pw_coop_run.py --broker-outage-ok
+
   deploy:
     name: Deploy to GitHub Pages
-    needs: gate            # the whole point: no green gate, no deploy
+    needs: [gate, coop-run]   # the whole point: no green gate and co-op run, no deploy
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
