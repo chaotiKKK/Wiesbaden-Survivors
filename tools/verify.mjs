@@ -89,7 +89,8 @@ const MARKERS = [
   ['sealed-signaling selftest', '_netSeal()'],
   ['online host always lets the guest pick player 2 (selftest)', '_netHostCharPick()'],
   ['guest sees the pause (selftest)', '_netPauseMirror()'],
-  ['host pauses when the guest falls silent (selftest)', '_netSilence()']
+  ['host pauses when the guest falls silent (selftest)', '_netSilence()'],
+  ['guest is told when the host falls silent (selftest)', '_netGuestSilence()']
 ];
 const FORBIDDEN = [
   ['removed SkinEditor cluster', 'const SkinEditor'],
