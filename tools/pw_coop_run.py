@@ -12,6 +12,19 @@ typed as shown on the host's screen), then play the way two people would:
                   guest presses "Bereit - naechste Welle"
   wave 2          starts on the host and shows on the guest
 
+and the risky moments in between:
+
+  pause           the guest pauses (Escape) and resumes ("Weiter" in its menu),
+                  then the host pauses and resumes: time stands still, the
+                  guest's input does nothing, and the guest is SHOWN the pause
+  going down      player 2 goes down late in wave 1 (white-box lever: the game's own
+                  Player.down(), as when its HP runs out): the guest's HUD says so,
+                  the downed player stays put, the run goes on with player 1; at
+                  wave 2 player 2 is back at half health and controllable again
+  dropped link    in wave 2 the guest's browser disappears without hanging up:
+                  the host pauses within seconds and says why, can play on alone,
+                  and is told the partner is gone once WebRTC gives up
+
 and checks that both players SEE the same game (the guest's video matches the
 host's canvas, the guest's HUD and menus match the host's state) and CONTROL
 the same game (each side's input and choices change that side's player in the
@@ -139,9 +152,11 @@ class Run:
         self.frames = []
         self.codes = []    # (decoded counter or None, host counter at that moment)
         self.k = 0
+        self.ctx = {}
 
     def page(self, name):
-        pg = self.browser.new_context(service_workers="block", viewport={"width": 1280, "height": 720}).new_page()
+        self.ctx[name] = self.browser.new_context(service_workers="block", viewport={"width": 1280, "height": 720})
+        pg = self.ctx[name].new_page()
         pg.on("pageerror", lambda e: self.errors.append("%s: %s" % (name, str(e)[:160])))
         pg.on("console", lambda m: self.errors.append("%s console: %s" % (name, m.text[:160])) if m.type == "error" else None)
         pg.add_init_script("window.confirm = () => true;")
@@ -195,6 +210,92 @@ class Run:
         page.keyboard.up("KeyD")
         return ok, after["x"] - before
 
+    def steer_host(self, secs=0.6):
+        k = KEYS[self.k % 4]
+        self.h.keyboard.down(k); time.sleep(secs); self.h.keyboard.up(k)
+        self.k += 1
+
+    def toast(self, page):
+        return page.evaluate("() => { const t = [...document.querySelectorAll('.toast')].pop(); return t ? t.textContent : ''; }")
+
+    # ---- the risky moments ------------------------------------------------------
+    def pause_checks(self):
+        h, g = self.h, self.g
+        g.keyboard.press("Escape")
+        ok, st = until(h, "() => [Game.state, UI.cur]", lambda v: v == ["paused", "scPause"], 3)
+        need(ok, "the guest's Escape pauses the host's game", str(st))
+        ok, gs = self.guest_menu("Pause", 3)
+        need(ok and any(a.lower() == "weiter" for a in gs["acts"]), "the guest is shown the pause", "%s / %s" % (gs["title"], gs["acts"]))
+        t0, x0 = h.evaluate("() => Game.waveTimer"), h.evaluate(PLAYER, 1)["x"]
+        g.keyboard.down("KeyD"); time.sleep(1.2); g.keyboard.up("KeyD")
+        t1, x1 = h.evaluate("() => Game.waveTimer"), h.evaluate(PLAYER, 1)["x"]
+        need(t1 == t0 and x1 == x0, "while paused, time stands still and the guest's input does nothing",
+             "wave timer %.2f -> %.2f, player 2 x %d -> %d" % (t0, t1, x0, x1))
+        g.locator("#netMenuActs button").filter(has_text="Weiter").click()
+        ok, st = until(h, "() => Game.state", lambda v: v == "play", 3)
+        need(ok, "the guest's 'Weiter' resumes the game", st)
+        ok, gs = until(g, GUEST_ST, lambda v: v["scr"] is None, 3)
+        check(ok, "the guest's pause menu closes on resume", str(gs["scr"]))
+        h.keyboard.press("Escape")
+        ok, st = until(h, "() => Game.state", lambda v: v == "paused", 3)
+        need(ok, "the host's Escape pauses the game", st)
+        ok, gs = self.guest_menu("Pause", 3)
+        need(ok, "the guest is shown the host's pause", gs["title"])
+        h.click('[data-act="resume"]')
+        ok, st = until(h, "() => Game.state", lambda v: v == "play", 3)
+        need(ok, "the host resumes", st)
+        ok, gs = until(g, GUEST_ST, lambda v: v["scr"] is None, 3)
+        check(ok, "the guest's pause menu closes when the host resumes", str(gs["scr"]))
+
+    def down_checks(self):
+        h, g = self.h, self.g
+        for _ in range(2):   # a Cyborg survives the first hit on emergency power
+            h.evaluate("() => Game.players[1].down()")
+            if not h.evaluate(PLAYER, 1)["alive"]:
+                break
+        p2 = h.evaluate(PLAYER, 1)
+        need(not p2["alive"], "player 2 goes down", "%s %d/%d" % (p2["name"], p2["hp"], p2["mx"]))
+        ok, gs = until(g, GUEST_ST, lambda v: any("AUSSER GEFECHT" in x for x in v["hud"]), 3)
+        need(ok, "the guest's HUD shows player 2 out of action", " | ".join(gs["hud"]))
+        g.keyboard.down("KeyD"); time.sleep(1.0); g.keyboard.up("KeyD")
+        check(h.evaluate(PLAYER, 1)["x"] == p2["x"], "a downed player 2 does not move")
+        ok, dx = self.moved_right(h, 0)
+        need(ok and h.evaluate("() => Game.state") == "play", "the run goes on with player 1", "+%d px" % dx)
+
+    def revive_checks(self):
+        h, g = self.h, self.g
+        p2 = h.evaluate(PLAYER, 1)
+        need(p2["alive"] and 0 < p2["hp"] <= p2["mx"] * 0.5 + 1, "player 2 is back for wave 2, at half health (co-op revive)",
+             "%s %d/%d" % (p2["name"], p2["hp"], p2["mx"]))
+        ok, gs = until(g, GUEST_ST, lambda v: not any("AUSSER GEFECHT" in x for x in v["hud"]), 3)
+        check(ok, "the guest's HUD shows player 2 back in action", " | ".join(gs["hud"]))
+        ok, dx = self.moved_right(g, 1)
+        need(ok, "the guest controls player 2 again", "+%d px" % dx)
+
+    def drop_checks(self):
+        h = self.h
+        need(h.evaluate("() => Game.state") == "play", "wave 2 is running when the link drops")
+        t0 = time.time()
+        self.ctx["guest"].close()          # no hang-up: the guest's browser just goes away
+        ok, st = until(h, "() => [Game.state, UI.cur]", lambda v: v == ["paused", "scPause"], 12)
+        dt = time.time() - t0
+        need(ok and dt <= 6, "the host pauses within seconds when the guest drops", "%.1f s, %s" % (dt, st))
+        msg = self.toast(h)
+        check("antwortet nicht" in msg, "the host is told why", msg)
+        h.click('[data-act="resume"]')
+        ok, dx = self.moved_right(h, 0)
+        need(ok and h.evaluate("() => Game.state") == "play", "the host can play on alone", "+%d px" % dx)
+        t0 = time.time()
+        while time.time() - t0 < 40 and h.evaluate("() => Net.phase") == "connected":
+            if h.evaluate("() => Game.state") == "play":
+                self.steer_host(0.5)
+            else:
+                time.sleep(0.5)
+        st = h.evaluate("() => ({ phase: Net.phase, status: Net.status, state: Game.state })")
+        check(st["phase"] == "closed" and ("getrennt" in self.toast(h) or "erneut verbinden" in st["status"]),
+              "once WebRTC gives up, the host is told the partner is gone",
+              "after %.0f s more: %s, %s, toast '%s'" % (time.time() - t0, st["phase"], st["status"], self.toast(h)))
+
     def guest_menu(self, title_prefix, secs=10):
         return until(self.g, GUEST_ST, lambda s: s["scr"] == "scNetMenu" and s["title"].startswith(title_prefix), secs)
 
@@ -236,14 +337,22 @@ class Run:
         ok, dx = self.moved_right(g, 1)
         need(ok, "guest input moves player 2 in the host's game", "+%d px" % dx)
 
+        # the risky moments of wave 1: a pause from each side now, player 2 goes down near the end
+        # (late, so player 1 only has to hold out alone for a few seconds)
+        self.pause_checks()
+
         # wave 1 until the game leaves play
-        t0 = time.time()
+        t0, downed = time.time(), False
         while h.evaluate("() => Game.state") == "play" and time.time() - t0 < 90:
+            if not downed and h.evaluate("() => Game.waveTimer") < 6:
+                self.down_checks(); downed = True
+                continue
             self.sample_frame()
             self.steer()
+        need(downed, "player 2 went down before wave 1 ended")
         st = h.evaluate(HOST_ST)
         need(st["state"] != "play", "wave 1 ends", "state=%s after %.0f s" % (st["state"], time.time() - t0))
-        need(any(p["alive"] for p in (h.evaluate(PLAYER, 0), h.evaluate(PLAYER, 1))), "someone survived wave 1")
+        need(h.evaluate(PLAYER, 0)["alive"], "player 1 carried wave 1 alone")
 
         # level-ups and relics, in whatever order they come, until the shop
         queue = h.evaluate("() => (Game.levelQueue || []).map(p => p.index)")
@@ -331,6 +440,7 @@ class Run:
         need(ok, "the guest's 'ready' starts wave 2 on the host", "state=%s wave=%s" % (st["state"], st["wave"]))
         ok, gs = until(g, GUEST_ST, lambda s: s["scr"] is None and any(x.startswith("WELLE 2") for x in s["hud"]), 5)
         need(ok, "guest's menu closes and its HUD shows wave 2", " | ".join(gs["hud"]))
+        self.revive_checks()
         for _ in range(8):
             self.sample_frame()
             self.steer(0.4)
@@ -353,10 +463,12 @@ class Run:
         med = statistics.median(self.frames) if self.frames else float("nan")
         check(med >= 0.6, "the guest's picture is the host's game picture", "median r %.2f over %d frames" % (med, len(self.frames)))
 
-        h.evaluate("() => Net.hangUp()")
-        g.evaluate("() => Net.hangUp()")
-        time.sleep(0.5)
         check(not self.errors, "no page errors on host or guest", "; ".join(self.errors[:3]))
+
+        # last: the link drops mid-run (ends the guest's session, so it goes after every guest check)
+        self.drop_checks()
+        check(not self.errors, "no page errors on the host after the drop", "; ".join(self.errors[:3]))
+        h.evaluate("() => Net.hangUp()")
 
     def close(self):
         self.browser.close()

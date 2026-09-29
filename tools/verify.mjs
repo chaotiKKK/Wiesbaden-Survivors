@@ -87,7 +87,9 @@ const MARKERS = [
   ['co-op host sends picture and sound in one stream', 'getAudioTracks()) pc.addTrack(tr, st);'],
   ['co-op guest collects all tracks in one stream', 'if (!ms.getTracks().includes(ev.track)) ms.addTrack(ev.track);'],
   ['sealed-signaling selftest', '_netSeal()'],
-  ['online host always lets the guest pick player 2 (selftest)', '_netHostCharPick()']
+  ['online host always lets the guest pick player 2 (selftest)', '_netHostCharPick()'],
+  ['guest sees the pause (selftest)', '_netPauseMirror()'],
+  ['host pauses when the guest falls silent (selftest)', '_netSilence()']
 ];
 const FORBIDDEN = [
   ['removed SkinEditor cluster', 'const SkinEditor'],
