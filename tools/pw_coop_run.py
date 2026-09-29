@@ -55,7 +55,17 @@ Connecting depends on a third-party broker, so only that part is retried (up to
 game's fault and fails at once. Test-environment adaptations as in
 pw_live_coop: WebRTC mDNS masking off, autoplay allowed, service workers blocked.
 
+Broker outage vs. game bug: in CI this suite blocks the deploy, so a third-party
+outage must not hold up releases, but a game bug that stops the pair from
+connecting must. With --broker-outage-ok, when connecting fails on every try the
+suite asks the public brokers directly (the game's own MqttWire CONNECT, waiting
+for CONNACK). None reachable: a loud ::warning, the session is SKIPPED, exit 0.
+Any reachable: the brokers are fine, so it is the game - FAIL. The test hook
+--simulate-broker-outage points the pages' MQTT WebSockets at a dead address to
+prove that path (it changes the browser, never the game).
+
 Usage: python tools/pw_coop_run.py [--serve DIR | --url URL] [--attempts 3]
+                                   [--broker-outage-ok] [--simulate-broker-outage]
 """
 import argparse
 import contextlib
@@ -75,7 +85,11 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--serve", default=None, help="serve this directory (default: the repository)")
 ap.add_argument("--url", default=None, help="test a deployed site instead of serving one")
 ap.add_argument("--attempts", type=int, default=3)
+ap.add_argument("--broker-outage-ok", action="store_true",
+                help="skip (warn, exit 0) instead of failing when no public broker is reachable at all")
+ap.add_argument("--simulate-broker-outage", action="store_true", help="test hook: MQTT WebSockets go to a dead address")
 args = ap.parse_args()
+skipped = []
 PORT = 8983
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SERVE = None if args.url else (args.serve or ROOT)
@@ -98,6 +112,19 @@ THUMB = """([sel, mirror]) => { const src = document.querySelector(sel), c = doc
   for (let i = 0; i < d.length; i += 4) out.push(0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]);
   return out; }"""
 KEYS = ["KeyD", "KeyS", "KeyA", "KeyW"]
+# Ask the game's brokers directly: WebSocket + the game's own MqttWire CONNECT, wait for CONNACK.
+BROKER_PROBE = """async () => Promise.all(NET_BROKERS.map(url => new Promise(res => {
+  let ws; const done = ok => { try { ws.close(); } catch (e) {} res(ok ? url : null); };
+  const to = setTimeout(() => done(false), 8000);
+  try { ws = new WebSocket(url, 'mqtt'); } catch (e) { clearTimeout(to); return res(null); }
+  ws.binaryType = 'arraybuffer';
+  ws.onopen = () => ws.send(MqttWire.connect('wbnsprobe' + Math.random().toString(36).slice(2, 8)));
+  ws.onmessage = ev => { const b = new Uint8Array(ev.data); if ((b[0] >> 4) === 2) { clearTimeout(to); done(true); } };
+  ws.onerror = () => { clearTimeout(to); done(false); };
+}))).then(r => r.filter(Boolean))"""
+OUTAGE = """(() => { const W = window.WebSocket;
+  window.WebSocket = function (url, proto) { if (/mqtt/.test(String(url))) url = 'wss://127.0.0.1:9/mqtt'; return new W(url, proto); };
+  window.WebSocket.prototype = W.prototype; Object.assign(window.WebSocket, { CONNECTING: 0, OPEN: 1, CLOSING: 2, CLOSED: 3 }); })();"""
 BLOCK = 36   # barcode block size in host canvas pixels (survives WebRTC downscaling to 320 px)
 STAMP = """(B) => { if (window.__stamp) return true; window.__stamp = { n: 0 };
   const cv = document.getElementById('game'), o = Game.render;
@@ -170,6 +197,8 @@ class Run:
         pg.on("pageerror", lambda e: self.errors.append("%s: %s" % (name, str(e)[:160])))
         pg.on("console", lambda m: self.errors.append("%s console: %s" % (name, m.text[:160])) if m.type == "error" else None)
         pg.add_init_script("window.confirm = () => true;")
+        if args.simulate_broker_outage:
+            pg.add_init_script(OUTAGE)
         pg.goto(BASE + "index.html", wait_until="domcontentloaded", timeout=90000)
         pg.wait_for_function("typeof Net === 'object' && typeof Game === 'object' && !!Game.state", timeout=60000)
         return pg
@@ -180,7 +209,8 @@ class Run:
         self.h, self.g = h, g
         h.click('[data-act="netOpen"]')
         h.click('[data-act="netHost"]')
-        ok, _ = until(h, "() => Net.status", lambda s: s.startswith("Raum offen"), 30)
+        ok, _ = until(h, "() => [Net.status, Net.phase]", lambda v: v[0].startswith("Raum offen") or v[1] == "error", 30)
+        ok = h.evaluate("() => Net.status").startswith("Raum offen")
         if not ok:
             return False, "room did not open: " + h.evaluate("() => Net.status")
         shown = h.inner_text("#netCodeOut").strip()
@@ -583,7 +613,17 @@ def session(p, label, scenario):
                 if IN_CI:
                     print("::warning title=Co-op run (%s): connect try %d failed::%s" % (label, i + 1, info))
                 if i + 1 == args.attempts:
-                    check(False, "%s: host and guest connect" % label, info)
+                    reachable = run.h.evaluate(BROKER_PROBE)
+                    if not reachable and args.broker_outage_ok:
+                        msg = "%s: no public broker reachable (%d tries) - a third-party outage, not the game; session skipped" % (label, args.attempts)
+                        print("SKIP | " + msg, flush=True)
+                        if IN_CI:
+                            print("::warning title=Co-op run skipped: broker outage::" + msg)
+                        skipped.append(label)
+                    else:
+                        check(False, "%s: host and guest connect" % label,
+                              "%s | brokers reachable: %s%s" % (info, ", ".join(reachable) or "none",
+                                                               " - so the game is at fault" if reachable else ""))
                 continue
             check(True, "%s: host and guest connect" % label, "room code %s typed as shown" % info)
             scenario(run)
@@ -604,11 +644,14 @@ with (Serve(PORT, directory=SERVE) if SERVE else contextlib.nullcontext()), sync
     session(p, "host drop", Run.host_drop)
 
 fails = [r for r in results if not r[1]]
-print("\n%d/%d checks passed" % (len(results) - len(fails), len(results)))
+print("\n%d/%d checks passed" % (len(results) - len(fails), len(results)) + (" | skipped (broker outage): " + ", ".join(skipped) if skipped else ""))
 path = os.environ.get("GITHUB_STEP_SUMMARY")
 if path:
     with open(path, "a", encoding="utf-8") as f:
-        f.write("## Online co-op run: %s\n\n| Step | | Detail |\n|---|---|---|\n" % ("OK" if not fails else "FAILED"))
+        f.write("## Online co-op run: %s\n\n" % ("FAILED" if fails else "SKIPPED (broker outage)" if skipped and not results else "OK"))
+        if skipped:
+            f.write("Skipped because no public broker was reachable: %s\n\n" % ", ".join(skipped))
+        f.write("| Step | | Detail |\n|---|---|---|\n")
         for n, ok, d in results:
             f.write("| %s | %s | %s |\n" % (n, "✅" if ok else "❌", d.replace("|", "/")))
-sys.exit(1 if fails or not results else 0)
+sys.exit(1 if fails or not (results or skipped) else 0)
