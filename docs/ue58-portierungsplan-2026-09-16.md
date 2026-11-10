@@ -1,5 +1,7 @@
 # Umbau nach Unreal Engine 5.8 — Plan
 
+> **Nachtrag 2026-11-09:** Der Live-Gegnerdeckel liegt seit dem Horden-Pass bei **100** (`BROTATO_RULES.maxEnemiesOnScreen`). Die 50er-Zahlen in diesem historischen UE-Portierungsplan sind Planungsstand und keine aktuelle Live-Aussage.
+
 Stand 2026-09-16. Grundlage ist der aktuelle Arbeitsbaum (HEAD `ae08ce8` plus
 nicht committete Änderungen). Alle Zahlen in diesem Dokument sind am Arbeitsbaum
 gemessen, nicht geschätzt; das Messprotokoll steht in Abschnitt 9.

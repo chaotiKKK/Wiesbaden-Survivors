@@ -1,0 +1,416 @@
+{
+  "seed": 111788254,
+  "player": "leonidas",
+  "run": {
+    "arena": "kurpark",
+    "wave": 1,
+    "seed": 111788254
+  },
+  "session": {
+    "startRunCalls": 1,
+    "shopsScanned": 64,
+    "trials": 14
+  },
+  "shop": {
+    "bannerlanze": {
+      "wave": 3,
+      "shopIndex": 2,
+      "slot": 0,
+      "price": 23,
+      "tier": 0,
+      "type": "melee",
+      "classes": [
+        "medieval",
+        "support"
+      ],
+      "rendered": true
+    },
+    "skalpell": {
+      "wave": 3,
+      "shopIndex": 2,
+      "slot": 1,
+      "price": 16,
+      "tier": 0,
+      "type": "melee",
+      "classes": [
+        "blade",
+        "medical"
+      ],
+      "rendered": true
+    },
+    "feldscher": {
+      "wave": 4,
+      "shopIndex": 3,
+      "slot": 4,
+      "price": 19,
+      "tier": 0,
+      "type": "melee",
+      "classes": [
+        "medical",
+        "medieval"
+      ],
+      "rendered": true
+    },
+    "wurfbeil": {
+      "wave": 4,
+      "shopIndex": 3,
+      "slot": 5,
+      "price": 21,
+      "tier": 0,
+      "type": "projectile",
+      "classes": [
+        "blade",
+        "medieval",
+        "primitive"
+      ],
+      "rendered": true
+    },
+    "kraeuterkessel": {
+      "wave": 5,
+      "shopIndex": 4,
+      "slot": 3,
+      "price": 22,
+      "tier": 0,
+      "type": "projectile",
+      "classes": [
+        "medical",
+        "primitive"
+      ],
+      "rendered": true
+    },
+    "notfallhammer": {
+      "wave": 6,
+      "shopIndex": 5,
+      "slot": 1,
+      "price": 46,
+      "tier": 1,
+      "type": "melee",
+      "classes": [
+        "blunt",
+        "medical"
+      ],
+      "rendered": true
+    },
+    "desinfektionsgranate": {
+      "wave": 7,
+      "shopIndex": 6,
+      "slot": 1,
+      "price": 26,
+      "tier": 0,
+      "type": "projectile",
+      "classes": [
+        "medical",
+        "explosive"
+      ],
+      "rendered": true
+    },
+    "steinhammer": {
+      "wave": 19,
+      "shopIndex": 18,
+      "slot": 0,
+      "price": 74,
+      "tier": 1,
+      "type": "melee",
+      "classes": [
+        "blunt",
+        "primitive"
+      ],
+      "rendered": true
+    },
+    "armbrust": {
+      "wave": 3,
+      "shopIndex": 22,
+      "slot": 4,
+      "price": 27,
+      "tier": 0,
+      "type": "projectile",
+      "classes": [
+        "medieval",
+        "precise"
+      ],
+      "rendered": true
+    },
+    "klingenpistole": {
+      "wave": 4,
+      "shopIndex": 23,
+      "slot": 3,
+      "price": 19,
+      "tier": 0,
+      "type": "projectile",
+      "classes": [
+        "blade",
+        "gun"
+      ],
+      "rendered": true
+    },
+    "schmiedehammer": {
+      "wave": 6,
+      "shopIndex": 25,
+      "slot": 2,
+      "price": 61,
+      "tier": 1,
+      "type": "melee",
+      "classes": [
+        "blunt",
+        "heavy"
+      ],
+      "rendered": true
+    },
+    "rettungssaege": {
+      "wave": 20,
+      "shopIndex": 39,
+      "slot": 3,
+      "price": 242,
+      "tier": 3,
+      "type": "melee",
+      "classes": [
+        "blade",
+        "support"
+      ],
+      "rendered": true
+    },
+    "flammenklinge": {
+      "wave": 10,
+      "shopIndex": 49,
+      "slot": 4,
+      "price": 58,
+      "tier": 1,
+      "type": "melee",
+      "classes": [
+        "blade",
+        "elemental"
+      ],
+      "rendered": true
+    },
+    "frosthammer": {
+      "wave": 4,
+      "shopIndex": 63,
+      "slot": 1,
+      "price": 47,
+      "tier": 1,
+      "type": "melee",
+      "classes": [
+        "blunt",
+        "elemental"
+      ],
+      "rendered": true
+    }
+  },
+  "damage": {
+    "skalpell": {
+      "type": "melee",
+      "classes": [
+        "blade",
+        "medical"
+      ],
+      "wave": 1,
+      "ticks": 1,
+      "simSeconds": 0.02,
+      "byWeapon": 7.65,
+      "runDamage": 7.65,
+      "hpLoss": 7.65,
+      "tickDamage": 7.65,
+      "enemyHpAfter": 999999992.35
+    },
+    "rettungssaege": {
+      "type": "melee",
+      "classes": [
+        "blade",
+        "support"
+      ],
+      "wave": 1,
+      "ticks": 1,
+      "simSeconds": 0.02,
+      "byWeapon": 14,
+      "runDamage": 14,
+      "hpLoss": 14,
+      "tickDamage": 14,
+      "enemyHpAfter": 999999986
+    },
+    "flammenklinge": {
+      "type": "melee",
+      "classes": [
+        "blade",
+        "elemental"
+      ],
+      "wave": 1,
+      "ticks": 1,
+      "simSeconds": 0.02,
+      "byWeapon": 9,
+      "runDamage": 9,
+      "hpLoss": 9,
+      "tickDamage": 9,
+      "enemyHpAfter": 999999991
+    },
+    "klingenpistole": {
+      "type": "projectile",
+      "classes": [
+        "blade",
+        "gun"
+      ],
+      "wave": 1,
+      "ticks": 4,
+      "simSeconds": 0.07,
+      "byWeapon": 12,
+      "runDamage": 12,
+      "hpLoss": 12,
+      "tickDamage": 12,
+      "enemyHpAfter": 999999988
+    },
+    "notfallhammer": {
+      "type": "melee",
+      "classes": [
+        "blunt",
+        "medical"
+      ],
+      "wave": 1,
+      "ticks": 1,
+      "simSeconds": 0.02,
+      "byWeapon": 12.8,
+      "runDamage": 12.8,
+      "hpLoss": 12.8,
+      "tickDamage": 12.8,
+      "enemyHpAfter": 999999987.2
+    },
+    "steinhammer": {
+      "type": "melee",
+      "classes": [
+        "blunt",
+        "primitive"
+      ],
+      "wave": 1,
+      "ticks": 1,
+      "simSeconds": 0.02,
+      "byWeapon": 20,
+      "runDamage": 20,
+      "hpLoss": 20,
+      "tickDamage": 20,
+      "enemyHpAfter": 999999980
+    },
+    "frosthammer": {
+      "type": "melee",
+      "classes": [
+        "blunt",
+        "elemental"
+      ],
+      "wave": 1,
+      "ticks": 1,
+      "simSeconds": 0.02,
+      "byWeapon": 11,
+      "runDamage": 11,
+      "hpLoss": 11,
+      "tickDamage": 11,
+      "enemyHpAfter": 999999989
+    },
+    "schmiedehammer": {
+      "type": "melee",
+      "classes": [
+        "blunt",
+        "heavy"
+      ],
+      "wave": 1,
+      "ticks": 1,
+      "simSeconds": 0.02,
+      "byWeapon": 30,
+      "runDamage": 30,
+      "hpLoss": 30,
+      "tickDamage": 30,
+      "enemyHpAfter": 999999970
+    },
+    "feldscher": {
+      "type": "melee",
+      "classes": [
+        "medical",
+        "medieval"
+      ],
+      "wave": 1,
+      "ticks": 1,
+      "simSeconds": 0.02,
+      "byWeapon": 8.7,
+      "runDamage": 8.7,
+      "hpLoss": 8.7,
+      "tickDamage": 8.700000047683716,
+      "enemyHpAfter": 999999991.3
+    },
+    "kraeuterkessel": {
+      "type": "projectile",
+      "classes": [
+        "medical",
+        "primitive"
+      ],
+      "wave": 1,
+      "ticks": 4,
+      "simSeconds": 0.07,
+      "byWeapon": 11.65,
+      "runDamage": 11.65,
+      "hpLoss": 11.65,
+      "tickDamage": 11.65,
+      "enemyHpAfter": 999999988.35
+    },
+    "desinfektionsgranate": {
+      "type": "projectile",
+      "classes": [
+        "medical",
+        "explosive"
+      ],
+      "wave": 1,
+      "ticks": 5,
+      "simSeconds": 0.08,
+      "byWeapon": 23.798838144672427,
+      "runDamage": 23.798838144672427,
+      "hpLoss": 23.8,
+      "tickDamage": 23.798838144672427,
+      "enemyHpAfter": 999999976.2
+    },
+    "wurfbeil": {
+      "type": "projectile",
+      "classes": [
+        "blade",
+        "medieval",
+        "primitive"
+      ],
+      "wave": 1,
+      "ticks": 4,
+      "simSeconds": 0.07,
+      "byWeapon": 17,
+      "runDamage": 17,
+      "hpLoss": 17,
+      "tickDamage": 17,
+      "enemyHpAfter": 999999983
+    },
+    "bannerlanze": {
+      "type": "melee",
+      "classes": [
+        "medieval",
+        "support"
+      ],
+      "wave": 1,
+      "ticks": 1,
+      "simSeconds": 0.02,
+      "byWeapon": 17,
+      "runDamage": 17,
+      "hpLoss": 17,
+      "tickDamage": 17,
+      "enemyHpAfter": 999999983
+    },
+    "armbrust": {
+      "type": "projectile",
+      "classes": [
+        "medieval",
+        "precise"
+      ],
+      "wave": 1,
+      "ticks": 4,
+      "simSeconds": 0.07,
+      "byWeapon": 53,
+      "runDamage": 53,
+      "hpLoss": 53,
+      "tickDamage": 53,
+      "enemyHpAfter": 999999947
+    }
+  },
+  "failures": [],
+  "shopShopsScanned": 64,
+  "shopUiChecked": 12,
+  "pass": true
+}

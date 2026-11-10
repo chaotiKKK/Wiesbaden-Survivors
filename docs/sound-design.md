@@ -123,3 +123,16 @@ Short brief and plan. Licensed assets are not shipped; the browser-native presen
 - Interview-Breakdown als Material ablegen (Oberfläche, Status-Link-Hover-Bug, startRuns/ShortCloseEdge defaultBaseDelay).
 - Dokumentieren, was bereits lokal sitzt und was noch als klarer Nächster Schritt offen ist.
 - Damit der nächste Schritt nicht losgelöst von der Sound-/Audio-Suche arbeitet, arbeiten wir zuerst die Oberflächenaufgabe ab.
+
+## Kritischer Zustand — drei klingende Schichten (2026-10-29)
+
+- Unter 30 % Leben plant `Game.update` einen **Herzschlag** (`AudioSys.heartbeat`):
+  zwei weiche Sinus-Stöße (lub bei ~60 Hz, dub 160 ms später, ~48 Hz), Dauer
+  und Lautstärke steigen mit der Schwere. Das Tempo läuft von 1,25 s bei 30 %
+  auf 0,55 s bei 1 % herunter — die Beschleunigung selbst ist das Signal.
+- Der Herzschlag liegt auf dem **SFX-Bus** (nicht auf der Musik), damit der
+  Effekt-Regler und die Effekt-Budget-Regel gelten; `voice()` verlangt
+  `started`, also bleibt das Gesten-Gate unangetastet. Er läuft nur bei
+  `OPT().sfx > 0` und ist mit `OPT().critFx` abschaltbar.
+- Er ersetzt die vorhandene Gefahrenschicht nicht: der Drone/Filter-Zug
+  (`_dangerChan`) bleibt die Bettschicht, der Herzschlag ist die Spitze.

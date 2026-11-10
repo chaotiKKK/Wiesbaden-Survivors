@@ -1,0 +1,869 @@
+{
+  "date": "2026-11-09",
+  "boss": {
+    "boss": "KURHAUS-KOLOSS",
+    "id": "kurhaus",
+    "x": 396,
+    "y": 621,
+    "r": 46,
+    "maxHp": 3400,
+    "hp": 3400,
+    "spawnScale": 1,
+    "coop": false,
+    "players": [
+      {
+        "x": 896,
+        "y": 321,
+        "r": 14,
+        "alive": true,
+        "pet": false,
+        "turrets": 0,
+        "char": "leonidas"
+      }
+    ],
+    "W": 1280,
+    "H": 720,
+    "dpr": 1,
+    "quality": 2,
+    "crop": [
+      405,
+      175,
+      470,
+      300
+    ]
+  },
+  "shipped_curve": "cubic",
+  "curve_ease": 2,
+  "method": {
+    "live": "Game.render() into #game, 470x300 crop at cam.zoom=1.8, pinned wave-20 boss",
+    "mask": "max channel delta > 2 between boss-present and identical boss-absent frame",
+    "reference": "alpha mask of the offscreen still (includes Game.drawShadows no-light branch)",
+    "chrome": "QA-only Game.qaSilhouette hides nameplate/HP; body draw untouched",
+    "dynamic_shadow": "Game.drawShadows no-light branch mirrored in the offscreen reference (alpha .3)",
+    "timing": "frame-boundary samples after Game.render() at performance.now(); 5 runs per curve, median"
+  },
+  "verification": {
+    "ok": true,
+    "values": [
+      {
+        "fraction": 1.0,
+        "squash": 0.55,
+        "live_png": "docs/pw/squash-stills/live-100.png",
+        "overlay_png": "docs/pw/squash-stills/live-overlay-100.png",
+        "ref_png": "docs/pw/squash-stills/linear-100.png",
+        "match": {
+          "iou": 0.998299,
+          "mismatch_px": 53,
+          "intersection_px": 31110,
+          "union_px": 31163,
+          "bbox": [
+            121,
+            48,
+            348,
+            285
+          ],
+          "ref_bbox": [
+            121,
+            48,
+            348,
+            285
+          ],
+          "bbox_delta": 0,
+          "area_px": 54264,
+          "ref_area_px": 54264,
+          "area_delta_pct": 0.0,
+          "ok": true
+        },
+        "background_stable": true
+      },
+      {
+        "fraction": 0.8,
+        "squash": 0.44,
+        "live_png": "docs/pw/squash-stills/live-080.png",
+        "overlay_png": "docs/pw/squash-stills/live-overlay-080.png",
+        "ref_png": "docs/pw/squash-stills/linear-080.png",
+        "match": {
+          "iou": 0.995642,
+          "mismatch_px": 135,
+          "intersection_px": 30842,
+          "union_px": 30977,
+          "bbox": [
+            127,
+            39,
+            342,
+            285
+          ],
+          "ref_bbox": [
+            127,
+            39,
+            342,
+            285
+          ],
+          "bbox_delta": 0,
+          "area_px": 53352,
+          "ref_area_px": 53352,
+          "area_delta_pct": 0.0,
+          "ok": true
+        },
+        "background_stable": true
+      },
+      {
+        "fraction": 0.6,
+        "squash": 0.33,
+        "live_png": "docs/pw/squash-stills/live-060.png",
+        "overlay_png": "docs/pw/squash-stills/live-overlay-060.png",
+        "ref_png": "docs/pw/squash-stills/linear-060.png",
+        "match": {
+          "iou": 0.99747,
+          "mismatch_px": 78,
+          "intersection_px": 30751,
+          "union_px": 30829,
+          "bbox": [
+            132,
+            31,
+            337,
+            285
+          ],
+          "ref_bbox": [
+            132,
+            31,
+            337,
+            285
+          ],
+          "bbox_delta": 0,
+          "area_px": 52530,
+          "ref_area_px": 52530,
+          "area_delta_pct": 0.0,
+          "ok": true
+        },
+        "background_stable": true
+      },
+      {
+        "fraction": 0.4,
+        "squash": 0.22,
+        "live_png": "docs/pw/squash-stills/live-040.png",
+        "overlay_png": "docs/pw/squash-stills/live-overlay-040.png",
+        "ref_png": "docs/pw/squash-stills/linear-040.png",
+        "match": {
+          "iou": 0.998694,
+          "mismatch_px": 40,
+          "intersection_px": 30581,
+          "union_px": 30621,
+          "bbox": [
+            137,
+            23,
+            332,
+            285
+          ],
+          "ref_bbox": [
+            137,
+            23,
+            332,
+            285
+          ],
+          "bbox_delta": 0,
+          "area_px": 51548,
+          "ref_area_px": 51548,
+          "area_delta_pct": 0.0,
+          "ok": true
+        },
+        "background_stable": true
+      },
+      {
+        "fraction": 0.2,
+        "squash": 0.11,
+        "live_png": "docs/pw/squash-stills/live-020.png",
+        "overlay_png": "docs/pw/squash-stills/live-overlay-020.png",
+        "ref_png": "docs/pw/squash-stills/linear-020.png",
+        "match": {
+          "iou": 0.998902,
+          "mismatch_px": 33,
+          "intersection_px": 30017,
+          "union_px": 30050,
+          "bbox": [
+            142,
+            15,
+            327,
+            285
+          ],
+          "ref_bbox": [
+            142,
+            15,
+            327,
+            285
+          ],
+          "bbox_delta": 0,
+          "area_px": 50406,
+          "ref_area_px": 50406,
+          "area_delta_pct": 0.0,
+          "ok": true
+        },
+        "background_stable": true
+      }
+    ],
+    "matched": 5,
+    "total_mismatch_px": 339,
+    "max_bbox_delta": 0,
+    "max_mismatch_px": 135,
+    "max_area_delta_pct": 0.0,
+    "background_stable": true
+  },
+  "recovery": {
+    "linear": {
+      "runs": [
+        {
+          "peak": 0.55,
+          "frames": 17,
+          "last_positive_ms": 150.2,
+          "first_zero_ms": 170.3,
+          "half_ms": 74.1,
+          "t80_ms": 34.4,
+          "t20_ms": 121.7,
+          "area_260ms": 42.43,
+          "first_t_ms": 33.6
+        },
+        {
+          "peak": 0.55,
+          "frames": 23,
+          "last_positive_ms": 158.7,
+          "first_zero_ms": 175.6,
+          "half_ms": 78.0,
+          "t80_ms": 29.6,
+          "t20_ms": 129.9,
+          "area_260ms": 43.83,
+          "first_t_ms": 14.4
+        },
+        {
+          "peak": 0.55,
+          "frames": 23,
+          "last_positive_ms": 164.7,
+          "first_zero_ms": 181.5,
+          "half_ms": 84.3,
+          "t80_ms": 33.3,
+          "t20_ms": 135.6,
+          "area_260ms": 46.53,
+          "first_t_ms": 15.1
+        },
+        {
+          "peak": 0.55,
+          "frames": 22,
+          "last_positive_ms": 160.9,
+          "first_zero_ms": 177.4,
+          "half_ms": 87.6,
+          "t80_ms": 28.4,
+          "t20_ms": 130.7,
+          "area_260ms": 45.85,
+          "first_t_ms": 15.3
+        },
+        {
+          "peak": 0.55,
+          "frames": 22,
+          "last_positive_ms": 164.4,
+          "first_zero_ms": 181.3,
+          "half_ms": 90.5,
+          "t80_ms": 37.5,
+          "t20_ms": 137.0,
+          "area_260ms": 48.09,
+          "first_t_ms": 17.4
+        }
+      ],
+      "median": {
+        "last_positive_ms": 160.9,
+        "first_zero_ms": 177.4,
+        "half_ms": 84.3,
+        "t80_ms": 33.3,
+        "t20_ms": 130.7,
+        "area_260ms": 45.85,
+        "peak": 0.55,
+        "frames": 22
+      },
+      "samples": [
+        {
+          "t": 33.6,
+          "squash": 0.44312,
+          "squashT": 0.1385,
+          "flash": 0.2266,
+          "fps": 43.293836687722354
+        },
+        {
+          "t": 59.7,
+          "squash": 0.33656,
+          "squashT": 0.1052,
+          "flash": 0.1933,
+          "fps": 42.23273215510702
+        },
+        {
+          "t": 84.6,
+          "squash": 0.23,
+          "squashT": 0.0719,
+          "flash": 0.16,
+          "fps": 41.25651598510078
+        },
+        {
+          "t": 108,
+          "squash": 0.17688,
+          "squashT": 0.0553,
+          "flash": 0.1434,
+          "fps": 42.77527181472635
+        },
+        {
+          "t": 129.9,
+          "squash": 0.07,
+          "squashT": 0.0219,
+          "flash": 0.11,
+          "fps": 41.74845965038659
+        },
+        {
+          "t": 150.2,
+          "squash": 0.01688,
+          "squashT": 0.0053,
+          "flash": 0.0934,
+          "fps": 43.2278599867893
+        },
+        {
+          "t": 170.3,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0.0767,
+          "fps": 44.56005034952312
+        },
+        {
+          "t": 190.7,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0.06,
+          "fps": 45.78566548323771
+        },
+        {
+          "t": 210.4,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0.0434,
+          "fps": 46.94208935301232
+        },
+        {
+          "t": 230.3,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0.01,
+          "fps": 45.58193178560968
+        },
+        {
+          "t": 253.8,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 46.75465435119454
+        },
+        {
+          "t": 274.8,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 47.804701164775935
+        },
+        {
+          "t": 297,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 46.382727473996184
+        },
+        {
+          "t": 317.8,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 47.434014037981456
+        },
+        {
+          "t": 333.6,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 48.458570023376566
+        },
+        {
+          "t": 350.5,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 49.40116152994007
+        },
+        {
+          "t": 365.9,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 50.239487769221824
+        }
+      ]
+    },
+    "eased": {
+      "runs": [
+        {
+          "peak": 0.55,
+          "frames": 22,
+          "last_positive_ms": 154.9,
+          "first_zero_ms": 169.8,
+          "half_ms": 37.7,
+          "t80_ms": 15.1,
+          "t20_ms": 81.6,
+          "area_260ms": 26.45,
+          "first_t_ms": 14.1
+        },
+        {
+          "peak": 0.55,
+          "frames": 22,
+          "last_positive_ms": 165.1,
+          "first_zero_ms": 179.6,
+          "half_ms": 47.9,
+          "t80_ms": 14.5,
+          "t20_ms": 98.2,
+          "area_260ms": 31.34,
+          "first_t_ms": 12.8
+        },
+        {
+          "peak": 0.55,
+          "frames": 22,
+          "last_positive_ms": 165.7,
+          "first_zero_ms": 182.4,
+          "half_ms": 49.5,
+          "t80_ms": 17.0,
+          "t20_ms": 94.6,
+          "area_260ms": 31.35,
+          "first_t_ms": 15.5
+        },
+        {
+          "peak": 0.55,
+          "frames": 23,
+          "last_positive_ms": 161.5,
+          "first_zero_ms": 177.6,
+          "half_ms": 45.2,
+          "t80_ms": 13.0,
+          "t20_ms": 89.9,
+          "area_260ms": 29.01,
+          "first_t_ms": 11.5
+        },
+        {
+          "peak": 0.55,
+          "frames": 23,
+          "last_positive_ms": 159.5,
+          "first_zero_ms": 177.3,
+          "half_ms": 42.6,
+          "t80_ms": 15.7,
+          "t20_ms": 88.6,
+          "area_260ms": 28.69,
+          "first_t_ms": 14.6
+        }
+      ],
+      "median": {
+        "last_positive_ms": 161.5,
+        "first_zero_ms": 177.6,
+        "half_ms": 45.2,
+        "t80_ms": 15.1,
+        "t20_ms": 89.9,
+        "area_260ms": 29.01,
+        "peak": 0.55,
+        "frames": 22
+      },
+      "samples": [
+        {
+          "t": 14.1,
+          "squash": 0.44889,
+          "squashT": 0.1553,
+          "flash": 0.2434,
+          "fps": 59.84102352070857
+        },
+        {
+          "t": 24.1,
+          "squash": 0.357526,
+          "squashT": 0.1386,
+          "flash": 0.2267,
+          "fps": 59.84416080072832
+        },
+        {
+          "t": 37.3,
+          "squash": 0.276999,
+          "squashT": 0.122,
+          "flash": 0.2101,
+          "fps": 59.87590504510421
+        },
+        {
+          "t": 53,
+          "squash": 0.20595,
+          "squashT": 0.1052,
+          "flash": 0.1933,
+          "fps": 59.84773740340032
+        },
+        {
+          "t": 69.9,
+          "squash": 0.14607,
+          "squashT": 0.0886,
+          "flash": 0.1767,
+          "fps": 59.879195519561925
+        },
+        {
+          "t": 86.1,
+          "squash": 0.096182,
+          "squashT": 0.0719,
+          "flash": 0.16,
+          "fps": 59.87927903967393
+        },
+        {
+          "t": 103.7,
+          "squash": 0.056679,
+          "squashT": 0.0552,
+          "flash": 0.1433,
+          "fps": 59.879355878176455
+        },
+        {
+          "t": 120.8,
+          "squash": 0.027704,
+          "squashT": 0.0386,
+          "flash": 0.1267,
+          "fps": 59.90828451635597
+        },
+        {
+          "t": 137.9,
+          "squash": 0.008991,
+          "squashT": 0.022,
+          "flash": 0.1101,
+          "fps": 59.93489886348165
+        },
+        {
+          "t": 154.9,
+          "squash": 0.000499,
+          "squashT": 0.0052,
+          "flash": 0.0933,
+          "fps": 59.90201171630757
+        },
+        {
+          "t": 169.8,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0.0768,
+          "fps": 59.95833562748781
+        },
+        {
+          "t": 187.9,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0.0601,
+          "fps": 59.95208793896575
+        },
+        {
+          "t": 203.2,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0.0434,
+          "fps": 59.94634006552492
+        },
+        {
+          "t": 219.8,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0.0267,
+          "fps": 59.941052021959365
+        },
+        {
+          "t": 237.1,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0.01,
+          "fps": 59.936187021879576
+        },
+        {
+          "t": 254,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 59.96056916856284
+        },
+        {
+          "t": 269.7,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 59.954142796754255
+        },
+        {
+          "t": 287.4,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 59.97708848144807
+        },
+        {
+          "t": 308.2,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 59.969340564608665
+        },
+        {
+          "t": 325,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 59.96221248111641
+        },
+        {
+          "t": 340.5,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 59.984512591061254
+        },
+        {
+          "t": 352.5,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 59.97617074545279
+        }
+      ]
+    },
+    "cubic": {
+      "runs": [
+        {
+          "peak": 0.55,
+          "frames": 22,
+          "last_positive_ms": 165.4,
+          "first_zero_ms": 182.1,
+          "half_ms": 35.7,
+          "t80_ms": 12.2,
+          "t20_ms": 71.3,
+          "area_260ms": 23.71,
+          "first_t_ms": 16.1
+        },
+        {
+          "peak": 0.55,
+          "frames": 22,
+          "last_positive_ms": 164.5,
+          "first_zero_ms": 180.7,
+          "half_ms": 33.2,
+          "t80_ms": 12.1,
+          "t20_ms": 69.2,
+          "area_260ms": 22.94,
+          "first_t_ms": 16
+        },
+        {
+          "peak": 0.55,
+          "frames": 22,
+          "last_positive_ms": 170.7,
+          "first_zero_ms": 181,
+          "half_ms": 33.9,
+          "t80_ms": 11.0,
+          "t20_ms": 69.6,
+          "area_260ms": 22.99,
+          "first_t_ms": 14.5
+        },
+        {
+          "peak": 0.55,
+          "frames": 22,
+          "last_positive_ms": 165.3,
+          "first_zero_ms": 181.8,
+          "half_ms": 35.3,
+          "t80_ms": 11.6,
+          "t20_ms": 74.7,
+          "area_260ms": 23.88,
+          "first_t_ms": 15.3
+        },
+        {
+          "peak": 0.55,
+          "frames": 22,
+          "last_positive_ms": 166.7,
+          "first_zero_ms": 184,
+          "half_ms": 36.5,
+          "t80_ms": 13.1,
+          "t20_ms": 72.0,
+          "area_260ms": 24.05,
+          "first_t_ms": 17.3
+        }
+      ],
+      "median": {
+        "last_positive_ms": 165.4,
+        "first_zero_ms": 181.8,
+        "half_ms": 35.3,
+        "t80_ms": 12.1,
+        "t20_ms": 71.3,
+        "area_260ms": 23.71,
+        "peak": 0.55,
+        "frames": 22
+      },
+      "samples": [
+        {
+          "t": 16.1,
+          "squash": 0.404753,
+          "squashT": 0.1552,
+          "flash": 0.2433,
+          "fps": 60.00248274259938
+        },
+        {
+          "t": 33.5,
+          "squash": 0.287633,
+          "squashT": 0.1385,
+          "flash": 0.2266,
+          "fps": 59.99270328486787
+        },
+        {
+          "t": 49.7,
+          "squash": 0.196096,
+          "squashT": 0.1219,
+          "flash": 0.21,
+          "fps": 60.01256413051154
+        },
+        {
+          "t": 65.6,
+          "squash": 0.126027,
+          "squashT": 0.1052,
+          "flash": 0.1933,
+          "fps": 60.0019781617481
+        },
+        {
+          "t": 83.7,
+          "squash": 0.075276,
+          "squashT": 0.0886,
+          "flash": 0.1767,
+          "fps": 60.02109701724135
+        },
+        {
+          "t": 100.3,
+          "squash": 0.040221,
+          "squashT": 0.0719,
+          "flash": 0.16,
+          "fps": 60.00982841753848
+        },
+        {
+          "t": 116.7,
+          "squash": 0.018195,
+          "squashT": 0.0552,
+          "flash": 0.1433,
+          "fps": 59.99946130581288
+        },
+        {
+          "t": 132.2,
+          "squash": 0.00617,
+          "squashT": 0.0385,
+          "flash": 0.1266,
+          "fps": 59.989923563024284
+        },
+        {
+          "t": 148.8,
+          "squash": 0.001134,
+          "squashT": 0.0219,
+          "flash": 0.11,
+          "fps": 60.010006786415445
+        },
+        {
+          "t": 165.4,
+          "squash": 1.5e-05,
+          "squashT": 0.0052,
+          "flash": 0.0933,
+          "fps": 59.99962540517969
+        },
+        {
+          "t": 182.1,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0.0766,
+          "fps": 59.99007453444175
+        },
+        {
+          "t": 199.1,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0.06,
+          "fps": 60.010145680119514
+        },
+        {
+          "t": 217.2,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0.0433,
+          "fps": 59.999753187387434
+        },
+        {
+          "t": 232.1,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0.0266,
+          "fps": 59.990192094072874
+        },
+        {
+          "t": 248.8,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0.01,
+          "fps": 60.01025383498015
+        },
+        {
+          "t": 265.5,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 59.99985268985922
+        },
+        {
+          "t": 282.3,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 60.01914158310358
+        },
+        {
+          "t": 299,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 60.008029418131734
+        },
+        {
+          "t": 315.4,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 59.997806226358676
+        },
+        {
+          "t": 333.7,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 60.017258836683084
+        },
+        {
+          "t": 348.7,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 60.00629729142487
+        },
+        {
+          "t": 365.4,
+          "squash": 0,
+          "squashT": 0,
+          "flash": 0,
+          "fps": 59.99621266978836
+        }
+      ]
+    }
+  },
+  "selection": {
+    "peak_unchanged": true,
+    "quadratic": {
+      "half_ms": 45.2,
+      "area_260ms": 29.01,
+      "peak": 0.55
+    },
+    "cubic": {
+      "half_ms": 35.3,
+      "area_260ms": 23.71,
+      "peak": 0.55
+    },
+    "cubic_faster_than_quadratic": true
+  },
+  "timing_ok": true,
+  "console_errors": []
+}

@@ -1,0 +1,19 @@
+{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "1.0.0",
+  "FriendlyName": "Wiesbaden Survivors Data",
+  "Description": "Typed UPrimaryDataAsset classes and the Interchange data.js import automator for Wiesbaden Survivors.",
+  "Category": "Game Features",
+  "CreatedBy": "Wiesbaden Survivors",
+  "CanContainContent": true,
+  "EnabledByDefault": true,
+  "EngineVersion": "5.8.0",
+  "Modules": [
+    {
+      "Name": "WbnData",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ]
+}

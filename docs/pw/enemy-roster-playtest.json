@@ -1,0 +1,120 @@
+{
+  "seed": 57475,
+  "player": "leonidas",
+  "run": {
+    "arena": "kurpark",
+    "wave": 1,
+    "seed": 57475
+  },
+  "session": {
+    "startRunCalls": 1,
+    "waveStarts": 1,
+    "updates": 240
+  },
+  "roster": {
+    "base": 51,
+    "campaign": 83,
+    "unique": 83,
+    "newRows": 23,
+    "campaignCoversNew": 23,
+    "newIds": [
+      "kurpark_laurer",
+      "tauben_schwarm",
+      "brunnenegel",
+      "strassenbahn_schuetze",
+      "kiosk_raufer",
+      "rheingau_weber",
+      "hafen_moerser",
+      "thermal_sirene",
+      "matten_heiler",
+      "festungs_schild",
+      "hexen_turm",
+      "weinberg_bomber",
+      "schiefer_waechter",
+      "kurhaus_spiegel",
+      "nebelgeist",
+      "schloss_koloss",
+      "bruecken_rammer",
+      "zollhaus_zwilling",
+      "deponie_drohne",
+      "kuppel_krabbe",
+      "pumpwerk_kreisel",
+      "veilchengeist",
+      "rheinufer_bomber"
+    ]
+  },
+  "before": {
+    "wave": 1,
+    "queue": 0,
+    "enemies": 0,
+    "kills": 0,
+    "xp": 0,
+    "pickups": 0
+  },
+  "plan": {
+    "wave": 20,
+    "queue": 385,
+    "queuedNew": 131,
+    "uniqueQueuedNew": [
+      "tauben_schwarm",
+      "bruecken_rammer",
+      "veilchengeist",
+      "rheingau_weber",
+      "kurpark_laurer",
+      "brunnenegel",
+      "rheinufer_bomber",
+      "deponie_drohne",
+      "kuppel_krabbe",
+      "nebelgeist",
+      "matten_heiler",
+      "kurhaus_spiegel",
+      "strassenbahn_schuetze",
+      "zollhaus_zwilling",
+      "kiosk_raufer",
+      "pumpwerk_kreisel",
+      "festungs_schild",
+      "schiefer_waechter",
+      "hafen_moerser",
+      "weinberg_bomber"
+    ],
+    "queuedBoss": 1
+  },
+  "after": {
+    "wave": 20,
+    "queue": 344,
+    "enemies": 40,
+    "newTypes": 8,
+    "newEnemies": 11,
+    "kills": 1,
+    "xp": 5,
+    "pickups": 0
+  },
+  "target": {
+    "id": "tauben_schwarm",
+    "name": "Tauben-Schwarm",
+    "hpBefore": 255.58399949649817,
+    "hpAfter": -857142601.5588576,
+    "dead": true,
+    "killsBefore": 1,
+    "killsAfter": 2,
+    "xpBefore": 5,
+    "xpAfter": 6,
+    "pickupsBefore": 0,
+    "pickupsAfter": 1
+  },
+  "checks": {
+    "baseRoster": true,
+    "liveRoster": true,
+    "uniqueLiveRoster": true,
+    "newRowsLive": true,
+    "campaignCoversNew": true,
+    "planHasNew": true,
+    "spawnedNew": true,
+    "playerAlive": true,
+    "newEnemyKilled": true,
+    "killAwardsXp": true,
+    "killDropsLoot": true
+  },
+  "failures": [],
+  "pass": true
+}

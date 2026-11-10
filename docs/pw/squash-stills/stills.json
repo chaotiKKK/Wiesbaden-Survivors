@@ -1,0 +1,181 @@
+{
+  "date": "2026-11-09",
+  "boss": {
+    "boss": "KURHAUS-KOLOSS",
+    "id": "kurhaus",
+    "r": 46,
+    "color": "#f4c25a",
+    "maxHp": 3400
+  },
+  "peak": 0.55,
+  "duration_ms": 171.88,
+  "fractions": [
+    1.0,
+    0.8,
+    0.6,
+    0.4,
+    0.2
+  ],
+  "modes": {
+    "linear": 0,
+    "eased": 1
+  },
+  "fixed": {
+    "hitFlash": 0,
+    "squashAng": 0,
+    "gameTime": 1.0,
+    "spawnScale": 1,
+    "camera": "none (offscreen draw)",
+    "cell_px": [
+      470,
+      300
+    ],
+    "scale": 1.8,
+    "dynamicShadow": "Game.drawShadows no-light branch, mirrored after the body"
+  },
+  "curve": {
+    "linear": "squash = peak * (1 - t/T)",
+    "eased": "squash = peak * (1 - t/T)^2"
+  },
+  "rows": [
+    {
+      "fraction": 1.0,
+      "squash": 0.55,
+      "linear": {
+        "t_ms": 0.0,
+        "png": "docs/pw/squash-stills/linear-100.png",
+        "sha256": "3d84e2c86cbdaa84d33f30a9b19bb69ce0ae296e30cc336291a3ba293e3afa37"
+      },
+      "eased": {
+        "t_ms": 0.0,
+        "png": "docs/pw/squash-stills/eased-100.png",
+        "sha256": "3d84e2c86cbdaa84d33f30a9b19bb69ce0ae296e30cc336291a3ba293e3afa37"
+      },
+      "diff": {
+        "pixels": 0,
+        "max_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "fraction": 0.8,
+      "squash": 0.44,
+      "linear": {
+        "t_ms": 34.37,
+        "png": "docs/pw/squash-stills/linear-080.png",
+        "sha256": "62be42bfe11a515ea4f17eb1b724c00e3c8fc817284910cca8420f1b11cee0d5"
+      },
+      "eased": {
+        "t_ms": 18.15,
+        "png": "docs/pw/squash-stills/eased-080.png",
+        "sha256": "62be42bfe11a515ea4f17eb1b724c00e3c8fc817284910cca8420f1b11cee0d5"
+      },
+      "diff": {
+        "pixels": 0,
+        "max_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "fraction": 0.6,
+      "squash": 0.33,
+      "linear": {
+        "t_ms": 68.75,
+        "png": "docs/pw/squash-stills/linear-060.png",
+        "sha256": "c13e7836fbe76f0fb3954d5156601b89c09826d7fb60df5c539cb498b825c1c0"
+      },
+      "eased": {
+        "t_ms": 38.74,
+        "png": "docs/pw/squash-stills/eased-060.png",
+        "sha256": "c13e7836fbe76f0fb3954d5156601b89c09826d7fb60df5c539cb498b825c1c0"
+      },
+      "diff": {
+        "pixels": 0,
+        "max_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "fraction": 0.4,
+      "squash": 0.22,
+      "linear": {
+        "t_ms": 103.12,
+        "png": "docs/pw/squash-stills/linear-040.png",
+        "sha256": "b847c8518b8120573b14b94f338b4f08319e2c3ea1d652a171248f475b837735"
+      },
+      "eased": {
+        "t_ms": 63.17,
+        "png": "docs/pw/squash-stills/eased-040.png",
+        "sha256": "b847c8518b8120573b14b94f338b4f08319e2c3ea1d652a171248f475b837735"
+      },
+      "diff": {
+        "pixels": 0,
+        "max_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "fraction": 0.2,
+      "squash": 0.11,
+      "linear": {
+        "t_ms": 137.5,
+        "png": "docs/pw/squash-stills/linear-020.png",
+        "sha256": "0834ff7f51d26e028d7dd74bacbece1496b9b1ef9db70cc5d829545c05ac581e"
+      },
+      "eased": {
+        "t_ms": 95.01,
+        "png": "docs/pw/squash-stills/eased-020.png",
+        "sha256": "0834ff7f51d26e028d7dd74bacbece1496b9b1ef9db70cc5d829545c05ac581e"
+      },
+      "diff": {
+        "pixels": 0,
+        "max_delta": 0,
+        "bbox": null
+      }
+    }
+  ],
+  "pixel_identical_pairs": 5,
+  "console_errors": [],
+  "live": {
+    "date": "2026-11-09",
+    "ok": true,
+    "matched": 5,
+    "total": 5,
+    "max_bbox_delta": 0,
+    "max_area_delta_pct": 0.0,
+    "total_mismatch_px": 339,
+    "timing": {
+      "linear": {
+        "last_positive_ms": 160.9,
+        "first_zero_ms": 177.4,
+        "half_ms": 84.3,
+        "t80_ms": 33.3,
+        "t20_ms": 130.7,
+        "area_260ms": 45.85,
+        "peak": 0.55,
+        "frames": 22
+      },
+      "eased": {
+        "last_positive_ms": 161.5,
+        "first_zero_ms": 177.6,
+        "half_ms": 45.2,
+        "t80_ms": 15.1,
+        "t20_ms": 89.9,
+        "area_260ms": 29.01,
+        "peak": 0.55,
+        "frames": 22
+      },
+      "cubic": {
+        "last_positive_ms": 165.4,
+        "first_zero_ms": 181.8,
+        "half_ms": 35.3,
+        "t80_ms": 12.1,
+        "t20_ms": 71.3,
+        "area_260ms": 23.71,
+        "peak": 0.55,
+        "frames": 22
+      }
+    },
+    "shipped_curve": "cubic"
+  }
+}

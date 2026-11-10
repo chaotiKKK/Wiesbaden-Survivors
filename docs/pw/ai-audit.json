@@ -1,0 +1,2160 @@
+{
+  "peak": 117,
+  "frames": 58512,
+  "elites": 6,
+  "enemies": 107,
+  "arena": {
+    "w": 1200,
+    "h": 950
+  },
+  "player": {
+    "x": 576,
+    "y": 525
+  },
+  "alive": 117,
+  "stuck": [
+    {
+      "type": "sentinel",
+      "run": 3.9,
+      "stuck": 10.26,
+      "t": 16.2,
+      "d": 513,
+      "wx": 50,
+      "wy": 533,
+      "pair": "approach/idle>approach/aim"
+    },
+    {
+      "type": "sentinel",
+      "run": 3.3,
+      "stuck": 9.49,
+      "t": 16.8,
+      "d": 433,
+      "wx": 645,
+      "wy": 900,
+      "pair": "approach/idle>approach/aim"
+    },
+    {
+      "type": "walker (Elite) [FLIPS]",
+      "run": 2,
+      "stuck": 0,
+      "t": 17.3,
+      "d": 0,
+      "wx": 0,
+      "wy": 0,
+      "pair": "circle/idle>lunge/idle"
+    },
+    {
+      "type": "healer",
+      "run": 1.79,
+      "stuck": 5.36,
+      "t": 16.9,
+      "d": 652,
+      "wx": 1187,
+      "wy": 569,
+      "pair": ""
+    }
+  ],
+  "turn": [
+    {
+      "type": "swarm",
+      "max": 9.3,
+      "n": 68,
+      "t": 9.6,
+      "d": 1,
+      "wx": 561,
+      "wy": 224,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 9.1,
+      "n": 40,
+      "t": 6.4,
+      "d": 1,
+      "wx": 154,
+      "wy": 525,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "siren",
+      "max": 8.7,
+      "n": 157,
+      "t": 16.7,
+      "d": 261,
+      "wx": 663,
+      "wy": 715,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 8.3,
+      "n": 153,
+      "t": 17.3,
+      "d": 1,
+      "wx": 559,
+      "wy": 475,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 8.3,
+      "n": 85,
+      "t": 14.2,
+      "d": 4,
+      "wx": 557,
+      "wy": 476,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 8.3,
+      "n": 115,
+      "t": 14.2,
+      "d": 2,
+      "wx": 561,
+      "wy": 477,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 8.3,
+      "n": 34,
+      "t": 9.7,
+      "d": 3,
+      "wx": 129,
+      "wy": 528,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 8.2,
+      "n": 164,
+      "t": 17.3,
+      "d": 2,
+      "wx": 560,
+      "wy": 473,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "summoner",
+      "max": 8.1,
+      "n": 135,
+      "t": 16.3,
+      "d": 300,
+      "wx": 260,
+      "wy": 468,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 8.1,
+      "n": 147,
+      "t": 15.4,
+      "d": 7,
+      "wx": 562,
+      "wy": 469,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 8.1,
+      "n": 126,
+      "t": 15.4,
+      "d": 4,
+      "wx": 563,
+      "wy": 476,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 8,
+      "n": 119,
+      "t": 15.4,
+      "d": 4,
+      "wx": 556,
+      "wy": 476,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "summoner",
+      "max": 7.9,
+      "n": 110,
+      "t": 16.4,
+      "d": 300,
+      "wx": 287,
+      "wy": 351,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "summoner",
+      "max": 7.7,
+      "n": 120,
+      "t": 17.3,
+      "d": 299,
+      "wx": 859,
+      "wy": 490,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "runner",
+      "max": 7.7,
+      "n": 87,
+      "t": 15.9,
+      "d": 13,
+      "wx": 564,
+      "wy": 463,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 7.4,
+      "n": 92,
+      "t": 14.1,
+      "d": 6,
+      "wx": 556,
+      "wy": 277,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 7.4,
+      "n": 36,
+      "t": 9.7,
+      "d": 8,
+      "wx": 104,
+      "wy": 521,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 7.3,
+      "n": 107,
+      "t": 14.1,
+      "d": 5,
+      "wx": 561,
+      "wy": 412,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "bomber",
+      "max": 7.1,
+      "n": 99,
+      "t": 16.4,
+      "d": 208,
+      "wx": 627,
+      "wy": 202,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 7.1,
+      "n": 81,
+      "t": 14.2,
+      "d": 6,
+      "wx": 566,
+      "wy": 476,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 7,
+      "n": 77,
+      "t": 15,
+      "d": 10,
+      "wx": 561,
+      "wy": 465,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "bomber",
+      "max": 7,
+      "n": 46,
+      "t": 14.9,
+      "d": 207,
+      "wx": 247,
+      "wy": 339,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 7,
+      "n": 34,
+      "t": 9.6,
+      "d": 7,
+      "wx": 453,
+      "wy": 532,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 6.9,
+      "n": 81,
+      "t": 14.1,
+      "d": 10,
+      "wx": 553,
+      "wy": 482,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "walker",
+      "max": 6.8,
+      "n": 36,
+      "t": 17.3,
+      "d": 34,
+      "wx": 593,
+      "wy": 214,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 6.8,
+      "n": 16,
+      "t": 5,
+      "d": 7,
+      "wx": 292,
+      "wy": 530,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "blinker",
+      "max": 6.4,
+      "n": 66,
+      "t": 16.2,
+      "d": 17,
+      "wx": 550,
+      "wy": 461,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "flyer",
+      "max": 6.3,
+      "n": 52,
+      "t": 14.9,
+      "d": 128,
+      "wx": 516,
+      "wy": 436,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 6.3,
+      "n": 14,
+      "t": 3.1,
+      "d": 2,
+      "wx": 297,
+      "wy": 524,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "mirror",
+      "max": 6.1,
+      "n": 38,
+      "t": 17.3,
+      "d": 5,
+      "wx": 561,
+      "wy": 525,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 6.1,
+      "n": 26,
+      "t": 9.7,
+      "d": 3,
+      "wx": 129,
+      "wy": 523,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 6,
+      "n": 19,
+      "t": 8.8,
+      "d": 5,
+      "wx": 564,
+      "wy": 305,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 6,
+      "n": 16,
+      "t": 7.8,
+      "d": 8,
+      "wx": 400,
+      "wy": 533,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "runner",
+      "max": 5.9,
+      "n": 58,
+      "t": 17.3,
+      "d": 10,
+      "wx": 570,
+      "wy": 457,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 5.9,
+      "n": 94,
+      "t": 17.3,
+      "d": 2,
+      "wx": 562,
+      "wy": 475,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 5.8,
+      "n": 27,
+      "t": 10.9,
+      "d": 7,
+      "wx": 36,
+      "wy": 521,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "leech",
+      "max": 5.7,
+      "n": 39,
+      "t": 15.9,
+      "d": 15,
+      "wx": 574,
+      "wy": 472,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 5.7,
+      "n": 33,
+      "t": 9.6,
+      "d": 14,
+      "wx": 472,
+      "wy": 534,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 5.7,
+      "n": 20,
+      "t": 5.1,
+      "d": 2,
+      "wx": 331,
+      "wy": 525,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "walker (Elite)",
+      "max": 5.5,
+      "n": 38,
+      "t": 17.3,
+      "d": 172,
+      "wx": 459,
+      "wy": 614,
+      "cur": "lunge/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 5.5,
+      "n": 14,
+      "t": 10.7,
+      "d": 17,
+      "wx": 237,
+      "wy": 509,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 5.5,
+      "n": 20,
+      "t": 7.8,
+      "d": 5,
+      "wx": 555,
+      "wy": 338,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 5.2,
+      "n": 24,
+      "t": 13.5,
+      "d": 22,
+      "wx": 541,
+      "wy": 485,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 5.2,
+      "n": 10,
+      "t": 3.1,
+      "d": 3,
+      "wx": 327,
+      "wy": 525,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 5.1,
+      "n": 33,
+      "t": 15.8,
+      "d": 18,
+      "wx": 575,
+      "wy": 439,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "blinker",
+      "max": 5,
+      "n": 49,
+      "t": 15.7,
+      "d": 61,
+      "wx": 130,
+      "wy": 554,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 5,
+      "n": 9,
+      "t": 5.9,
+      "d": 13,
+      "wx": 199,
+      "wy": 537,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 5,
+      "n": 10,
+      "t": 2.1,
+      "d": 2,
+      "wx": 372,
+      "wy": 526,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 4.9,
+      "n": 21,
+      "t": 12.6,
+      "d": 37,
+      "wx": 578,
+      "wy": 432,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 4.9,
+      "n": 21,
+      "t": 12.6,
+      "d": 37,
+      "wx": 578,
+      "wy": 432,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 4.9,
+      "n": 9,
+      "t": 5.1,
+      "d": 16,
+      "wx": 46,
+      "wy": 513,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 4.8,
+      "n": 13,
+      "t": 8.8,
+      "d": 20,
+      "wx": 278,
+      "wy": 531,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 4.7,
+      "n": 21,
+      "t": 12.6,
+      "d": 34,
+      "wx": 575,
+      "wy": 485,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 4.7,
+      "n": 21,
+      "t": 12.6,
+      "d": 34,
+      "wx": 575,
+      "wy": 485,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "runner",
+      "max": 4.6,
+      "n": 54,
+      "t": 17,
+      "d": 6,
+      "wx": 181,
+      "wy": 519,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 4.5,
+      "n": 9,
+      "t": 9.7,
+      "d": 10,
+      "wx": 188,
+      "wy": 516,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 4.4,
+      "n": 31,
+      "t": 10.9,
+      "d": 51,
+      "wx": 535,
+      "wy": 538,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 4.4,
+      "n": 10,
+      "t": 6.4,
+      "d": 13,
+      "wx": 22,
+      "wy": 522,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 4.2,
+      "n": 16,
+      "t": 12.6,
+      "d": 12,
+      "wx": 548,
+      "wy": 124,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 4.2,
+      "n": 18,
+      "t": 11.6,
+      "d": 23,
+      "wx": 541,
+      "wy": 111,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 4.2,
+      "n": 19,
+      "t": 10.9,
+      "d": 8,
+      "wx": 568,
+      "wy": 32,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 4.1,
+      "n": 23,
+      "t": 13.5,
+      "d": 25,
+      "wx": 556,
+      "wy": 499,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 4.1,
+      "n": 14,
+      "t": 13.5,
+      "d": 28,
+      "wx": 555,
+      "wy": 502,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "mirror",
+      "max": 4,
+      "n": 27,
+      "t": 17.3,
+      "d": 520,
+      "wx": 1026,
+      "wy": 245,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 4,
+      "n": 8,
+      "t": 5.1,
+      "d": 4,
+      "wx": 14,
+      "wy": 524,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "spitter",
+      "max": 3.9,
+      "n": 15,
+      "t": 16.8,
+      "d": 237,
+      "wx": 665,
+      "wy": 317,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 3.9,
+      "n": 18,
+      "t": 11.6,
+      "d": 14,
+      "wx": 574,
+      "wy": 170,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 3.9,
+      "n": 9,
+      "t": 5.1,
+      "d": 17,
+      "wx": 17,
+      "wy": 516,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "walker (Elite)",
+      "max": 3.8,
+      "n": 32,
+      "t": 17.3,
+      "d": 120,
+      "wx": 562,
+      "wy": 355,
+      "cur": "lunge/idle"
+    },
+    {
+      "type": "walker (Elite)",
+      "max": 3.5,
+      "n": 29,
+      "t": 17.3,
+      "d": 44,
+      "wx": 547,
+      "wy": 433,
+      "cur": "circle/idle"
+    },
+    {
+      "type": "runner",
+      "max": 3.5,
+      "n": 25,
+      "t": 15.2,
+      "d": 37,
+      "wx": 590,
+      "wy": 475,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 3.5,
+      "n": 10,
+      "t": 9.7,
+      "d": 6,
+      "wx": 234,
+      "wy": 524,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "spliter",
+      "max": 3.4,
+      "n": 16,
+      "t": 15.1,
+      "d": 29,
+      "wx": 588,
+      "wy": 471,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 3.4,
+      "n": 6,
+      "t": 5.1,
+      "d": 18,
+      "wx": 28,
+      "wy": 508,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "mirror",
+      "max": 3.3,
+      "n": 20,
+      "t": 16.7,
+      "d": 29,
+      "wx": 532,
+      "wy": 483,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "charger",
+      "max": 3.3,
+      "n": 16,
+      "t": 15.7,
+      "d": 99,
+      "wx": 590,
+      "wy": 206,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "shooter",
+      "max": 3.2,
+      "n": 16,
+      "t": 15.1,
+      "d": 274,
+      "wx": 815,
+      "wy": 375,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 3.2,
+      "n": 6,
+      "t": 5,
+      "d": 15,
+      "wx": 259,
+      "wy": 540,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 3.1,
+      "n": 9,
+      "t": 10.7,
+      "d": 33,
+      "wx": 573,
+      "wy": 499,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "swarm",
+      "max": 3.1,
+      "n": 5,
+      "t": 5.1,
+      "d": 19,
+      "wx": 20,
+      "wy": 510,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 3,
+      "n": 15,
+      "t": 11.6,
+      "d": 34,
+      "wx": 103,
+      "wy": 497,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "spliter",
+      "max": 2.9,
+      "n": 16,
+      "t": 16.3,
+      "d": 28,
+      "wx": 533,
+      "wy": 466,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "shielded",
+      "max": 2.9,
+      "n": 11,
+      "t": 15.6,
+      "d": 36,
+      "wx": 529,
+      "wy": 93,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "walker (Elite)",
+      "max": 2.8,
+      "n": 30,
+      "t": 17.3,
+      "d": 247,
+      "wx": 267,
+      "wy": 404,
+      "cur": "circle/idle"
+    },
+    {
+      "type": "walker (Elite)",
+      "max": 2.6,
+      "n": 28,
+      "t": 17.3,
+      "d": 96,
+      "wx": 571,
+      "wy": 380,
+      "cur": "circle/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 2.6,
+      "n": 4,
+      "t": 5.9,
+      "d": 20,
+      "wx": 199,
+      "wy": 538,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 2.5,
+      "n": 6,
+      "t": 8.8,
+      "d": 37,
+      "wx": 141,
+      "wy": 560,
+      "cur": "approach/idle"
+    },
+    {
+      "type": "ghost",
+      "max": 2.5,
+      "n": 3,
+      "t": 5.9,
+      "d": 24,
+      "wx": 194,
+      "wy": 502,
+      "cur": "approach/idle"
+    }
+  ],
+  "rev": [
+    {
+      "type": "siren",
+      "rev": 157,
+      "rate": 9.4,
+      "t": 16.7
+    },
+    {
+      "type": "summoner",
+      "rev": 125,
+      "rate": 7.67,
+      "t": 16.3
+    },
+    {
+      "type": "summoner",
+      "rev": 119,
+      "rate": 6.89,
+      "t": 17.3
+    },
+    {
+      "type": "summoner",
+      "rev": 102,
+      "rate": 6.23,
+      "t": 16.4
+    },
+    {
+      "type": "swarm",
+      "rev": 57,
+      "rate": 3.7,
+      "t": 15.4
+    },
+    {
+      "type": "swarm",
+      "rev": 63,
+      "rate": 3.65,
+      "t": 17.3
+    },
+    {
+      "type": "bomber",
+      "rev": 57,
+      "rate": 3.48,
+      "t": 16.4
+    },
+    {
+      "type": "swarm",
+      "rev": 57,
+      "rate": 3.3,
+      "t": 17.3
+    },
+    {
+      "type": "ghost",
+      "rev": 7,
+      "rate": 3.29,
+      "t": 2.1
+    },
+    {
+      "type": "swarm",
+      "rev": 49,
+      "rate": 3.18,
+      "t": 15.4
+    },
+    {
+      "type": "swarm",
+      "rev": 29,
+      "rate": 3.01,
+      "t": 9.6
+    },
+    {
+      "type": "swarm",
+      "rev": 19,
+      "rate": 2.97,
+      "t": 6.4
+    },
+    {
+      "type": "bomber",
+      "rev": 40,
+      "rate": 2.68,
+      "t": 14.9
+    },
+    {
+      "type": "swarm",
+      "rev": 37,
+      "rate": 2.61,
+      "t": 14.2
+    },
+    {
+      "type": "swarm",
+      "rev": 38,
+      "rate": 2.47,
+      "t": 15.4
+    },
+    {
+      "type": "swarm",
+      "rev": 31,
+      "rate": 2.19,
+      "t": 14.1
+    },
+    {
+      "type": "blinker",
+      "rev": 27,
+      "rate": 1.67,
+      "t": 16.2
+    },
+    {
+      "type": "ghost",
+      "rev": 5,
+      "rate": 1.63,
+      "t": 3.1
+    },
+    {
+      "type": "mortar",
+      "rev": 24,
+      "rate": 1.6,
+      "t": 15
+    },
+    {
+      "type": "swarm",
+      "rev": 20,
+      "rate": 1.41,
+      "t": 14.1
+    },
+    {
+      "type": "swarm",
+      "rev": 18,
+      "rate": 1.27,
+      "t": 14.2
+    },
+    {
+      "type": "blinker",
+      "rev": 19,
+      "rate": 1.21,
+      "t": 15.7
+    },
+    {
+      "type": "runner",
+      "rev": 20,
+      "rate": 1.16,
+      "t": 17.3
+    },
+    {
+      "type": "flyer",
+      "rev": 17,
+      "rate": 1.14,
+      "t": 14.9
+    },
+    {
+      "type": "swarm",
+      "rev": 17,
+      "rate": 1.13,
+      "t": 15
+    },
+    {
+      "type": "swarm",
+      "rev": 16,
+      "rate": 1.13,
+      "t": 14.1
+    },
+    {
+      "type": "mirror",
+      "rev": 18,
+      "rate": 1.04,
+      "t": 17.3
+    },
+    {
+      "type": "walker (Elite)",
+      "rev": 16,
+      "rate": 0.93,
+      "t": 17.3
+    }
+  ],
+  "jit": [
+    {
+      "type": "swarm",
+      "secs": 4.1,
+      "n": 4,
+      "ratio": 37.7,
+      "d": 4,
+      "wx": 559,
+      "wy": 479
+    },
+    {
+      "type": "runner",
+      "secs": 4.1,
+      "n": 4,
+      "ratio": 10.2,
+      "d": 14,
+      "wx": 553,
+      "wy": 487
+    },
+    {
+      "type": "leech",
+      "secs": 4.1,
+      "n": 4,
+      "ratio": 28,
+      "d": 25,
+      "wx": 562,
+      "wy": 122
+    },
+    {
+      "type": "siren",
+      "secs": 4,
+      "n": 4,
+      "ratio": 73.3,
+      "d": 263,
+      "wx": 664,
+      "wy": 717
+    },
+    {
+      "type": "summoner",
+      "secs": 3.1,
+      "n": 3,
+      "ratio": 44.4,
+      "d": 303,
+      "wx": 862,
+      "wy": 490
+    },
+    {
+      "type": "swarm",
+      "secs": 3.1,
+      "n": 3,
+      "ratio": 54,
+      "d": 6,
+      "wx": 565,
+      "wy": 478
+    },
+    {
+      "type": "runner",
+      "secs": 3,
+      "n": 3,
+      "ratio": 17.7,
+      "d": 19,
+      "wx": 556,
+      "wy": 456
+    },
+    {
+      "type": "ghost",
+      "secs": 3,
+      "n": 3,
+      "ratio": 16.6,
+      "d": 27,
+      "wx": 579,
+      "wy": 451
+    },
+    {
+      "type": "swarm",
+      "secs": 3,
+      "n": 3,
+      "ratio": 33.2,
+      "d": 4,
+      "wx": 557,
+      "wy": 478
+    },
+    {
+      "type": "runner",
+      "secs": 2,
+      "n": 2,
+      "ratio": 13.8,
+      "d": 18,
+      "wx": 571,
+      "wy": 461
+    },
+    {
+      "type": "walker",
+      "secs": 2,
+      "n": 2,
+      "ratio": 15.2,
+      "d": 57,
+      "wx": 302,
+      "wy": 481
+    },
+    {
+      "type": "swarm",
+      "secs": 2,
+      "n": 2,
+      "ratio": 16.9,
+      "d": 3,
+      "wx": 557,
+      "wy": 474
+    },
+    {
+      "type": "mirror",
+      "secs": 2,
+      "n": 2,
+      "ratio": 19.4,
+      "d": 42,
+      "wx": 526,
+      "wy": 481
+    },
+    {
+      "type": "spliter",
+      "secs": 2,
+      "n": 2,
+      "ratio": 12.4,
+      "d": 31,
+      "wx": 529,
+      "wy": 473
+    },
+    {
+      "type": "summoner",
+      "secs": 2,
+      "n": 2,
+      "ratio": 71.9,
+      "d": 300,
+      "wx": 260,
+      "wy": 468
+    },
+    {
+      "type": "blinker",
+      "secs": 2,
+      "n": 2,
+      "ratio": 13.3,
+      "d": 11,
+      "wx": 551,
+      "wy": 482
+    },
+    {
+      "type": "swarm",
+      "secs": 2,
+      "n": 2,
+      "ratio": 21.3,
+      "d": 7,
+      "wx": 565,
+      "wy": 470
+    },
+    {
+      "type": "swarm",
+      "secs": 2,
+      "n": 2,
+      "ratio": 59,
+      "d": 1,
+      "wx": 559,
+      "wy": 475
+    },
+    {
+      "type": "boss:SEBBOS ROGUE-KI",
+      "secs": 1,
+      "n": 1,
+      "ratio": 13.3,
+      "d": 187,
+      "wx": 642,
+      "wy": 526
+    },
+    {
+      "type": "mirror",
+      "secs": 1,
+      "n": 1,
+      "ratio": 9.8,
+      "d": 250,
+      "wx": 334,
+      "wy": 584
+    },
+    {
+      "type": "mirror",
+      "secs": 1,
+      "n": 1,
+      "ratio": 9.8,
+      "d": 30,
+      "wx": 570,
+      "wy": 446
+    },
+    {
+      "type": "walker (Elite)",
+      "secs": 1,
+      "n": 1,
+      "ratio": 9.2,
+      "d": 170,
+      "wx": 436,
+      "wy": 430
+    },
+    {
+      "type": "walker",
+      "secs": 1,
+      "n": 1,
+      "ratio": 9.8,
+      "d": 130,
+      "wx": 163,
+      "wy": 471
+    },
+    {
+      "type": "summoner",
+      "secs": 1,
+      "n": 1,
+      "ratio": 48.7,
+      "d": 300,
+      "wx": 287,
+      "wy": 351
+    },
+    {
+      "type": "ghost",
+      "secs": 1,
+      "n": 1,
+      "ratio": 7.5,
+      "d": 26,
+      "wx": 569,
+      "wy": 499
+    },
+    {
+      "type": "ghost",
+      "secs": 1,
+      "n": 1,
+      "ratio": 12.6,
+      "d": 97,
+      "wx": 576,
+      "wy": 107
+    },
+    {
+      "type": "charger",
+      "secs": 1,
+      "n": 1,
+      "ratio": 11.8,
+      "d": 266,
+      "wx": 199,
+      "wy": 492
+    },
+    {
+      "type": "blinker",
+      "secs": 1,
+      "n": 1,
+      "ratio": 29.2,
+      "d": 270,
+      "wx": 535,
+      "wy": 283
+    },
+    {
+      "type": "runner",
+      "secs": 1,
+      "n": 1,
+      "ratio": 8.1,
+      "d": 21,
+      "wx": 578,
+      "wy": 485
+    },
+    {
+      "type": "spliter",
+      "secs": 1,
+      "n": 1,
+      "ratio": 11.4,
+      "d": 29,
+      "wx": 589,
+      "wy": 477
+    },
+    {
+      "type": "swarm",
+      "secs": 1,
+      "n": 1,
+      "ratio": 8.3,
+      "d": 15,
+      "wx": 567,
+      "wy": 488
+    },
+    {
+      "type": "swarm",
+      "secs": 1,
+      "n": 1,
+      "ratio": 9.2,
+      "d": 5,
+      "wx": 555,
+      "wy": 475
+    },
+    {
+      "type": "swarm",
+      "secs": 1,
+      "n": 1,
+      "ratio": 12.5,
+      "d": 3,
+      "wx": 559,
+      "wy": 477
+    },
+    {
+      "type": "swarm",
+      "secs": 1,
+      "n": 1,
+      "ratio": 22.8,
+      "d": 2,
+      "wx": 559,
+      "wy": 477
+    },
+    {
+      "type": "swarm",
+      "secs": 1,
+      "n": 1,
+      "ratio": 43.3,
+      "d": 8,
+      "wx": 559,
+      "wy": 467
+    },
+    {
+      "type": "swarm",
+      "secs": 1,
+      "n": 1,
+      "ratio": 23.3,
+      "d": 11,
+      "wx": 552,
+      "wy": 482
+    },
+    {
+      "type": "ghost",
+      "secs": 1,
+      "n": 1,
+      "ratio": 5.8,
+      "d": 20,
+      "wx": 542,
+      "wy": 483
+    },
+    {
+      "type": "ghost",
+      "secs": 1,
+      "n": 1,
+      "ratio": 11.4,
+      "d": 90,
+      "wx": 165,
+      "wy": 506
+    },
+    {
+      "type": "ghost",
+      "secs": 1,
+      "n": 1,
+      "ratio": 7.5,
+      "d": 26,
+      "wx": 569,
+      "wy": 499
+    },
+    {
+      "type": "ghost",
+      "secs": 1,
+      "n": 1,
+      "ratio": 12.6,
+      "d": 97,
+      "wx": 576,
+      "wy": 107
+    },
+    {
+      "type": "ghost",
+      "secs": 1,
+      "n": 1,
+      "ratio": 6.3,
+      "d": 67,
+      "wx": 611,
+      "wy": 485
+    },
+    {
+      "type": "swarm",
+      "secs": 1,
+      "n": 1,
+      "ratio": 16.1,
+      "d": 12,
+      "wx": 566,
+      "wy": 113
+    }
+  ],
+  "byType": {
+    "boss:SEBBOS ROGUE-KI": {
+      "n": 1,
+      "t": 17.271184449503128,
+      "stuck": 1.4257139303471074,
+      "maxRun": 0.25370115379702307,
+      "rev": 0,
+      "turn": 9,
+      "jitT": 1.0132414757182548,
+      "ch": 0,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "swarm": {
+      "n": 31,
+      "t": 338.4680896927529,
+      "stuck": 0.06617180146158311,
+      "maxRun": 0.03277180146158165,
+      "rev": 506,
+      "turn": 1858,
+      "jitT": 23.357434856315276,
+      "ch": 0,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "mirror": {
+      "n": 3,
+      "t": 51.27437935703294,
+      "stuck": 0.5254774238994968,
+      "maxRun": 0.13889460528037342,
+      "rev": 32,
+      "turn": 85,
+      "jitT": 4.0254850989475734,
+      "ch": 0,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "summoner": {
+      "n": 3,
+      "t": 49.936126558202375,
+      "stuck": 0.602389583397319,
+      "maxRun": 0.08188143716464873,
+      "rev": 346,
+      "turn": 365,
+      "jitT": 6.078491517178904,
+      "ch": 0,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "runner": {
+      "n": 4,
+      "t": 65.36434462473292,
+      "stuck": 0.6078137200991096,
+      "maxRun": 0.23329999986818276,
+      "rev": 51,
+      "turn": 224,
+      "jitT": 10.120684460369908,
+      "ch": 0,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "walker": {
+      "n": 4,
+      "t": 65.73329036209432,
+      "stuck": 0.398614369407838,
+      "maxRun": 0.03323839988839451,
+      "rev": 11,
+      "turn": 56,
+      "jitT": 3.0289648248857843,
+      "ch": 0,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "walker (Elite)": {
+      "n": 6,
+      "t": 103.52690669701876,
+      "stuck": 1.2831644188300673,
+      "maxRun": 0.2332999927553122,
+      "rev": 60,
+      "turn": 179,
+      "jitT": 1.00267207728418,
+      "ch": 91,
+      "flips": 6,
+      "stTime": {
+        "approach": 11.257914890684813,
+        "circle": 68.27194580816483,
+        "lunge": 23.99704599816912,
+        "retreat": 0
+      }
+    },
+    "healer": {
+      "n": 1,
+      "t": 16.92973352587009,
+      "stuck": 5.356894634894744,
+      "maxRun": 1.7869270040771863,
+      "rev": 0,
+      "turn": 2,
+      "jitT": 0,
+      "ch": 0,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "spitter": {
+      "n": 1,
+      "t": 16.847897482670465,
+      "stuck": 0.2687249202390232,
+      "maxRun": 0.10117938283778213,
+      "rev": 1,
+      "turn": 15,
+      "jitT": 0,
+      "ch": 0,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "mortar": {
+      "n": 2,
+      "t": 31.847347332583453,
+      "stuck": 8.062275741471487,
+      "maxRun": 0.24999999936655753,
+      "rev": 26,
+      "turn": 6,
+      "jitT": 0,
+      "ch": 0,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "sentinel": {
+      "n": 2,
+      "t": 32.98097967593211,
+      "stuck": 19.7517816842851,
+      "maxRun": 3.9035347291443165,
+      "rev": 0,
+      "turn": 0,
+      "jitT": 0,
+      "ch": 16,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "siren": {
+      "n": 1,
+      "t": 16.69881868668472,
+      "stuck": 0,
+      "maxRun": 0,
+      "rev": 157,
+      "turn": 157,
+      "jitT": 4.049332656719098,
+      "ch": 0,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "bomber": {
+      "n": 2,
+      "t": 31.348344418249788,
+      "stuck": 0,
+      "maxRun": 0,
+      "rev": 97,
+      "turn": 145,
+      "jitT": 0,
+      "ch": 0,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "spliter": {
+      "n": 2,
+      "t": 31.39835356505445,
+      "stuck": 0.0831078142667448,
+      "maxRun": 0.05009999295224869,
+      "rev": 12,
+      "turn": 32,
+      "jitT": 3.038692394963109,
+      "ch": 0,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "ghost": {
+      "n": 36,
+      "t": 313.16823046664337,
+      "stuck": 0.6501663925310979,
+      "maxRun": 0.09974144410861449,
+      "rev": 138,
+      "turn": 456,
+      "jitT": 10.159698877484708,
+      "ch": 0,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "blinker": {
+      "n": 2,
+      "t": 31.831661919538302,
+      "stuck": 0,
+      "maxRun": 0,
+      "rev": 46,
+      "turn": 115,
+      "jitT": 3.0532167646718946,
+      "ch": 0,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "leech": {
+      "n": 1,
+      "t": 15.865831985023082,
+      "stuck": 0,
+      "maxRun": 0,
+      "rev": 7,
+      "turn": 39,
+      "jitT": 4.0568631871506975,
+      "ch": 3,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "tank": {
+      "n": 1,
+      "t": 15.749132080578333,
+      "stuck": 1.1454893157998693,
+      "maxRun": 0.4646820112501266,
+      "rev": 1,
+      "turn": 3,
+      "jitT": 0,
+      "ch": 0,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "charger": {
+      "n": 1,
+      "t": 15.715832093200744,
+      "stuck": 0.5168698839187051,
+      "maxRun": 0.2650659186702815,
+      "rev": 4,
+      "turn": 16,
+      "jitT": 1.00996834759162,
+      "ch": 12,
+      "flips": 1,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "shielded": {
+      "n": 1,
+      "t": 15.632432112953873,
+      "stuck": 0.04405815561621012,
+      "maxRun": 0.028681541431917833,
+      "rev": 1,
+      "turn": 11,
+      "jitT": 0,
+      "ch": 0,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "shooter": {
+      "n": 1,
+      "t": 15.149132129811788,
+      "stuck": 0.10576320078313561,
+      "maxRun": 0.020032252581967464,
+      "rev": 7,
+      "turn": 16,
+      "jitT": 0,
+      "ch": 0,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    },
+    "flyer": {
+      "n": 1,
+      "t": 14.915832129991673,
+      "stuck": 0,
+      "maxRun": 0,
+      "rev": 17,
+      "turn": 52,
+      "jitT": 0,
+      "ch": 0,
+      "flips": 0,
+      "stTime": {
+        "approach": 0,
+        "circle": 0,
+        "lunge": 0,
+        "retreat": 0
+      }
+    }
+  },
+  "packFlips": 43,
+  "byTypeList": [
+    {
+      "type": "sentinel",
+      "n": 2,
+      "seconds": 33,
+      "stuck_s": 19.8,
+      "worst_run": 3.9,
+      "rev": 0,
+      "turn": 0,
+      "jit_s": 0,
+      "ch": 16,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "mortar",
+      "n": 2,
+      "seconds": 31.8,
+      "stuck_s": 8.1,
+      "worst_run": 0.25,
+      "rev": 26,
+      "turn": 6,
+      "jit_s": 0,
+      "ch": 0,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "healer",
+      "n": 1,
+      "seconds": 16.9,
+      "stuck_s": 5.4,
+      "worst_run": 1.79,
+      "rev": 0,
+      "turn": 2,
+      "jit_s": 0,
+      "ch": 0,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "boss:SEBBOS ROGUE-KI",
+      "n": 1,
+      "seconds": 17.3,
+      "stuck_s": 1.4,
+      "worst_run": 0.25,
+      "rev": 0,
+      "turn": 9,
+      "jit_s": 1,
+      "ch": 0,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "walker (Elite)",
+      "n": 6,
+      "seconds": 103.5,
+      "stuck_s": 1.3,
+      "worst_run": 0.23,
+      "rev": 60,
+      "turn": 179,
+      "jit_s": 1,
+      "ch": 91,
+      "flips": 6,
+      "st": "approach 11 / circle 68 / lunge 24 / retreat 0"
+    },
+    {
+      "type": "tank",
+      "n": 1,
+      "seconds": 15.7,
+      "stuck_s": 1.1,
+      "worst_run": 0.46,
+      "rev": 1,
+      "turn": 3,
+      "jit_s": 0,
+      "ch": 0,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "ghost",
+      "n": 36,
+      "seconds": 313.2,
+      "stuck_s": 0.7,
+      "worst_run": 0.1,
+      "rev": 138,
+      "turn": 456,
+      "jit_s": 10.2,
+      "ch": 0,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "summoner",
+      "n": 3,
+      "seconds": 49.9,
+      "stuck_s": 0.6,
+      "worst_run": 0.08,
+      "rev": 346,
+      "turn": 365,
+      "jit_s": 6.1,
+      "ch": 0,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "runner",
+      "n": 4,
+      "seconds": 65.4,
+      "stuck_s": 0.6,
+      "worst_run": 0.23,
+      "rev": 51,
+      "turn": 224,
+      "jit_s": 10.1,
+      "ch": 0,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "mirror",
+      "n": 3,
+      "seconds": 51.3,
+      "stuck_s": 0.5,
+      "worst_run": 0.14,
+      "rev": 32,
+      "turn": 85,
+      "jit_s": 4,
+      "ch": 0,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "charger",
+      "n": 1,
+      "seconds": 15.7,
+      "stuck_s": 0.5,
+      "worst_run": 0.27,
+      "rev": 4,
+      "turn": 16,
+      "jit_s": 1,
+      "ch": 12,
+      "flips": 1,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "walker",
+      "n": 4,
+      "seconds": 65.7,
+      "stuck_s": 0.4,
+      "worst_run": 0.03,
+      "rev": 11,
+      "turn": 56,
+      "jit_s": 3,
+      "ch": 0,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "spitter",
+      "n": 1,
+      "seconds": 16.8,
+      "stuck_s": 0.3,
+      "worst_run": 0.1,
+      "rev": 1,
+      "turn": 15,
+      "jit_s": 0,
+      "ch": 0,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "swarm",
+      "n": 31,
+      "seconds": 338.5,
+      "stuck_s": 0.1,
+      "worst_run": 0.03,
+      "rev": 506,
+      "turn": 1858,
+      "jit_s": 23.4,
+      "ch": 0,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "spliter",
+      "n": 2,
+      "seconds": 31.4,
+      "stuck_s": 0.1,
+      "worst_run": 0.05,
+      "rev": 12,
+      "turn": 32,
+      "jit_s": 3,
+      "ch": 0,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "shooter",
+      "n": 1,
+      "seconds": 15.1,
+      "stuck_s": 0.1,
+      "worst_run": 0.02,
+      "rev": 7,
+      "turn": 16,
+      "jit_s": 0,
+      "ch": 0,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "siren",
+      "n": 1,
+      "seconds": 16.7,
+      "stuck_s": 0,
+      "worst_run": 0,
+      "rev": 157,
+      "turn": 157,
+      "jit_s": 4,
+      "ch": 0,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "bomber",
+      "n": 2,
+      "seconds": 31.3,
+      "stuck_s": 0,
+      "worst_run": 0,
+      "rev": 97,
+      "turn": 145,
+      "jit_s": 0,
+      "ch": 0,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "blinker",
+      "n": 2,
+      "seconds": 31.8,
+      "stuck_s": 0,
+      "worst_run": 0,
+      "rev": 46,
+      "turn": 115,
+      "jit_s": 3.1,
+      "ch": 0,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "leech",
+      "n": 1,
+      "seconds": 15.9,
+      "stuck_s": 0,
+      "worst_run": 0,
+      "rev": 7,
+      "turn": 39,
+      "jit_s": 4.1,
+      "ch": 3,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "shielded",
+      "n": 1,
+      "seconds": 15.6,
+      "stuck_s": 0,
+      "worst_run": 0.03,
+      "rev": 1,
+      "turn": 11,
+      "jit_s": 0,
+      "ch": 0,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    },
+    {
+      "type": "flyer",
+      "n": 1,
+      "seconds": 14.9,
+      "stuck_s": 0,
+      "worst_run": 0,
+      "rev": 17,
+      "turn": 52,
+      "jit_s": 0,
+      "ch": 0,
+      "flips": 0,
+      "st": "approach 0 / circle 0 / lunge 0 / retreat 0"
+    }
+  ],
+  "console_errors": [],
+  "wave": {
+    "wave": 20,
+    "danger": 0,
+    "fps": 51
+  }
+}

@@ -1,0 +1,233 @@
+{
+  "schema": "wbn-assetpack/1",
+  "pack": 2,
+  "generated": "2026-11-08",
+  "blender": "4.5.15 LTS",
+  "units": "meters",
+  "forward": "-Y (Blender), FBX export -Z forward / Y up",
+  "pivot": "base center at world origin",
+  "note": "Teilmenge von assets/manifest.json (pack = 2).",
+  "assets": [
+    {
+      "name": "SM_Boss_KurhausKoloss",
+      "kind": "boss",
+      "dimensions_m": [
+        5.62,
+        2.48,
+        6.22
+      ],
+      "verts": 1852,
+      "tris": 3544,
+      "materials": [
+        "M_Koloss_Sandstein_Dunkel",
+        "M_Koloss_Sandstein",
+        "M_Koloss_Gold",
+        "M_Koloss_Kern",
+        "M_Koloss_Dach"
+      ],
+      "files": {
+        "glb": "assets/glb/SM_Boss_KurhausKoloss.glb",
+        "fbx": "assets/fbx/SM_Boss_KurhausKoloss.fbx",
+        "blend": "assets/blender/SM_Boss_KurhausKoloss.blend",
+        "render": "assets/renders/SM_Boss_KurhausKoloss.png"
+      },
+      "bytes": {
+        "glb": 253720,
+        "fbx": 80716
+      },
+      "pack": 2,
+      "role": "boss",
+      "game_id": "kurhaus",
+      "blockout": true
+    },
+    {
+      "name": "SM_KurparkPavillon",
+      "kind": "prop",
+      "dimensions_m": [
+        4.4,
+        4.4,
+        4.27
+      ],
+      "verts": 1623,
+      "tris": 3110,
+      "materials": [
+        "M_Pavillon_Sandstein_Dunkel",
+        "M_Pavillon_Sandstein",
+        "M_Pavillon_Kupfer",
+        "M_Pavillon_Dach",
+        "M_Pavillon_Gold"
+      ],
+      "files": {
+        "glb": "assets/glb/SM_KurparkPavillon.glb",
+        "fbx": "assets/fbx/SM_KurparkPavillon.fbx",
+        "blend": "assets/blender/SM_KurparkPavillon.blend",
+        "render": "assets/renders/SM_KurparkPavillon.png"
+      },
+      "bytes": {
+        "glb": 218828,
+        "fbx": 77084
+      },
+      "pack": 2,
+      "role": "arena_prop",
+      "location_hint": "Kurpark Wiesbaden"
+    },
+    {
+      "name": "SM_Reiterstandbild",
+      "kind": "prop",
+      "dimensions_m": [
+        2.1,
+        3.15,
+        5.13
+      ],
+      "verts": 1778,
+      "tris": 3420,
+      "materials": [
+        "M_Denkmal_Sockel_Dunkel",
+        "M_Denkmal_Sockel",
+        "M_Denkmal_Gold",
+        "M_Denkmal_Bronze_Dunkel",
+        "M_Denkmal_Bronze"
+      ],
+      "files": {
+        "glb": "assets/glb/SM_Reiterstandbild.glb",
+        "fbx": "assets/fbx/SM_Reiterstandbild.fbx",
+        "blend": "assets/blender/SM_Reiterstandbild.blend",
+        "render": "assets/renders/SM_Reiterstandbild.png"
+      },
+      "bytes": {
+        "glb": 246300,
+        "fbx": 83244
+      },
+      "pack": 2,
+      "role": "arena_prop",
+      "location_hint": "Stadtmitte Wiesbaden"
+    },
+    {
+      "name": "SM_RheinuferGelaender",
+      "kind": "prop",
+      "dimensions_m": [
+        4.4,
+        0.56,
+        2.13
+      ],
+      "verts": 1388,
+      "tris": 2640,
+      "materials": [
+        "M_Rheinufer_Stein",
+        "M_Rheinufer_Eisen",
+        "M_Rheinufer_Messing",
+        "M_Rheinufer_Eisen_Hell"
+      ],
+      "files": {
+        "glb": "assets/glb/SM_RheinuferGelaender.glb",
+        "fbx": "assets/fbx/SM_RheinuferGelaender.fbx",
+        "blend": "assets/blender/SM_RheinuferGelaender.blend",
+        "render": "assets/renders/SM_RheinuferGelaender.png"
+      },
+      "bytes": {
+        "glb": 192184,
+        "fbx": 61276
+      },
+      "pack": 2,
+      "role": "arena_prop",
+      "location_hint": "Rheinufer Schierstein"
+    },
+    {
+      "name": "SM_Schuetze",
+      "kind": "enemy",
+      "dimensions_m": [
+        0.837,
+        1.248,
+        1.845
+      ],
+      "verts": 1492,
+      "tris": 2848,
+      "materials": [
+        "M_Schuetze_Stoff",
+        "M_Schuetze_Panzer",
+        "M_Schuetze_Dunkel",
+        "M_Schuetze_Energie",
+        "M_Schuetze_Panzer_Hell",
+        "M_Schuetze_Knochen"
+      ],
+      "files": {
+        "glb": "assets/glb/SM_Schuetze.glb",
+        "fbx": "assets/fbx/SM_Schuetze.fbx",
+        "blend": "assets/blender/SM_Schuetze.blend",
+        "render": "assets/renders/SM_Schuetze.png"
+      },
+      "bytes": {
+        "glb": 207984,
+        "fbx": 75852
+      },
+      "pack": 2,
+      "role": "ranged",
+      "game_id": "shooter"
+    },
+    {
+      "name": "SM_Sentinel",
+      "kind": "enemy",
+      "dimensions_m": [
+        1.679,
+        1.73,
+        1.96
+      ],
+      "verts": 840,
+      "tris": 1608,
+      "materials": [
+        "M_Sentinel_Basalt_Hell",
+        "M_Sentinel_Panzer",
+        "M_Sentinel_Basalt",
+        "M_Sentinel_Strahl",
+        "M_Sentinel_Panzer_Hell"
+      ],
+      "files": {
+        "glb": "assets/glb/SM_Sentinel.glb",
+        "fbx": "assets/fbx/SM_Sentinel.fbx",
+        "blend": "assets/blender/SM_Sentinel.blend",
+        "render": "assets/renders/SM_Sentinel.png"
+      },
+      "bytes": {
+        "glb": 116444,
+        "fbx": 51436
+      },
+      "pack": 2,
+      "role": "beam",
+      "game_id": "sentinel"
+    },
+    {
+      "name": "SM_WeinbergMauer",
+      "kind": "prop",
+      "dimensions_m": [
+        4.6,
+        1.1,
+        2.14
+      ],
+      "verts": 1648,
+      "tris": 3108,
+      "materials": [
+        "M_Weinberg_Erde",
+        "M_Weinberg_Stein",
+        "M_Weinberg_Stein_Hell",
+        "M_Weinberg_Holz",
+        "M_Weinberg_Draht",
+        "M_Weinberg_Blatt",
+        "M_Weinberg_Blatt_Hell",
+        "M_Weinberg_Traube"
+      ],
+      "files": {
+        "glb": "assets/glb/SM_WeinbergMauer.glb",
+        "fbx": "assets/fbx/SM_WeinbergMauer.fbx",
+        "blend": "assets/blender/SM_WeinbergMauer.blend",
+        "render": "assets/renders/SM_WeinbergMauer.png"
+      },
+      "bytes": {
+        "glb": 237752,
+        "fbx": 82700
+      },
+      "pack": 2,
+      "role": "arena_prop",
+      "location_hint": "Weinberg am Neroberg"
+    }
+  ]
+}

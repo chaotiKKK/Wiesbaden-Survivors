@@ -1,0 +1,128 @@
+{
+  "movement": {
+    "each": [
+      {
+        "latency_ms": 4.9,
+        "latency_frames": 0,
+        "ramp_ms": 153.7,
+        "top_speed": 244.9
+      },
+      {
+        "latency_ms": 5.0,
+        "latency_frames": 0,
+        "ramp_ms": 172.2,
+        "top_speed": 244.9
+      },
+      {
+        "latency_ms": 8.6,
+        "latency_frames": 0,
+        "ramp_ms": 175.1,
+        "top_speed": 244.9
+      },
+      {
+        "latency_ms": 1.8,
+        "latency_frames": 0,
+        "ramp_ms": null,
+        "top_speed": 173.1
+      }
+    ],
+    "stop": [
+      {
+        "latency_ms": 171.1,
+        "frames": 10
+      },
+      {
+        "latency_ms": 169.8,
+        "frames": 10
+      },
+      {
+        "latency_ms": 178.1,
+        "frames": 9
+      },
+      {
+        "latency_ms": 153.3,
+        "frames": 9
+      }
+    ],
+    "diag_ratio": 1.0,
+    "dash": {
+      "kind": "roll",
+      "frames": 16,
+      "duration_ms": 279.3,
+      "distance": 122.6,
+      "invuln_max": 0.32
+    },
+    "player_speed_stat": 244.85760000000002
+  },
+  "aim_auto": {
+    "snap_err_deg_max": 0.0,
+    "snap_err_deg_mean": 0.0,
+    "reaq_ms": 24.5,
+    "reaq_frames": 1,
+    "samples": 61,
+    "mode": "auto"
+  },
+  "aim_manual": {
+    "jitter_deg": 0.0,
+    "samples": 27,
+    "slew_deg_per_frame": [
+      17.1,
+      13.1,
+      10.1,
+      7.7,
+      5.9,
+      4.5,
+      3.5,
+      2.7,
+      2.0,
+      1.6
+    ],
+    "slew_to_5deg_ms": 85.7
+  },
+  "player_hit": {
+    "hitflash_frames": 19,
+    "hitflash_max": 0.24,
+    "invuln_frames": 31,
+    "critvis_max": 0,
+    "hp_after": 128
+  },
+  "combat": {
+    "frames": 647,
+    "fps_p50": 44.8,
+    "frame_p50_ms": 22.3,
+    "frame_p95_ms": 41.4,
+    "frame_max_ms": 93.1,
+    "hitstop_events": 26,
+    "hitstop_max_s": 0.12,
+    "hitstop_duty": 0.261,
+    "timeScale_min": 0.3,
+    "trauma_max": 0.988,
+    "trauma_mean": 0.246,
+    "enemy_hitflash_frames": 1586,
+    "kills": 20,
+    "combo_max": 19,
+    "enemies_max": 62,
+    "dash_frames": 0,
+    "sfx": {
+      "crit": 288,
+      "wall": 51,
+      "hit": 37,
+      "e_shot": 34,
+      "step": 31,
+      "w_loeschwasser": 31,
+      "e_spawn": 22,
+      "tick": 22,
+      "shard": 20,
+      "kill": 20
+    },
+    "feedback_calls": {
+      "gross": 1,
+      "mittel": 16
+    },
+    "wave": 20,
+    "state": "play",
+    "boss_present": true
+  },
+  "console_errors": [],
+  "engine_errors": []
+}

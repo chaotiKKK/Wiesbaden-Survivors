@@ -1,0 +1,143 @@
+{
+  "mode": "before",
+  "seed": 1041360869,
+  "danger": 3,
+  "player": "leonidas",
+  "waves": {
+    "11": {
+      "expected": "horde",
+      "event": null,
+      "plan": {
+        "total": 276,
+        "elites": 24,
+        "bosses": 0
+      },
+      "control": {
+        "total": 276,
+        "elites": 23,
+        "bosses": 0
+      },
+      "live": {
+        "total": 50,
+        "elites": 4
+      },
+      "eventMaterial": 0,
+      "shop": {
+        "ok": true,
+        "state": "shop",
+        "offers": 6
+      },
+      "checks": {
+        "eventOk": false,
+        "hordeOk": false,
+        "elitePlanOk": true,
+        "liveOk": true,
+        "rewardOk": true
+      },
+      "pass": false
+    },
+    "12": {
+      "expected": "elite",
+      "event": null,
+      "plan": {
+        "total": 308,
+        "elites": 27,
+        "bosses": 0
+      },
+      "control": {
+        "total": 308,
+        "elites": 25,
+        "bosses": 0
+      },
+      "live": {
+        "total": 53,
+        "elites": 5
+      },
+      "eventMaterial": 0,
+      "shop": {
+        "ok": true,
+        "state": "shop",
+        "offers": 6
+      },
+      "checks": {
+        "eventOk": false,
+        "hordeOk": true,
+        "elitePlanOk": true,
+        "liveOk": true,
+        "rewardOk": true
+      },
+      "pass": false
+    },
+    "14": {
+      "expected": "horde",
+      "event": null,
+      "plan": {
+        "total": 364,
+        "elites": 27,
+        "bosses": 0
+      },
+      "control": {
+        "total": 364,
+        "elites": 36,
+        "bosses": 0
+      },
+      "live": {
+        "total": 50,
+        "elites": 6
+      },
+      "eventMaterial": 0,
+      "shop": {
+        "ok": true,
+        "state": "shop",
+        "offers": 6
+      },
+      "checks": {
+        "eventOk": false,
+        "hordeOk": false,
+        "elitePlanOk": true,
+        "liveOk": true,
+        "rewardOk": true
+      },
+      "pass": false
+    },
+    "15": {
+      "expected": "elite",
+      "event": null,
+      "plan": {
+        "total": 392,
+        "elites": 47,
+        "bosses": 1
+      },
+      "control": {
+        "total": 392,
+        "elites": 42,
+        "bosses": 1
+      },
+      "live": {
+        "total": 67,
+        "elites": 4
+      },
+      "eventMaterial": 0,
+      "shop": {
+        "ok": true,
+        "state": "shop",
+        "offers": 6
+      },
+      "checks": {
+        "eventOk": false,
+        "hordeOk": true,
+        "elitePlanOk": true,
+        "liveOk": true,
+        "rewardOk": true
+      },
+      "pass": false
+    }
+  },
+  "failures": [
+    "wave 11: {\"eventOk\":false,\"hordeOk\":false,\"elitePlanOk\":true,\"liveOk\":true,\"rewardOk\":true}",
+    "wave 12: {\"eventOk\":false,\"hordeOk\":true,\"elitePlanOk\":true,\"liveOk\":true,\"rewardOk\":true}",
+    "wave 14: {\"eventOk\":false,\"hordeOk\":false,\"elitePlanOk\":true,\"liveOk\":true,\"rewardOk\":true}",
+    "wave 15: {\"eventOk\":false,\"hordeOk\":true,\"elitePlanOk\":true,\"liveOk\":true,\"rewardOk\":true}"
+  ],
+  "pass": false
+}

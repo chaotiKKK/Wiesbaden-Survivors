@@ -1,0 +1,501 @@
+{
+  "seed": 1592639710,
+  "player": "leonidas",
+  "run": {
+    "arena": "kurpark",
+    "wave": 1,
+    "seed": 1592639710
+  },
+  "shop": {
+    "splitterklinge": {
+      "wave": 1,
+      "shopIndex": 0,
+      "slot": 3,
+      "price": 19,
+      "tier": 0,
+      "type": "projectile",
+      "classes": [
+        "blade",
+        "explosive"
+      ],
+      "rendered": true
+    },
+    "streitkolben": {
+      "wave": 2,
+      "shopIndex": 1,
+      "slot": 0,
+      "price": 24,
+      "tier": 0,
+      "type": "melee",
+      "classes": [
+        "heavy",
+        "medieval"
+      ],
+      "rendered": true
+    },
+    "belagerungsbombe": {
+      "wave": 2,
+      "shopIndex": 1,
+      "slot": 4,
+      "price": 24,
+      "tier": 0,
+      "type": "projectile",
+      "classes": [
+        "explosive",
+        "medieval"
+      ],
+      "rendered": true
+    },
+    "bollwerkbanner": {
+      "wave": 3,
+      "shopIndex": 2,
+      "slot": 0,
+      "price": 23,
+      "tier": 0,
+      "type": "melee",
+      "classes": [
+        "heavy",
+        "support"
+      ],
+      "rendered": true
+    },
+    "mammutkeule": {
+      "wave": 3,
+      "shopIndex": 2,
+      "slot": 3,
+      "price": 27,
+      "tier": 0,
+      "type": "melee",
+      "classes": [
+        "heavy",
+        "primitive"
+      ],
+      "rendered": true
+    },
+    "klingenbrecher": {
+      "wave": 8,
+      "shopIndex": 7,
+      "slot": 4,
+      "price": 120,
+      "tier": 2,
+      "type": "melee",
+      "classes": [
+        "blade",
+        "blunt"
+      ],
+      "rendered": true
+    },
+    "kaeltekompresse": {
+      "wave": 10,
+      "shopIndex": 9,
+      "slot": 5,
+      "price": 26,
+      "tier": 0,
+      "type": "projectile",
+      "classes": [
+        "elemental",
+        "medical"
+      ],
+      "rendered": true
+    },
+    "pistolenkolben": {
+      "wave": 11,
+      "shopIndex": 10,
+      "slot": 0,
+      "price": 54,
+      "tier": 1,
+      "type": "projectile",
+      "classes": [
+        "blunt",
+        "gun"
+      ],
+      "rendered": true
+    },
+    "runenstab": {
+      "wave": 19,
+      "shopIndex": 18,
+      "slot": 1,
+      "price": 37,
+      "tier": 0,
+      "type": "projectile",
+      "classes": [
+        "elemental",
+        "medieval"
+      ],
+      "rendered": true
+    },
+    "granatkolben": {
+      "wave": 5,
+      "shopIndex": 24,
+      "slot": 0,
+      "price": 25,
+      "tier": 0,
+      "type": "projectile",
+      "classes": [
+        "blunt",
+        "explosive"
+      ],
+      "rendered": true
+    },
+    "blitzspeer": {
+      "wave": 7,
+      "shopIndex": 26,
+      "slot": 2,
+      "price": 26,
+      "tier": 0,
+      "type": "projectile",
+      "classes": [
+        "elemental",
+        "primitive"
+      ],
+      "rendered": true
+    },
+    "ballistenarm": {
+      "wave": 7,
+      "shopIndex": 26,
+      "slot": 5,
+      "price": 34,
+      "tier": 0,
+      "type": "projectile",
+      "classes": [
+        "heavy",
+        "precise"
+      ],
+      "rendered": true
+    },
+    "knochenbogen": {
+      "wave": 11,
+      "shopIndex": 30,
+      "slot": 4,
+      "price": 66,
+      "tier": 1,
+      "type": "projectile",
+      "classes": [
+        "precise",
+        "primitive"
+      ],
+      "rendered": true
+    },
+    "sanitaetsramme": {
+      "wave": 1,
+      "shopIndex": 40,
+      "slot": 0,
+      "price": 23,
+      "tier": 0,
+      "type": "melee",
+      "classes": [
+        "heavy",
+        "medical"
+      ],
+      "rendered": true
+    },
+    "knochenflinte": {
+      "wave": 2,
+      "shopIndex": 41,
+      "slot": 1,
+      "price": 20,
+      "tier": 0,
+      "type": "projectile",
+      "classes": [
+        "gun",
+        "primitive"
+      ],
+      "rendered": true
+    }
+  },
+  "damage": {
+    "klingenbrecher": {
+      "type": "melee",
+      "classes": [
+        "blade",
+        "blunt"
+      ],
+      "wave": 1,
+      "ticks": 1,
+      "simSeconds": 0.02,
+      "byWeapon": 16.4,
+      "runDamage": 16.4,
+      "hpLoss": 16.4,
+      "tickDamage": 16.4,
+      "enemyHpAfter": 999999983.6
+    },
+    "splitterklinge": {
+      "type": "projectile",
+      "classes": [
+        "blade",
+        "explosive"
+      ],
+      "wave": 1,
+      "ticks": 5,
+      "simSeconds": 0.08,
+      "byWeapon": 22.229616549869583,
+      "runDamage": 22.229616549869583,
+      "hpLoss": 22.23,
+      "tickDamage": 22.229616549869583,
+      "enemyHpAfter": 999999977.77
+    },
+    "granatkolben": {
+      "type": "projectile",
+      "classes": [
+        "blunt",
+        "explosive"
+      ],
+      "wave": 1,
+      "ticks": 5,
+      "simSeconds": 0.08,
+      "byWeapon": 29.064561108500254,
+      "runDamage": 29.064561108500254,
+      "hpLoss": 29.06,
+      "tickDamage": 29.064561128616333,
+      "enemyHpAfter": 999999970.94
+    },
+    "pistolenkolben": {
+      "type": "projectile",
+      "classes": [
+        "blunt",
+        "gun"
+      ],
+      "wave": 1,
+      "ticks": 4,
+      "simSeconds": 0.07,
+      "byWeapon": 13,
+      "runDamage": 13,
+      "hpLoss": 13,
+      "tickDamage": 13,
+      "enemyHpAfter": 999999987
+    },
+    "kaeltekompresse": {
+      "type": "projectile",
+      "classes": [
+        "elemental",
+        "medical"
+      ],
+      "wave": 1,
+      "ticks": 4,
+      "simSeconds": 0.07,
+      "byWeapon": 10.65,
+      "runDamage": 10.65,
+      "hpLoss": 10.65,
+      "tickDamage": 10.65,
+      "enemyHpAfter": 999999989.35
+    },
+    "runenstab": {
+      "type": "projectile",
+      "classes": [
+        "elemental",
+        "medieval"
+      ],
+      "wave": 1,
+      "ticks": 4,
+      "simSeconds": 0.07,
+      "byWeapon": 16,
+      "runDamage": 16,
+      "hpLoss": 16,
+      "tickDamage": 16,
+      "enemyHpAfter": 999999984
+    },
+    "blitzspeer": {
+      "type": "projectile",
+      "classes": [
+        "elemental",
+        "primitive"
+      ],
+      "wave": 1,
+      "ticks": 4,
+      "simSeconds": 0.07,
+      "byWeapon": 14,
+      "runDamage": 14,
+      "hpLoss": 14,
+      "tickDamage": 14,
+      "enemyHpAfter": 999999986
+    },
+    "belagerungsbombe": {
+      "type": "projectile",
+      "classes": [
+        "explosive",
+        "medieval"
+      ],
+      "wave": 1,
+      "ticks": 5,
+      "simSeconds": 0.08,
+      "byWeapon": 29.49012218147231,
+      "runDamage": 29.49012218147231,
+      "hpLoss": 29.49,
+      "tickDamage": 29.490122199058533,
+      "enemyHpAfter": 999999970.51
+    },
+    "knochenflinte": {
+      "type": "projectile",
+      "classes": [
+        "gun",
+        "primitive"
+      ],
+      "wave": 1,
+      "ticks": 4,
+      "simSeconds": 0.07,
+      "byWeapon": 10,
+      "runDamage": 10,
+      "hpLoss": 10,
+      "tickDamage": 10,
+      "enemyHpAfter": 999999990
+    },
+    "sanitaetsramme": {
+      "type": "melee",
+      "classes": [
+        "heavy",
+        "medical"
+      ],
+      "wave": 1,
+      "ticks": 1,
+      "simSeconds": 0.02,
+      "byWeapon": 17.7,
+      "runDamage": 17.7,
+      "hpLoss": 17.7,
+      "tickDamage": 17.700000047683716,
+      "enemyHpAfter": 999999982.3
+    },
+    "streitkolben": {
+      "type": "melee",
+      "classes": [
+        "heavy",
+        "medieval"
+      ],
+      "wave": 1,
+      "ticks": 1,
+      "simSeconds": 0.02,
+      "byWeapon": 22.4,
+      "runDamage": 22.4,
+      "hpLoss": 22.4,
+      "tickDamage": 22.4,
+      "enemyHpAfter": 999999977.6
+    },
+    "ballistenarm": {
+      "type": "projectile",
+      "classes": [
+        "heavy",
+        "precise"
+      ],
+      "wave": 1,
+      "ticks": 4,
+      "simSeconds": 0.07,
+      "byWeapon": 26.55,
+      "runDamage": 26.55,
+      "hpLoss": 26.55,
+      "tickDamage": 26.55,
+      "enemyHpAfter": 999999973.45
+    },
+    "mammutkeule": {
+      "type": "melee",
+      "classes": [
+        "heavy",
+        "primitive"
+      ],
+      "wave": 1,
+      "ticks": 1,
+      "simSeconds": 0.02,
+      "byWeapon": 28.3,
+      "runDamage": 28.3,
+      "hpLoss": 28.3,
+      "tickDamage": 28.3,
+      "enemyHpAfter": 999999971.7
+    },
+    "bollwerkbanner": {
+      "type": "melee",
+      "classes": [
+        "heavy",
+        "support"
+      ],
+      "wave": 1,
+      "ticks": 1,
+      "simSeconds": 0.02,
+      "byWeapon": 15,
+      "runDamage": 15,
+      "hpLoss": 15,
+      "tickDamage": 15,
+      "enemyHpAfter": 999999985
+    },
+    "knochenbogen": {
+      "type": "projectile",
+      "classes": [
+        "precise",
+        "primitive"
+      ],
+      "wave": 1,
+      "ticks": 4,
+      "simSeconds": 0.07,
+      "byWeapon": 23.25,
+      "runDamage": 23.25,
+      "hpLoss": 23.25,
+      "tickDamage": 23.25,
+      "enemyHpAfter": 999999976.75
+    }
+  },
+  "classBonus": {
+    "character": "leonidas",
+    "bladeOnly": {
+      "weapons": [
+        "knife",
+        "knife"
+      ],
+      "counts": {
+        "blade": 2,
+        "blunt": 0
+      },
+      "stats": {
+        "melee": 6,
+        "crit": 11,
+        "armor": 2
+      },
+      "maxHp": 135
+    },
+    "bluntHeavy": {
+      "weapons": [
+        "schmiedehammer",
+        "schmiedehammer"
+      ],
+      "counts": {
+        "blade": 0,
+        "blunt": 2
+      },
+      "stats": {
+        "melee": 8,
+        "crit": 5,
+        "armor": 3
+      },
+      "maxHp": 135
+    },
+    "hybrid": {
+      "weapons": [
+        "klingenbrecher",
+        "klingenbrecher"
+      ],
+      "counts": {
+        "blade": 2,
+        "blunt": 2
+      },
+      "stats": {
+        "melee": 14,
+        "crit": 7,
+        "armor": 3
+      },
+      "maxHp": 135
+    },
+    "diffs": {
+      "hybridMinusBladeMelee": 8,
+      "hybridMinusBladeArmor": 1,
+      "hybridMinusHeavyMelee": 6,
+      "hybridMinusHeavyCrit": 2
+    },
+    "checks": {
+      "hybridHasBothTags": true,
+      "hybridGainsBluntMeleeOverBlade": true,
+      "hybridGainsBluntArmorOverBlade": true,
+      "hybridGainsBladeMeleeOverHeavy": true,
+      "hybridGainsBladeCritOverHeavy": true
+    }
+  },
+  "failures": [],
+  "shopShopsScanned": 42,
+  "shopUiChecked": 12,
+  "pass": true
+}

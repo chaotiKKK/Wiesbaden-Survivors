@@ -1,0 +1,265 @@
+{
+  "mode": "after",
+  "seed": 1041360869,
+  "danger": 3,
+  "player": "leonidas",
+  "waves": {
+    "11": {
+      "expected": "horde",
+      "event": {
+        "kind": "horde",
+        "name": "HORDENWELLE",
+        "mult": 1.8,
+        "mat": 45
+      },
+      "plan": {
+        "total": 77,
+        "elites": 1,
+        "bosses": 0
+      },
+      "control": {
+        "total": 43,
+        "elites": 1,
+        "bosses": 0
+      },
+      "live": {
+        "total": 36,
+        "elites": 1,
+        "event": "horde"
+      },
+      "threat": {
+        "plan": {
+          "hp": 31035,
+          "dmg": 763,
+          "count": 77
+        },
+        "control": {
+          "hp": 17488,
+          "dmg": 439,
+          "count": 43
+        }
+      },
+      "eventMaterial": 59,
+      "shop": {
+        "ok": true,
+        "state": "shop",
+        "offers": 6
+      },
+      "checks": {
+        "eventOk": true,
+        "hordeOk": true,
+        "elitePlanOk": true,
+        "liveOk": true,
+        "liveEventOk": true,
+        "bossOk": true,
+        "rewardOk": true,
+        "balanceOk": true
+      },
+      "pass": true
+    },
+    "12": {
+      "expected": "elite",
+      "event": {
+        "kind": "elite",
+        "name": "ELITEWELLE",
+        "mult": 0.75,
+        "mat": 60
+      },
+      "plan": {
+        "total": 35,
+        "elites": 7,
+        "bosses": 0
+      },
+      "control": {
+        "total": 46,
+        "elites": 1,
+        "bosses": 0
+      },
+      "live": {
+        "total": 21,
+        "elites": 7,
+        "event": "elite"
+      },
+      "threat": {
+        "plan": {
+          "hp": 21965,
+          "dmg": 429,
+          "count": 35
+        },
+        "control": {
+          "hp": 23159,
+          "dmg": 531,
+          "count": 46
+        }
+      },
+      "eventMaterial": 79,
+      "shop": {
+        "ok": true,
+        "state": "shop",
+        "offers": 6
+      },
+      "checks": {
+        "eventOk": true,
+        "hordeOk": true,
+        "elitePlanOk": true,
+        "liveOk": true,
+        "liveEventOk": true,
+        "bossOk": true,
+        "rewardOk": true,
+        "balanceOk": true
+      },
+      "pass": true
+    },
+    "14": {
+      "expected": "horde",
+      "event": {
+        "kind": "horde",
+        "name": "HORDENWELLE",
+        "mult": 2,
+        "mat": 55
+      },
+      "plan": {
+        "total": 100,
+        "elites": 3,
+        "bosses": 0
+      },
+      "control": {
+        "total": 50,
+        "elites": 3,
+        "bosses": 0
+      },
+      "live": {
+        "total": 49,
+        "elites": 3,
+        "event": "horde"
+      },
+      "threat": {
+        "plan": {
+          "hp": 56566,
+          "dmg": 1460,
+          "count": 100
+        },
+        "control": {
+          "hp": 28838,
+          "dmg": 753,
+          "count": 50
+        }
+      },
+      "eventMaterial": 73,
+      "shop": {
+        "ok": true,
+        "state": "shop",
+        "offers": 6
+      },
+      "checks": {
+        "eventOk": true,
+        "hordeOk": true,
+        "elitePlanOk": true,
+        "liveOk": true,
+        "liveEventOk": true,
+        "bossOk": true,
+        "rewardOk": true,
+        "balanceOk": true
+      },
+      "pass": true
+    },
+    "15": {
+      "expected": "elite",
+      "event": {
+        "kind": "elite",
+        "name": "ELITEWELLE",
+        "mult": 0.75,
+        "mat": 80
+      },
+      "plan": {
+        "total": 40,
+        "elites": 8,
+        "bosses": 0
+      },
+      "control": {
+        "total": 53,
+        "elites": 4,
+        "bosses": 0
+      },
+      "live": {
+        "total": 16,
+        "elites": 8,
+        "event": "elite"
+      },
+      "threat": {
+        "plan": {
+          "hp": 22763,
+          "dmg": 411,
+          "count": 40
+        },
+        "control": {
+          "hp": 26619,
+          "dmg": 512,
+          "count": 53
+        }
+      },
+      "eventMaterial": 106,
+      "shop": {
+        "ok": true,
+        "state": "shop",
+        "offers": 6
+      },
+      "checks": {
+        "eventOk": true,
+        "hordeOk": true,
+        "elitePlanOk": true,
+        "liveOk": true,
+        "liveEventOk": true,
+        "bossOk": true,
+        "rewardOk": true,
+        "balanceOk": true
+      },
+      "pass": true
+    }
+  },
+  "failures": [],
+  "dangerGate": {
+    "0": {
+      "waves": {
+        "11": null,
+        "12": null,
+        "14": null,
+        "15": null
+      },
+      "wave13": null
+    },
+    "1": {
+      "waves": {
+        "11": null,
+        "12": null,
+        "14": null,
+        "15": null
+      },
+      "wave13": null
+    },
+    "2": {
+      "waves": {
+        "11": null,
+        "12": null,
+        "14": null,
+        "15": null
+      },
+      "wave13": null
+    },
+    "3": {
+      "waves": {
+        "11": "horde",
+        "12": "elite",
+        "14": "horde",
+        "15": "elite"
+      },
+      "wave13": null
+    }
+  },
+  "gate": {
+    "noEventsBelowDanger3": true,
+    "eventsAtDanger3": true,
+    "nonEventWave13": true
+  },
+  "pass": true
+}

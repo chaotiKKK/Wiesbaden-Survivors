@@ -1,0 +1,714 @@
+{
+  "date": "2026-11-09",
+  "boss": {
+    "boss": "KURHAUS-KOLOSS",
+    "id": "kurhaus",
+    "r": 46,
+    "color": "#f4c25a",
+    "maxHp": 3400
+  },
+  "method": {
+    "step": "Game.update(1/60), 12 steps, boss isolated, wave timer frozen",
+    "sampling": "frame boundaries after each update; t = step * 1000 / 60",
+    "metrics": "frame-grid stats match tools/_squash-ab.py; continuous stats include t=0 and interpolate the half crossing",
+    "pixels": "verified offscreen boss render from tools/_squash-stills.py at each time step; same boss pose, hitFlash 0",
+    "caveat": "60 Hz simulation, not a GPU frame-time capture; rAF presentation is not part of this measurement"
+  },
+  "peak": 0.55,
+  "duration_ms": 171.88,
+  "dt_ms": 16.6667,
+  "runs_per_mode": 3,
+  "new_60": {
+    "linear": {
+      "ease": 0,
+      "runs": [
+        {
+          "first_sample": 0.496667,
+          "frames_visible": 10,
+          "duration_ms": 166.7,
+          "half_ms": 100,
+          "area_260ms": 38.64,
+          "at_50ms": 0.39,
+          "at_100ms": 0.23,
+          "at_150ms": 0.07,
+          "peak": 0.55,
+          "dur_target_ms": 171.9
+        },
+        {
+          "first_sample": 0.496667,
+          "frames_visible": 10,
+          "duration_ms": 166.7,
+          "half_ms": 100,
+          "area_260ms": 38.64,
+          "at_50ms": 0.39,
+          "at_100ms": 0.23,
+          "at_150ms": 0.07,
+          "peak": 0.55,
+          "dur_target_ms": 171.9
+        },
+        {
+          "first_sample": 0.496667,
+          "frames_visible": 10,
+          "duration_ms": 166.7,
+          "half_ms": 100,
+          "area_260ms": 38.64,
+          "at_50ms": 0.39,
+          "at_100ms": 0.23,
+          "at_150ms": 0.07,
+          "peak": 0.55,
+          "dur_target_ms": 171.9
+        }
+      ],
+      "samples": [
+        {
+          "step": 0,
+          "t": 0,
+          "squash": 0.55,
+          "squashT": 0.171875,
+          "p": 1
+        },
+        {
+          "step": 1,
+          "t": 16.666666666666668,
+          "squash": 0.49666666666666676,
+          "squashT": 0.15520833333333334,
+          "p": 0.9030303030303031
+        },
+        {
+          "step": 2,
+          "t": 33.333333333333336,
+          "squash": 0.44333333333333336,
+          "squashT": 0.13854166666666667,
+          "p": 0.806060606060606
+        },
+        {
+          "step": 3,
+          "t": 50,
+          "squash": 0.39,
+          "squashT": 0.12187500000000001,
+          "p": 0.7090909090909091
+        },
+        {
+          "step": 4,
+          "t": 66.66666666666667,
+          "squash": 0.3366666666666667,
+          "squashT": 0.10520833333333335,
+          "p": 0.6121212121212122
+        },
+        {
+          "step": 5,
+          "t": 83.33333333333333,
+          "squash": 0.28333333333333344,
+          "squashT": 0.08854166666666669,
+          "p": 0.5151515151515152
+        },
+        {
+          "step": 6,
+          "t": 100,
+          "squash": 0.2300000000000001,
+          "squashT": 0.07187500000000002,
+          "p": 0.4181818181818183
+        },
+        {
+          "step": 7,
+          "t": 116.66666666666667,
+          "squash": 0.17666666666666675,
+          "squashT": 0.05520833333333336,
+          "p": 0.32121212121212134
+        },
+        {
+          "step": 8,
+          "t": 133.33333333333334,
+          "squash": 0.12333333333333343,
+          "squashT": 0.038541666666666696,
+          "p": 0.2242424242424244
+        },
+        {
+          "step": 9,
+          "t": 150,
+          "squash": 0.0700000000000001,
+          "squashT": 0.02187500000000003,
+          "p": 0.12727272727272745
+        },
+        {
+          "step": 10,
+          "t": 166.66666666666666,
+          "squash": 0.016666666666666764,
+          "squashT": 0.005208333333333363,
+          "p": 0.030303030303030477
+        },
+        {
+          "step": 11,
+          "t": 183.33333333333334,
+          "squash": 0,
+          "squashT": 0,
+          "p": 0
+        },
+        {
+          "step": 12,
+          "t": 200,
+          "squash": 0,
+          "squashT": 0,
+          "p": 0
+        }
+      ],
+      "repeatable": true,
+      "repeat_signature_count": 1,
+      "median": {
+        "first_sample": 0.496667,
+        "frames_visible": 10,
+        "duration_ms": 166.7,
+        "half_ms": 100,
+        "area_260ms": 38.64,
+        "at_50ms": 0.39,
+        "at_100ms": 0.23,
+        "at_150ms": 0.07,
+        "peak": 0.55
+      }
+    },
+    "eased": {
+      "ease": 1,
+      "runs": [
+        {
+          "first_sample": 0.448505,
+          "frames_visible": 10,
+          "duration_ms": 166.7,
+          "half_ms": 66.7,
+          "area_260ms": 23.34,
+          "at_50ms": 0.276545,
+          "at_100ms": 0.096182,
+          "at_150ms": 0.008909,
+          "peak": 0.55,
+          "dur_target_ms": 171.9
+        },
+        {
+          "first_sample": 0.448505,
+          "frames_visible": 10,
+          "duration_ms": 166.7,
+          "half_ms": 66.7,
+          "area_260ms": 23.34,
+          "at_50ms": 0.276545,
+          "at_100ms": 0.096182,
+          "at_150ms": 0.008909,
+          "peak": 0.55,
+          "dur_target_ms": 171.9
+        },
+        {
+          "first_sample": 0.448505,
+          "frames_visible": 10,
+          "duration_ms": 166.7,
+          "half_ms": 66.7,
+          "area_260ms": 23.34,
+          "at_50ms": 0.276545,
+          "at_100ms": 0.096182,
+          "at_150ms": 0.008909,
+          "peak": 0.55,
+          "dur_target_ms": 171.9
+        }
+      ],
+      "samples": [
+        {
+          "step": 0,
+          "t": 0,
+          "squash": 0.55,
+          "squashT": 0.171875,
+          "p": 1
+        },
+        {
+          "step": 1,
+          "t": 16.666666666666668,
+          "squash": 0.4485050505050506,
+          "squashT": 0.15520833333333334,
+          "p": 0.9030303030303031
+        },
+        {
+          "step": 2,
+          "t": 33.333333333333336,
+          "squash": 0.3573535353535353,
+          "squashT": 0.13854166666666667,
+          "p": 0.806060606060606
+        },
+        {
+          "step": 3,
+          "t": 50,
+          "squash": 0.2765454545454546,
+          "squashT": 0.12187500000000001,
+          "p": 0.7090909090909091
+        },
+        {
+          "step": 4,
+          "t": 66.66666666666667,
+          "squash": 0.20608080808080814,
+          "squashT": 0.10520833333333335,
+          "p": 0.6121212121212122
+        },
+        {
+          "step": 5,
+          "t": 83.33333333333333,
+          "squash": 0.14595959595959604,
+          "squashT": 0.08854166666666669,
+          "p": 0.5151515151515152
+        },
+        {
+          "step": 6,
+          "t": 100,
+          "squash": 0.09618181818181824,
+          "squashT": 0.07187500000000002,
+          "p": 0.4181818181818183
+        },
+        {
+          "step": 7,
+          "t": 116.66666666666667,
+          "squash": 0.056747474747474796,
+          "squashT": 0.05520833333333336,
+          "p": 0.32121212121212134
+        },
+        {
+          "step": 8,
+          "t": 133.33333333333334,
+          "squash": 0.027656565656565702,
+          "squashT": 0.038541666666666696,
+          "p": 0.2242424242424244
+        },
+        {
+          "step": 9,
+          "t": 150,
+          "squash": 0.008909090909090936,
+          "squashT": 0.02187500000000003,
+          "p": 0.12727272727272745
+        },
+        {
+          "step": 10,
+          "t": 166.66666666666666,
+          "squash": 0.0005050505050505109,
+          "squashT": 0.005208333333333363,
+          "p": 0.030303030303030477
+        },
+        {
+          "step": 11,
+          "t": 183.33333333333334,
+          "squash": 0,
+          "squashT": 0,
+          "p": 0
+        },
+        {
+          "step": 12,
+          "t": 200,
+          "squash": 0,
+          "squashT": 0,
+          "p": 0
+        }
+      ],
+      "repeatable": true,
+      "repeat_signature_count": 1,
+      "median": {
+        "first_sample": 0.448505,
+        "frames_visible": 10,
+        "duration_ms": 166.7,
+        "half_ms": 66.7,
+        "area_260ms": 23.34,
+        "at_50ms": 0.276545,
+        "at_100ms": 0.096182,
+        "at_150ms": 0.008909,
+        "peak": 0.55
+      }
+    }
+  },
+  "new_60_continuous": {
+    "linear": {
+      "half_ms": 85.9,
+      "area_260ms": 47.36
+    },
+    "eased": {
+      "half_ms": 50.4,
+      "area_260ms": 31.66
+    }
+  },
+  "new_frame_gaps": {
+    "half_ms": 33.3,
+    "area_260ms": 15.3,
+    "first_sample": 0.048162
+  },
+  "new_continuous_gaps": {
+    "half_ms": 35.5,
+    "area_260ms": 15.7
+  },
+  "old_rAF_49_59": {
+    "linear": {
+      "runs": [
+        {
+          "fps": 57,
+          "first_sample": 0.4981,
+          "frames_visible": 9,
+          "duration_ms": 153.9,
+          "half_ms": 105,
+          "area_260ms": 42.4
+        },
+        {
+          "fps": 56,
+          "first_sample": 0.4966,
+          "frames_visible": 8,
+          "duration_ms": 149.7,
+          "half_ms": 92.1,
+          "area_260ms": 39.1
+        },
+        {
+          "fps": 59,
+          "first_sample": 0.4969,
+          "frames_visible": 11,
+          "duration_ms": 229,
+          "half_ms": 69.6,
+          "area_260ms": 35.1
+        }
+      ],
+      "median": {
+        "fps": 57,
+        "first_sample": 0.4969,
+        "frames_visible": 9,
+        "duration_ms": 153.9,
+        "half_ms": 92.1,
+        "area_260ms": 39.1
+      }
+    },
+    "eased": {
+      "runs": [
+        {
+          "fps": 58,
+          "first_sample": 0.4489,
+          "frames_visible": 9,
+          "duration_ms": 139.6,
+          "half_ms": 57.3,
+          "area_260ms": 22.9
+        },
+        {
+          "fps": 54,
+          "first_sample": 0.4489,
+          "frames_visible": 8,
+          "duration_ms": 129.1,
+          "half_ms": 44.6,
+          "area_260ms": 20.1
+        },
+        {
+          "fps": 49,
+          "first_sample": 0.3676,
+          "frames_visible": 6,
+          "duration_ms": 126.8,
+          "half_ms": 29.7,
+          "area_260ms": 16.9
+        }
+      ],
+      "median": {
+        "fps": 54,
+        "first_sample": 0.4489,
+        "frames_visible": 8,
+        "duration_ms": 129.1,
+        "half_ms": 44.6,
+        "area_260ms": 20.1
+      }
+    },
+    "half_gap_ms": 47.5,
+    "area_gap": 19.0,
+    "first_gap": 0.048
+  },
+  "old_rAF_gaps": {
+    "half_ms": 47.5,
+    "area_260ms": 19.0,
+    "first_sample": 0.048
+  },
+  "old_live_43_58": {
+    "linear": {
+      "runs": [
+        {
+          "half_ms": 74.1,
+          "area_260ms": 42.43,
+          "last_positive_ms": 150.2,
+          "first_zero_ms": 170.3,
+          "frames": 17
+        },
+        {
+          "half_ms": 78.0,
+          "area_260ms": 43.83,
+          "last_positive_ms": 158.7,
+          "first_zero_ms": 175.6,
+          "frames": 23
+        },
+        {
+          "half_ms": 84.3,
+          "area_260ms": 46.53,
+          "last_positive_ms": 164.7,
+          "first_zero_ms": 181.5,
+          "frames": 23
+        },
+        {
+          "half_ms": 87.6,
+          "area_260ms": 45.85,
+          "last_positive_ms": 160.9,
+          "first_zero_ms": 177.4,
+          "frames": 22
+        },
+        {
+          "half_ms": 90.5,
+          "area_260ms": 48.09,
+          "last_positive_ms": 164.4,
+          "first_zero_ms": 181.3,
+          "frames": 22
+        }
+      ],
+      "median": {
+        "half_ms": 84.3,
+        "area_260ms": 45.85,
+        "last_positive_ms": 160.9,
+        "first_zero_ms": 177.4,
+        "frames": 22
+      }
+    },
+    "eased": {
+      "runs": [
+        {
+          "half_ms": 37.7,
+          "area_260ms": 26.45,
+          "last_positive_ms": 154.9,
+          "first_zero_ms": 169.8,
+          "frames": 22
+        },
+        {
+          "half_ms": 47.9,
+          "area_260ms": 31.34,
+          "last_positive_ms": 165.1,
+          "first_zero_ms": 179.6,
+          "frames": 22
+        },
+        {
+          "half_ms": 49.5,
+          "area_260ms": 31.35,
+          "last_positive_ms": 165.7,
+          "first_zero_ms": 182.4,
+          "frames": 22
+        },
+        {
+          "half_ms": 45.2,
+          "area_260ms": 29.01,
+          "last_positive_ms": 161.5,
+          "first_zero_ms": 177.6,
+          "frames": 23
+        },
+        {
+          "half_ms": 42.6,
+          "area_260ms": 28.69,
+          "last_positive_ms": 159.5,
+          "first_zero_ms": 177.3,
+          "frames": 23
+        }
+      ],
+      "median": {
+        "half_ms": 45.2,
+        "area_260ms": 29.01,
+        "last_positive_ms": 161.5,
+        "first_zero_ms": 177.6,
+        "frames": 22
+      }
+    },
+    "half_gap_ms": 39.1,
+    "area_gap": 16.84
+  },
+  "old_live_gaps": {
+    "half_ms": 39.1,
+    "area_260ms": 16.84
+  },
+  "pixel_diff_same_time": [
+    {
+      "step": 0,
+      "t_ms": 0.0,
+      "linear_squash": 0.55,
+      "eased_squash": 0.55,
+      "pixels": 0,
+      "max_delta": 0,
+      "bbox": null
+    },
+    {
+      "step": 1,
+      "t_ms": 16.7,
+      "linear_squash": 0.496667,
+      "eased_squash": 0.448505,
+      "pixels": 5725,
+      "max_delta": 255,
+      "bbox": [
+        124,
+        40,
+        346,
+        256
+      ]
+    },
+    {
+      "step": 2,
+      "t_ms": 33.3,
+      "linear_squash": 0.443333,
+      "eased_squash": 0.357354,
+      "pixels": 7817,
+      "max_delta": 255,
+      "bbox": [
+        126,
+        33,
+        344,
+        259
+      ]
+    },
+    {
+      "step": 3,
+      "t_ms": 50.0,
+      "linear_squash": 0.39,
+      "eased_squash": 0.276545,
+      "pixels": 9939,
+      "max_delta": 255,
+      "bbox": [
+        129,
+        27,
+        341,
+        262
+      ]
+    },
+    {
+      "step": 4,
+      "t_ms": 66.7,
+      "linear_squash": 0.336667,
+      "eased_squash": 0.206081,
+      "pixels": 10856,
+      "max_delta": 255,
+      "bbox": [
+        131,
+        22,
+        339,
+        265
+      ]
+    },
+    {
+      "step": 5,
+      "t_ms": 83.3,
+      "linear_squash": 0.283333,
+      "eased_squash": 0.14596,
+      "pixels": 10817,
+      "max_delta": 255,
+      "bbox": [
+        134,
+        17,
+        336,
+        267
+      ]
+    },
+    {
+      "step": 6,
+      "t_ms": 100.0,
+      "linear_squash": 0.23,
+      "eased_squash": 0.096182,
+      "pixels": 10582,
+      "max_delta": 255,
+      "bbox": [
+        137,
+        14,
+        333,
+        269
+      ]
+    },
+    {
+      "step": 7,
+      "t_ms": 116.7,
+      "linear_squash": 0.176667,
+      "eased_squash": 0.056747,
+      "pixels": 9830,
+      "max_delta": 255,
+      "bbox": [
+        139,
+        11,
+        331,
+        270
+      ]
+    },
+    {
+      "step": 8,
+      "t_ms": 133.3,
+      "linear_squash": 0.123333,
+      "eased_squash": 0.027657,
+      "pixels": 8473,
+      "max_delta": 255,
+      "bbox": [
+        142,
+        9,
+        328,
+        271
+      ]
+    },
+    {
+      "step": 9,
+      "t_ms": 150.0,
+      "linear_squash": 0.07,
+      "eased_squash": 0.008909,
+      "pixels": 6339,
+      "max_delta": 255,
+      "bbox": [
+        144,
+        7,
+        326,
+        272
+      ]
+    },
+    {
+      "step": 10,
+      "t_ms": 166.7,
+      "linear_squash": 0.016667,
+      "eased_squash": 0.000505,
+      "pixels": 3748,
+      "max_delta": 255,
+      "bbox": [
+        147,
+        7,
+        323,
+        272
+      ]
+    },
+    {
+      "step": 11,
+      "t_ms": 183.3,
+      "linear_squash": 0,
+      "eased_squash": 0,
+      "pixels": 0,
+      "max_delta": 0,
+      "bbox": null
+    },
+    {
+      "step": 12,
+      "t_ms": 200.0,
+      "linear_squash": 0,
+      "eased_squash": 0,
+      "pixels": 0,
+      "max_delta": 0,
+      "bbox": null
+    }
+  ],
+  "pixel_max": {
+    "step": 4,
+    "t_ms": 66.7,
+    "linear_squash": 0.336667,
+    "eased_squash": 0.206081,
+    "pixels": 10856,
+    "max_delta": 255,
+    "bbox": [
+      131,
+      22,
+      339,
+      265
+    ]
+  },
+  "pixel_canvas_px": 141000,
+  "pixel_max_fraction": 0.077,
+  "console_errors": [],
+  "verdict": {
+    "half_gap_vs_live_43_58": false,
+    "area_gap_vs_live_43_58": false,
+    "half_gap_vs_old_rAF": false,
+    "area_gap_vs_old_rAF": false,
+    "more_visible_than_old_sampling": false,
+    "difference_still_readable": true,
+    "visible_frames_same": true,
+    "last_positive_same": true
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "off": {
+    "center": {
+      "plate_y": 511.7,
+      "plate_alpha": 1,
+      "player_top": 589.2,
+      "player_r": 14,
+      "plate_bottom": 525.7,
+      "clearance": 63.4,
+      "dx": -5.8
+    },
+    "top": {
+      "plate_y": 517.8,
+      "plate_alpha": 1,
+      "player_top": 529.2,
+      "player_r": 14,
+      "plate_bottom": 531.8,
+      "clearance": -2.6,
+      "dx": -8.9
+    },
+    "plate-line": {
+      "plate_y": 510.4,
+      "plate_alpha": 1,
+      "player_top": 501.2,
+      "player_r": 14,
+      "plate_bottom": 524.4,
+      "clearance": -23.2,
+      "dx": 3.2
+    }
+  },
+  "on": {
+    "center": {
+      "plate_y": 559.9,
+      "plate_alpha": 1,
+      "player_top": 589.2,
+      "player_r": 14,
+      "plate_bottom": 573.9,
+      "clearance": 15.3,
+      "dx": -6.1
+    },
+    "top": {
+      "plate_y": 510.2,
+      "plate_alpha": 0.26,
+      "player_top": 529.2,
+      "player_r": 14,
+      "plate_bottom": 524.2,
+      "clearance": 5,
+      "dx": 4.9
+    },
+    "plate-line": {
+      "plate_y": 522.8,
+      "plate_alpha": 0.26,
+      "player_top": 501.2,
+      "player_r": 14,
+      "plate_bottom": 536.8,
+      "clearance": -35.7,
+      "dx": -6.3
+    }
+  },
+  "console_errors": []
+}

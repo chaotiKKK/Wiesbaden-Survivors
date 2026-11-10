@@ -1,0 +1,72 @@
+{
+  "generated": "2026-11-09T11:45:32.447Z",
+  "source": "content/fuenf-viertel.json",
+  "base": "data.js",
+  "schema": "wbn-fuenf-viertel/1",
+  "status": "live",
+  "draftOnly": false,
+  "engineWired": true,
+  "counts": {
+    "districts": 5,
+    "waves": 100,
+    "wavesPerDistrict": 20,
+    "enemies": 83,
+    "baseEnemies": 51,
+    "draftEnemies": 32,
+    "spawnable": 82,
+    "splitOnly": 1,
+    "bosses": 10,
+    "usedBosses": 10,
+    "modifiers": 10,
+    "aiFamilies": 24,
+    "baseAI": 19,
+    "draftAI": 5,
+    "guestBosses": 3
+  },
+  "checks": {
+    "schema": true,
+    "liveStatus": true,
+    "engineWired": true,
+    "fiveDistricts": true,
+    "twentyWavesEach": true,
+    "hundredWaves": true,
+    "contiguousWaves": true,
+    "eightyThreeEnemies": true,
+    "thirtyTwoDraftEnemies": true,
+    "allEnemiesUsed": true,
+    "tenBosses": true,
+    "twoBossesPerDistrict": true,
+    "bossWaves": true,
+    "waveShape": true,
+    "tenModifiers": true,
+    "twoModifiersPerDistrict": true,
+    "twentyFourAI": true,
+    "fiveDraftAI": true,
+    "noPending": true
+  },
+  "guestBosses": [
+    {
+      "boss": "thermalquelle",
+      "homeArena": "warmerdamm",
+      "district": "kurpark"
+    },
+    {
+      "boss": "sirenkollektiv",
+      "homeArena": "schlachthof",
+      "district": "rheinufer"
+    },
+    {
+      "boss": "kochbrunnen",
+      "homeArena": "labor",
+      "district": "rheingau"
+    }
+  ],
+  "unusedArenas": [
+    "labor",
+    "warmerdamm",
+    "schlachthof"
+  ],
+  "pending": [],
+  "failures": [],
+  "pass": true
+}

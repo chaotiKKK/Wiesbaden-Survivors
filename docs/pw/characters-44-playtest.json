@@ -1,0 +1,1034 @@
+{
+  "seed": 18967,
+  "heroes": [
+    {
+      "id": "speersophie",
+      "name": "Speer-Sophie",
+      "selectable": true,
+      "started": true,
+      "weapon": "spear",
+      "abilityExpected": "speerwurf",
+      "abilityActual": "speerwurf",
+      "before": {
+        "playerHp": 63,
+        "enemyHp": [
+          500,
+          500,
+          500,
+          500,
+          500
+        ],
+        "hits": 0,
+        "dead": 0,
+        "stunned": 0,
+        "slowed": 0,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [],
+        "abilityCd": 0,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "after": {
+        "playerHp": 63,
+        "enemyHp": [
+          445,
+          445,
+          445,
+          445,
+          445
+        ],
+        "hits": 5,
+        "dead": 0,
+        "stunned": 5,
+        "slowed": 0,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [
+          "range"
+        ],
+        "abilityCd": 8,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "delta": {
+        "hits": 5,
+        "playerHp": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0
+      },
+      "expectedEffects": [
+        "stunned"
+      ],
+      "checks": {
+        "effectOk": true,
+        "buffsOk": true,
+        "pickupOk": true,
+        "healOk": true,
+        "dashOk": true
+      },
+      "ok": true
+    },
+    {
+      "id": "axtachim",
+      "name": "Axt-Achim",
+      "selectable": true,
+      "started": true,
+      "weapon": "chopper",
+      "abilityExpected": "holzhack",
+      "abilityActual": "holzhack",
+      "before": {
+        "playerHp": 63,
+        "enemyHp": [
+          500,
+          500,
+          500,
+          500,
+          500
+        ],
+        "hits": 0,
+        "dead": 0,
+        "stunned": 0,
+        "slowed": 0,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [],
+        "abilityCd": 0,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "after": {
+        "playerHp": 63,
+        "enemyHp": [
+          448,
+          448,
+          448,
+          448,
+          448
+        ],
+        "hits": 5,
+        "dead": 0,
+        "stunned": 5,
+        "slowed": 0,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [
+          "melee"
+        ],
+        "abilityCd": 10,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "delta": {
+        "hits": 5,
+        "playerHp": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0
+      },
+      "expectedEffects": [
+        "stunned"
+      ],
+      "checks": {
+        "effectOk": true,
+        "buffsOk": true,
+        "pickupOk": true,
+        "healOk": true,
+        "dashOk": true
+      },
+      "ok": true
+    },
+    {
+      "id": "nagelnadja",
+      "name": "Nagel-Nadja",
+      "selectable": true,
+      "started": true,
+      "weapon": "nagler",
+      "abilityExpected": "nagelregen",
+      "abilityActual": "nagelregen",
+      "before": {
+        "playerHp": 62,
+        "enemyHp": [
+          500,
+          500,
+          500,
+          500,
+          500
+        ],
+        "hits": 0,
+        "dead": 0,
+        "stunned": 0,
+        "slowed": 0,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [],
+        "abilityCd": 0,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "after": {
+        "playerHp": 62,
+        "enemyHp": [
+          457,
+          457,
+          457,
+          457,
+          457
+        ],
+        "hits": 5,
+        "dead": 0,
+        "stunned": 5,
+        "slowed": 5,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 5,
+        "buffs": [
+          "atkSpd"
+        ],
+        "abilityCd": 8.5,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "delta": {
+        "hits": 5,
+        "playerHp": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0
+      },
+      "expectedEffects": [
+        "stunned",
+        "slowed",
+        "marked"
+      ],
+      "checks": {
+        "effectOk": true,
+        "buffsOk": true,
+        "pickupOk": true,
+        "healOk": true,
+        "dashOk": true
+      },
+      "ok": true
+    },
+    {
+      "id": "bierbernd",
+      "name": "Bier-Bernd",
+      "selectable": true,
+      "started": true,
+      "weapon": "bierwerfer",
+      "abilityExpected": "fassrolle",
+      "abilityActual": "fassrolle",
+      "before": {
+        "playerHp": 66,
+        "enemyHp": [
+          500,
+          500,
+          500,
+          500,
+          500
+        ],
+        "hits": 0,
+        "dead": 0,
+        "stunned": 0,
+        "slowed": 0,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [],
+        "abilityCd": 0,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "after": {
+        "playerHp": 66,
+        "enemyHp": [
+          451.5,
+          451.5,
+          451.5,
+          451.5,
+          451.5
+        ],
+        "hits": 5,
+        "dead": 0,
+        "stunned": 0,
+        "slowed": 0,
+        "burnt": 5,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [
+          "armor"
+        ],
+        "abilityCd": 11,
+        "dash": 0.24,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "delta": {
+        "hits": 5,
+        "playerHp": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0
+      },
+      "expectedEffects": [
+        "burnt"
+      ],
+      "checks": {
+        "effectOk": true,
+        "buffsOk": true,
+        "pickupOk": true,
+        "healOk": true,
+        "dashOk": true
+      },
+      "ok": true
+    },
+    {
+      "id": "minenmarie",
+      "name": "Minen-Marie",
+      "selectable": true,
+      "started": true,
+      "weapon": "magnetmine",
+      "abilityExpected": "magnetfeld",
+      "abilityActual": "magnetfeld",
+      "before": {
+        "playerHp": 61,
+        "enemyHp": [
+          500,
+          500,
+          500,
+          500,
+          500
+        ],
+        "hits": 0,
+        "dead": 0,
+        "stunned": 0,
+        "slowed": 0,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [],
+        "abilityCd": 0,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "after": {
+        "playerHp": 61,
+        "enemyHp": [
+          461.2,
+          461.2,
+          461.2,
+          461.2,
+          461.2
+        ],
+        "hits": 5,
+        "dead": 0,
+        "stunned": 5,
+        "slowed": 5,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [
+          "eng"
+        ],
+        "abilityCd": 12,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "delta": {
+        "hits": 5,
+        "playerHp": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0
+      },
+      "expectedEffects": [
+        "slowed",
+        "stunned"
+      ],
+      "checks": {
+        "effectOk": true,
+        "buffsOk": true,
+        "pickupOk": true,
+        "healOk": true,
+        "dashOk": true
+      },
+      "ok": true
+    },
+    {
+      "id": "taubentoni",
+      "name": "Tauben-Toni",
+      "selectable": true,
+      "started": true,
+      "weapon": "taubenschwarm",
+      "abilityExpected": "taubensturm",
+      "abilityActual": "taubensturm",
+      "before": {
+        "playerHp": 57.5,
+        "enemyHp": [
+          500,
+          500,
+          500,
+          500,
+          500
+        ],
+        "hits": 0,
+        "dead": 0,
+        "stunned": 0,
+        "slowed": 0,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [],
+        "abilityCd": 0,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "after": {
+        "playerHp": 57.5,
+        "enemyHp": [
+          474.25,
+          474.25,
+          474.25,
+          474.25,
+          474.25
+        ],
+        "hits": 5,
+        "dead": 0,
+        "stunned": 0,
+        "slowed": 5,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [
+          "luck"
+        ],
+        "abilityCd": 10,
+        "dash": 0,
+        "pickups": 4,
+        "powerups": 1,
+        "materials": 0,
+        "healed": false
+      },
+      "delta": {
+        "hits": 5,
+        "playerHp": 0,
+        "pickups": 4,
+        "powerups": 1,
+        "materials": 0
+      },
+      "expectedEffects": [
+        "slowed"
+      ],
+      "checks": {
+        "effectOk": true,
+        "buffsOk": true,
+        "pickupOk": true,
+        "healOk": true,
+        "dashOk": true
+      },
+      "ok": true
+    },
+    {
+      "id": "saegesvenja",
+      "name": "Säge-Svenja",
+      "selectable": true,
+      "started": true,
+      "weapon": "kettensaege",
+      "abilityExpected": "kettenschnitt",
+      "abilityActual": "kettenschnitt",
+      "before": {
+        "playerHp": 60,
+        "enemyHp": [
+          500,
+          500,
+          500,
+          500,
+          500
+        ],
+        "hits": 0,
+        "dead": 0,
+        "stunned": 0,
+        "slowed": 0,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [],
+        "abilityCd": 0,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "after": {
+        "playerHp": 60,
+        "enemyHp": [
+          449,
+          449,
+          449,
+          449,
+          449
+        ],
+        "hits": 5,
+        "dead": 0,
+        "stunned": 5,
+        "slowed": 0,
+        "burnt": 5,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [
+          "atkSpd"
+        ],
+        "abilityCd": 9,
+        "dash": 0.2,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "delta": {
+        "hits": 5,
+        "playerHp": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0
+      },
+      "expectedEffects": [
+        "burnt",
+        "stunned"
+      ],
+      "checks": {
+        "effectOk": true,
+        "buffsOk": true,
+        "pickupOk": true,
+        "healOk": true,
+        "dashOk": true
+      },
+      "ok": true
+    },
+    {
+      "id": "laserlars",
+      "name": "Laser-Lars",
+      "selectable": true,
+      "started": true,
+      "weapon": "laserzirkel",
+      "abilityExpected": "laserfokus",
+      "abilityActual": "laserfokus",
+      "before": {
+        "playerHp": 63,
+        "enemyHp": [
+          500,
+          500,
+          500,
+          500,
+          500
+        ],
+        "hits": 0,
+        "dead": 0,
+        "stunned": 0,
+        "slowed": 0,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [],
+        "abilityCd": 0,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "after": {
+        "playerHp": 63,
+        "enemyHp": [
+          440.6,
+          440.6,
+          440.6,
+          440.6,
+          440.6
+        ],
+        "hits": 5,
+        "dead": 0,
+        "stunned": 0,
+        "slowed": 5,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 5,
+        "buffs": [
+          "crit",
+          "range"
+        ],
+        "abilityCd": 10,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "delta": {
+        "hits": 5,
+        "playerHp": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0
+      },
+      "expectedEffects": [
+        "slowed",
+        "marked"
+      ],
+      "checks": {
+        "effectOk": true,
+        "buffsOk": true,
+        "pickupOk": true,
+        "healOk": true,
+        "dashOk": true
+      },
+      "ok": true
+    },
+    {
+      "id": "blitzbritta",
+      "name": "Blitz-Britta",
+      "selectable": true,
+      "started": true,
+      "weapon": "blitzableiter",
+      "abilityExpected": "kettenblitz",
+      "abilityActual": "kettenblitz",
+      "before": {
+        "playerHp": 62,
+        "enemyHp": [
+          500,
+          500,
+          500,
+          500,
+          500
+        ],
+        "hits": 0,
+        "dead": 0,
+        "stunned": 0,
+        "slowed": 0,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [],
+        "abilityCd": 0,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "after": {
+        "playerHp": 62,
+        "enemyHp": [
+          457.136,
+          448.112,
+          443.6,
+          452.624,
+          461.648
+        ],
+        "hits": 5,
+        "dead": 0,
+        "stunned": 5,
+        "slowed": 0,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 5,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [
+          "elem"
+        ],
+        "abilityCd": 10,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "delta": {
+        "hits": 5,
+        "playerHp": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0
+      },
+      "expectedEffects": [
+        "shocked",
+        "stunned"
+      ],
+      "checks": {
+        "effectOk": true,
+        "buffsOk": true,
+        "pickupOk": true,
+        "healOk": true,
+        "dashOk": true
+      },
+      "ok": true
+    },
+    {
+      "id": "skalpellsina",
+      "name": "Skalpell-Sina",
+      "selectable": true,
+      "started": true,
+      "weapon": "skalpell",
+      "abilityExpected": "notoperation",
+      "abilityActual": "notoperation",
+      "before": {
+        "playerHp": 53,
+        "enemyHp": [
+          500,
+          500,
+          500,
+          500,
+          500
+        ],
+        "hits": 0,
+        "dead": 0,
+        "stunned": 0,
+        "slowed": 0,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [],
+        "abilityCd": 0,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "after": {
+        "playerHp": 93,
+        "enemyHp": [
+          465,
+          465,
+          465,
+          465,
+          465
+        ],
+        "hits": 5,
+        "dead": 0,
+        "stunned": 5,
+        "slowed": 0,
+        "burnt": 0,
+        "poisoned": 5,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [
+          "lifesteal"
+        ],
+        "abilityCd": 11,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": true
+      },
+      "delta": {
+        "hits": 5,
+        "playerHp": 40,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0
+      },
+      "expectedEffects": [
+        "poisoned",
+        "stunned"
+      ],
+      "checks": {
+        "effectOk": true,
+        "buffsOk": true,
+        "pickupOk": true,
+        "healOk": true,
+        "dashOk": true
+      },
+      "ok": true
+    },
+    {
+      "id": "rettungsralf",
+      "name": "Rettungs-Ralf",
+      "selectable": true,
+      "started": true,
+      "weapon": "rettungssaege",
+      "abilityExpected": "rettungsgriff",
+      "abilityActual": "rettungsgriff",
+      "before": {
+        "playerHp": 63,
+        "enemyHp": [
+          500,
+          500,
+          500,
+          500,
+          500
+        ],
+        "hits": 0,
+        "dead": 0,
+        "stunned": 0,
+        "slowed": 0,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [],
+        "abilityCd": 0,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "after": {
+        "playerHp": 91,
+        "enemyHp": [
+          481,
+          481,
+          481,
+          481,
+          481
+        ],
+        "hits": 5,
+        "dead": 0,
+        "stunned": 5,
+        "slowed": 0,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [
+          "armor",
+          "hpRegen"
+        ],
+        "abilityCd": 12,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": true
+      },
+      "delta": {
+        "hits": 5,
+        "playerHp": 28,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0
+      },
+      "expectedEffects": [
+        "stunned"
+      ],
+      "checks": {
+        "effectOk": true,
+        "buffsOk": true,
+        "pickupOk": true,
+        "healOk": true,
+        "dashOk": true
+      },
+      "ok": true
+    },
+    {
+      "id": "flammenfelix",
+      "name": "Flammen-Felix",
+      "selectable": true,
+      "started": true,
+      "weapon": "flammenklinge",
+      "abilityExpected": "brandschneise",
+      "abilityActual": "brandschneise",
+      "before": {
+        "playerHp": 59,
+        "enemyHp": [
+          500,
+          500,
+          500,
+          500,
+          500
+        ],
+        "hits": 0,
+        "dead": 0,
+        "stunned": 0,
+        "slowed": 0,
+        "burnt": 0,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [],
+        "abilityCd": 0,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "after": {
+        "playerHp": 59,
+        "enemyHp": [
+          449.4,
+          449.4,
+          449.4,
+          449.4,
+          449.4
+        ],
+        "hits": 5,
+        "dead": 0,
+        "stunned": 5,
+        "slowed": 0,
+        "burnt": 5,
+        "poisoned": 0,
+        "shocked": 0,
+        "frozen": 0,
+        "marked": 0,
+        "buffs": [
+          "speed",
+          "elem"
+        ],
+        "abilityCd": 10,
+        "dash": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0,
+        "healed": false
+      },
+      "delta": {
+        "hits": 5,
+        "playerHp": 0,
+        "pickups": 0,
+        "powerups": 0,
+        "materials": 0
+      },
+      "expectedEffects": [
+        "burnt",
+        "stunned"
+      ],
+      "checks": {
+        "effectOk": true,
+        "buffsOk": true,
+        "pickupOk": true,
+        "healOk": true,
+        "dashOk": true
+      },
+      "ok": true
+    }
+  ],
+  "determinism": {
+    "hero": "speersophie",
+    "seed": 18967,
+    "same": true,
+    "first": {
+      "hits": 5,
+      "enemyHp": [
+        445,
+        445,
+        445,
+        445,
+        445
+      ],
+      "cd": 8
+    },
+    "second": {
+      "hits": 5,
+      "enemyHp": [
+        445,
+        445,
+        445,
+        445,
+        445
+      ],
+      "cd": 8
+    }
+  },
+  "checks": {
+    "speersophie": true,
+    "axtachim": true,
+    "nagelnadja": true,
+    "bierbernd": true,
+    "minenmarie": true,
+    "taubentoni": true,
+    "saegesvenja": true,
+    "laserlars": true,
+    "blitzbritta": true,
+    "skalpellsina": true,
+    "rettungsralf": true,
+    "flammenfelix": true,
+    "determinism": true,
+    "rosterCount": true
+  },
+  "failures": [],
+  "heroCount": 44,
+  "pass": true
+}

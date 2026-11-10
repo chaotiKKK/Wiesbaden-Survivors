@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://tests/workshop.gd" id="1_workshop"]
+[ext_resource type="PackedScene" path="res://scenes/Main.tscn" id="2_main"]
+
+[node name="Workshop" type="Node"]
+script = ExtResource("1_workshop")

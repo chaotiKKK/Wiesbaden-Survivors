@@ -1,0 +1,381 @@
+{
+  "generated": "2026-11-09",
+  "source": "data.js",
+  "counts": {
+    "chars": 44,
+    "weapons": 81,
+    "items": 125,
+    "enemies": 83,
+    "baseEnemies": 51,
+    "campaignEnemies": 32,
+    "arenas": 8,
+    "bosses": 10,
+    "dangers": 9,
+    "mods": 9,
+    "achievements": 36,
+    "contentRecords": 405
+  },
+  "weapons": {
+    "byClass": {
+      "blade": 13,
+      "blunt": 12,
+      "elemental": 18,
+      "explosive": 12,
+      "gun": 20,
+      "heavy": 19,
+      "medical": 9,
+      "medieval": 10,
+      "precise": 18,
+      "primitive": 11,
+      "support": 23
+    },
+    "classes": 11,
+    "underSix": [],
+    "monoClassLoadouts": 208287,
+    "classPairs": 55,
+    "classPairsPossible": 55,
+    "byType": {
+      "projectile": 39,
+      "melee": 24,
+      "cone": 7,
+      "hitscan": 2,
+      "aura": 3,
+      "chain": 4,
+      "charge": 2
+    },
+    "tierIssues": [],
+    "locked": 16,
+    "defaultUnlocked": 65,
+    "avgTiersPrice": 24
+  },
+  "items": {
+    "byRarity": {
+      "1": 31,
+      "2": 31,
+      "3": 32,
+      "4": 31
+    },
+    "cursed": 12,
+    "turret": 4,
+    "thorns": 4,
+    "statsCovered": 24,
+    "statsTotal": 24,
+    "uncoveredStats": [],
+    "statCount": {
+      "maxHp": 41,
+      "hpRegen": 20,
+      "lifesteal": 5,
+      "dmgP": 18,
+      "melee": 6,
+      "ranged": 7,
+      "elem": 14,
+      "atkSpd": 22,
+      "crit": 18,
+      "critDmg": 6,
+      "eng": 15,
+      "range": 11,
+      "armor": 32,
+      "dodge": 19,
+      "speed": 43,
+      "luck": 21,
+      "harvest": 19,
+      "xpGain": 9,
+      "expSize": 5,
+      "pierce": 1,
+      "bounce": 1,
+      "knock": 11,
+      "abilityRank": 1,
+      "abilityCdMod": 1
+    }
+  },
+  "chars": {
+    "locked": 4,
+    "bySynergyClass": {
+      "gun": 3,
+      "medical": 3,
+      "support": 8,
+      "precise": 6,
+      "elemental": 8,
+      "heavy": 4,
+      "primitive": 3,
+      "blunt": 4,
+      "blade": 2,
+      "medieval": 1,
+      "explosive": 2
+    },
+    "byStartClass": {
+      "elemental": 10,
+      "support": 17,
+      "blunt": 6,
+      "precise": 13,
+      "gun": 12,
+      "heavy": 9,
+      "blade": 10,
+      "medieval": 3,
+      "primitive": 4,
+      "medical": 3,
+      "explosive": 2
+    },
+    "sharedAbilities": [],
+    "synergyUnderSix": 0
+  },
+  "enemies": {
+    "byAI": {
+      "chase": 12,
+      "orbit": 2,
+      "ranged": 3,
+      "exploder": 2,
+      "charger": 3,
+      "healer": 2,
+      "aura": 2,
+      "summoner": 2,
+      "shielded": 2,
+      "teleport": 2,
+      "spiral": 2,
+      "mortar": 2,
+      "weaver": 2,
+      "sentinel": 2,
+      "leech": 2,
+      "bomber": 2,
+      "mirror": 3,
+      "juggernaut": 2,
+      "siren": 2
+    },
+    "aiFamilies": 19,
+    "waves": [
+      {
+        "wave": 1,
+        "types": 3,
+        "aiFamilies": 1
+      },
+      {
+        "wave": 2,
+        "types": 5,
+        "aiFamilies": 1
+      },
+      {
+        "wave": 3,
+        "types": 8,
+        "aiFamilies": 4
+      },
+      {
+        "wave": 4,
+        "types": 12,
+        "aiFamilies": 7
+      },
+      {
+        "wave": 5,
+        "types": 18,
+        "aiFamilies": 8
+      },
+      {
+        "wave": 6,
+        "types": 24,
+        "aiFamilies": 9
+      },
+      {
+        "wave": 7,
+        "types": 29,
+        "aiFamilies": 11
+      },
+      {
+        "wave": 8,
+        "types": 34,
+        "aiFamilies": 15
+      },
+      {
+        "wave": 9,
+        "types": 39,
+        "aiFamilies": 17
+      },
+      {
+        "wave": 10,
+        "types": 43,
+        "aiFamilies": 18
+      },
+      {
+        "wave": 11,
+        "types": 46,
+        "aiFamilies": 19
+      },
+      {
+        "wave": 12,
+        "types": 49,
+        "aiFamilies": 19
+      },
+      {
+        "wave": 13,
+        "types": 50,
+        "aiFamilies": 19
+      },
+      {
+        "wave": 14,
+        "types": 50,
+        "aiFamilies": 19
+      },
+      {
+        "wave": 15,
+        "types": 50,
+        "aiFamilies": 19
+      },
+      {
+        "wave": 16,
+        "types": 50,
+        "aiFamilies": 19
+      },
+      {
+        "wave": 17,
+        "types": 50,
+        "aiFamilies": 19
+      },
+      {
+        "wave": 18,
+        "types": 50,
+        "aiFamilies": 19
+      },
+      {
+        "wave": 19,
+        "types": 50,
+        "aiFamilies": 19
+      },
+      {
+        "wave": 20,
+        "types": 50,
+        "aiFamilies": 19
+      }
+    ],
+    "splitOnly": [
+      "shardling"
+    ],
+    "summonRefs": [],
+    "splitRefs": []
+  },
+  "arenas": {
+    "themes": {
+      "offen": 1,
+      "eng": 2,
+      "weit": 3,
+      "räume": 1,
+      "boss": 1
+    },
+    "features": {
+      "buildings": 38,
+      "cover": 38,
+      "poison": 11,
+      "speedField": 15,
+      "movingWalls": 11
+    },
+    "bossesPerArena": {
+      "kurpark": 1,
+      "innenstadt": 2,
+      "rheinufer": 1,
+      "labor": 1,
+      "neroberg": 2,
+      "warmerdamm": 1,
+      "schlachthof": 1,
+      "rheingau": 1
+    },
+    "withoutBoss": [],
+    "bossesPerArenaAvg": 1.25
+  },
+  "bosses": {
+    "patterns": {
+      "radial": 3,
+      "charge": 2,
+      "bulletHell": 4,
+      "spiral": 3,
+      "crossfire": 4,
+      "shockwave": 1,
+      "arenaHazard": 2,
+      "orbitMines": 1,
+      "shotgunBurst": 1,
+      "rails": 1,
+      "waterjet": 1,
+      "wailRings": 2,
+      "geysers": 2,
+      "steamCone": 1,
+      "bellwave": 1,
+      "stoneRain": 1
+    },
+    "avgPhases": 3
+  },
+  "waveEvents": {
+    "dangerGate": 3,
+    "count": 4,
+    "waves": [
+      {
+        "wave": 11,
+        "kind": "horde",
+        "name": "HORDENWELLE",
+        "mult": 1.8,
+        "eliteRate": 0,
+        "mat": 45
+      },
+      {
+        "wave": 12,
+        "kind": "elite",
+        "name": "ELITEWELLE",
+        "mult": 0.75,
+        "eliteRate": 0.18,
+        "mat": 60
+      },
+      {
+        "wave": 14,
+        "kind": "horde",
+        "name": "HORDENWELLE",
+        "mult": 2,
+        "eliteRate": 0,
+        "mat": 55
+      },
+      {
+        "wave": 15,
+        "kind": "elite",
+        "name": "ELITEWELLE",
+        "mult": 0.75,
+        "eliteRate": 0.2,
+        "mat": 80
+      }
+    ]
+  },
+  "reference": {
+    "name": "Brotato (aktueller Patch, alle DLC)",
+    "asOf": "2026-11-08",
+    "weapons": 62,
+    "characters": 44,
+    "enemies": 83,
+    "zones": 3,
+    "wavesPerRun": 20,
+    "weaponSlots": 6,
+    "dangerLevels": 6,
+    "maxEnemiesOnScreen": 100,
+    "coopLocal": 2,
+    "coopSwitch2": 4,
+    "items": null,
+    "sources": [
+      "https://brotato.wiki.fextralife.com/FAQ (62 Waffen, 6 Slots, Danger 0-5)",
+      "https://psnprofiles.com/guide/18933-brotato-trophy-guide (44 Charaktere)",
+      "https://brotato.fandom.com/wiki/Enemies (83 Gegner)",
+      "https://brotato.wiki.spellsandguns.com/Enemies (100 Gegner gleichzeitig)",
+      "https://www.nintendo.com/au/games/nintendo-switch/brotato (6 Slots, 20-90s, 2P lokal, Barrierefreiheit)",
+      "https://www.nintendo.com/au/games/nintendo-switch-2/brotato-nintendo-switch-2-edition (4P lokal)"
+    ]
+  },
+  "gaps": {
+    "weapons": -19,
+    "characters": 0,
+    "enemies": 0,
+    "zones": -5,
+    "dangerLevels": 3,
+    "wavesPerRun": 0,
+    "slots": 0
+  },
+  "gates": {
+    "classesAtLeastSix": true,
+    "everyEnemyInCampaign": true,
+    "everyArenaHasBoss": true,
+    "uniqueAbilities": true,
+    "allStatsCovered": true,
+    "classPairsAtLeast40": true
+  },
+  "broken": []
+}

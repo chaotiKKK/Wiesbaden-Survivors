@@ -1,0 +1,308 @@
+{
+  "schema": "wbn-stadtgeschichte/1",
+  "milestones": [
+    5,
+    10,
+    15
+  ],
+  "note": "Im HTML-Spiel aktiv (data.js STADTGESCHICHTE, Player.evolveStadtgeschichte, Game.endWave an Welle 5/10/15). Deterministisch, kein RNG. Balance: tools/stadtgeschichte-balance.mjs.",
+  "lines": [
+    {
+      "id": "fruehstueck",
+      "name": "Kurhaus-Frühstück",
+      "parts": [
+        "kaffee",
+        "verband"
+      ],
+      "tiers": [
+        {
+          "name": "Kurhaus-Menü",
+          "premium": 30,
+          "stats": {
+            "maxHp": 8,
+            "speed": 4,
+            "hpRegen": 1
+          },
+          "text": "Kaffee und Verbandszeug: der ehrliche Start in den Tag."
+        },
+        {
+          "name": "Kurhaus-Menü Plus",
+          "premium": 70,
+          "stats": {
+            "maxHp": 10,
+            "speed": 4,
+            "hpRegen": 2,
+            "atkSpd": 2
+          },
+          "text": "Zweite Tasse, zweite Chance."
+        },
+        {
+          "name": "Kurhaus-Menü Deluxe",
+          "premium": 130,
+          "stats": {
+            "maxHp": 16,
+            "speed": 6,
+            "hpRegen": 2,
+            "atkSpd": 4
+          },
+          "text": "Der ganze Kurhaus-Saal steht hinter dir."
+        }
+      ]
+    },
+    {
+      "id": "feuerwehr",
+      "name": "Feuerwehr-Ausrüstung",
+      "parts": [
+        "helm",
+        "handschuh"
+      ],
+      "tiers": [
+        {
+          "name": "Einsatzausrüstung",
+          "premium": 30,
+          "stats": {
+            "armor": 3,
+            "maxHp": 10,
+            "melee": 4
+          },
+          "text": "Helm auf, Handschuhe an."
+        },
+        {
+          "name": "Einsatzausrüstung Plus",
+          "premium": 70,
+          "stats": {
+            "armor": 4,
+            "maxHp": 14,
+            "melee": 8
+          },
+          "text": "Jetzt hältst du auch dem Rückstoß stand."
+        },
+        {
+          "name": "Einsatzausrüstung Deluxe",
+          "premium": 130,
+          "stats": {
+            "armor": 6,
+            "maxHp": 22,
+            "melee": 12,
+            "knock": 15
+          },
+          "text": "Die ganze Wachmannschaft in einem Anzug."
+        }
+      ]
+    },
+    {
+      "id": "optik",
+      "name": "Präzisions-Optik",
+      "parts": [
+        "zielfernrohr",
+        "lupe"
+      ],
+      "tiers": [
+        {
+          "name": "Präzisionsoptik",
+          "premium": 40,
+          "stats": {
+            "range": 10,
+            "crit": 2,
+            "critDmg": 5,
+            "atkSpd": 4,
+            "dmgP": 2
+          },
+          "text": "Weit sehen, genau treffen."
+        },
+        {
+          "name": "Präzisionsoptik Plus",
+          "premium": 90,
+          "stats": {
+            "range": 18,
+            "crit": 2,
+            "critDmg": 6,
+            "atkSpd": 8,
+            "dmgP": 4
+          },
+          "text": "Die Lupe findet, was das Zielrohr anvisiert."
+        },
+        {
+          "name": "Präzisionsoptik Deluxe",
+          "premium": 160,
+          "stats": {
+            "range": 28,
+            "crit": 3,
+            "critDmg": 10,
+            "atkSpd": 12,
+            "dmgP": 6
+          },
+          "text": "Auf dieser Entfernung ist ein Treffer eine Entscheidung."
+        }
+      ]
+    },
+    {
+      "id": "technik",
+      "name": "Wartungsrig",
+      "parts": [
+        "multitool",
+        "drohne"
+      ],
+      "tiers": [
+        {
+          "name": "Wartungsrig",
+          "premium": 40,
+          "stats": {
+            "eng": 10,
+            "atkSpd": 6
+          },
+          "text": "Tool in der Hand, Drohne über der Schulter."
+        },
+        {
+          "name": "Wartungsrig Plus",
+          "premium": 90,
+          "stats": {
+            "eng": 18,
+            "atkSpd": 12,
+            "range": 8,
+            "dmgP": 3,
+            "armor": 1,
+            "maxHp": 6
+          },
+          "text": "Die Drohne kalibriert, während du schraubst."
+        },
+        {
+          "name": "Wartungsrig Deluxe",
+          "premium": 160,
+          "stats": {
+            "eng": 30,
+            "atkSpd": 20,
+            "range": 15,
+            "dmgP": 6,
+            "armor": 2,
+            "maxHp": 12
+          },
+          "text": "Ein halbes Werkstattlager, auf zwei Schultern verteilt."
+        }
+      ]
+    },
+    {
+      "id": "kurpark",
+      "name": "Kurpark-Glück",
+      "parts": [
+        "kleeblatt4",
+        "parfum"
+      ],
+      "tiers": [
+        {
+          "name": "Kurpark-Glück",
+          "premium": 35,
+          "stats": {
+            "luck": 15,
+            "harvest": 3,
+            "xpGain": 5
+          },
+          "text": "Kleeblatt in der Tasche, Nerobergluft in der Nase."
+        },
+        {
+          "name": "Kurpark-Glück Plus",
+          "premium": 80,
+          "stats": {
+            "luck": 28,
+            "harvest": 6,
+            "xpGain": 10
+          },
+          "text": "Der Kurpark scheint dir alles zuzuwerfen."
+        },
+        {
+          "name": "Kurpark-Glück Deluxe",
+          "premium": 150,
+          "stats": {
+            "luck": 45,
+            "harvest": 10,
+            "xpGain": 18
+          },
+          "text": "Selbst die Tauben bringen dir Materialien."
+        }
+      ]
+    },
+    {
+      "id": "rhein",
+      "name": "Rheinufer-Set",
+      "parts": [
+        "rheinstein",
+        "sprungfeder"
+      ],
+      "tiers": [
+        {
+          "name": "Rheinufer-Set",
+          "premium": 35,
+          "stats": {
+            "armor": 2,
+            "knock": 15,
+            "speed": 5,
+            "dodge": 2
+          },
+          "text": "Stein in der Tasche, Feder im Schritt."
+        },
+        {
+          "name": "Rheinufer-Set Plus",
+          "premium": 80,
+          "stats": {
+            "armor": 4,
+            "knock": 28,
+            "speed": 9,
+            "dodge": 5
+          },
+          "text": "Der Stein bremst, die Feder beschleunigt."
+        },
+        {
+          "name": "Rheinufer-Set Deluxe",
+          "premium": 150,
+          "stats": {
+            "armor": 7,
+            "knock": 45,
+            "speed": 14,
+            "dodge": 8
+          },
+          "text": "Zwischen Ufer und Sprung liegt dein Revier."
+        }
+      ]
+    },
+    {
+      "id": "klinik",
+      "name": "Klinik-Set",
+      "parts": [
+        "sanikoffer",
+        "vampir"
+      ],
+      "tiers": [
+        {
+          "name": "Klinik-Set",
+          "premium": 45,
+          "stats": {
+            "lifesteal": 10,
+            "hpRegen": 1,
+            "maxHp": 15
+          },
+          "text": "Sanitäter und Blutkonserve: Hilfe, die zurückkommt."
+        },
+        {
+          "name": "Klinik-Set Plus",
+          "premium": 100,
+          "stats": {
+            "lifesteal": 12,
+            "hpRegen": 2,
+            "maxHp": 20
+          },
+          "text": "Die Klinik arbeitet jetzt für dich."
+        },
+        {
+          "name": "Klinik-Set Deluxe",
+          "premium": 180,
+          "stats": {
+            "lifesteal": 18,
+            "hpRegen": 3,
+            "maxHp": 32
+          },
+          "text": "Was dich nicht umbringt, bezahlt deine Miete."
+        }
+      ]
+    }
+  ]
+}

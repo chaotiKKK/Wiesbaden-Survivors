@@ -1,0 +1,498 @@
+{
+  "date": "2026-11-09",
+  "url": "http://127.0.0.1:8981/index.html?qa=1",
+  "new_ids": [
+    "schlauchrolle",
+    "kastanienblatt",
+    "fahrradkette",
+    "loetkolben",
+    "schaufenster",
+    "atemschutz",
+    "loeschdecke",
+    "taubenpaar",
+    "lichtung",
+    "stroemung",
+    "faehrmannstueck",
+    "messsonde",
+    "kuehlkreislauf",
+    "marktschreier",
+    "hydrant",
+    "kurmusik",
+    "promenade",
+    "pruefstand",
+    "uhrturm",
+    "wachbuch",
+    "parkbank",
+    "rheinbruecke",
+    "reaktorhandschuh",
+    "goldener_adler"
+  ],
+  "shop": {
+    "screen": "scShop",
+    "focus": "kurpark",
+    "attempts": 0,
+    "natural": {
+      "cur": "scShop",
+      "state": "shop"
+    },
+    "counts": {
+      "kurpark": 2
+    },
+    "items": [
+      "kastanienblatt",
+      "parkbank"
+    ],
+    "offers": [
+      {
+        "kind": "weapon",
+        "id": "skalpell",
+        "fam": null,
+        "name": "skalpell",
+        "price": 17
+      },
+      {
+        "kind": "weapon",
+        "id": "kraeuterkessel",
+        "fam": null,
+        "name": "kraeuterkessel",
+        "price": 44
+      },
+      {
+        "kind": "weapon",
+        "id": "klingenpistole",
+        "fam": null,
+        "name": "klingenpistole",
+        "price": 39
+      },
+      {
+        "kind": "item",
+        "id": "taubenpaar",
+        "fam": "kurpark",
+        "name": "Kurpark-Taubenpaar",
+        "price": 44
+      },
+      {
+        "kind": "weapon",
+        "id": "steinhammer",
+        "fam": null,
+        "name": "steinhammer",
+        "price": 25
+      },
+      {
+        "kind": "item",
+        "id": "uhrturm",
+        "fam": "innenstadt",
+        "name": "Uhrturm",
+        "price": 96
+      }
+    ],
+    "focusOffer": {
+      "kind": "item",
+      "id": "taubenpaar",
+      "fam": "kurpark",
+      "name": "Kurpark-Taubenpaar",
+      "price": 44
+    },
+    "shopText": "◆ Veedel-Fokus: Kurpark — ein Angebot aus dieser Familie ist garantiert.\nSkalpell\n17\nBLADE MEDICAL GEWÖHNLICH · T1\n8 Schaden · 0.46s · 92px\nKrit 14% · x2\n≈ 19,7 DPS für Leonidas\nChirurgische Schnitte: schnell, präzise und mit Blutung. Skalierung: 65% Nahkampfschaden, 35% HP-Regeneration\nSPERREN\nKräuterkessel\n44\nMEDICAL PRIMITIVE UNGEWÖHNLICH · T2\n13 Schaden · 0.59s · 365px\nKrit 5% · x1.6\n≈ 30,6 DPS für Leonidas\nKräuterwurf: hinterlässt eine Giftwolke und stärkt die Regeneration. Skalierung: 40% Fernkampfschaden, 35% HP-Regeneration\nSPERREN\nKlingenpistole\n39\nBLADE GUN UNGEWÖHNLICH · T2\n12 Schaden · 0.52s · 330px\nKrit 7% · x1.7\n≈ 32,7 DPS für Leonidas\nBajonett am Lauf: Projektile durchschlagen, Nahkampf skaliert mit. Skalierung: 50% Fernkampfschaden, 20% Nahkampfschaden\nSPERREN\nKurpark-Taubenpaar\n44\nUNGEWÖHNLICHKURPARK\n-5 Max. Leben\n+14 Glück\n+8% EP-Gewinn\nSie fressen dir aus der Hand und bringen Glück.\nSPERREN\nSteinhammer\n25\nBLUNT PRIMITIVE GEWÖHNLICH · T1\n20 Schaden · 1.05s · 112px\nKrit 4% · x1.6\n≈ 21 DPS für Leonidas\nUrtümlicher Steinblock: wuchtig, langsam und mit hohem Rückstoß. Skalierung: 90% Nahkampfschaden, 20% Glück\nSPERREN\nUhrturm\n96\nSELTENINNENSTADT\n+5% Angriffstempo\n+8% Krit. Chance\n+20% Krit. Schaden\nDie Stadt taktet im Rhythmus deiner Schüsse.\nSPERREN",
+    "invText": "Veedel: Kurpark ×2 · Fokus: Kurpark\nKastanienblatt, Kurpark-Bank",
+    "hint": true,
+    "tag": true,
+    "invFamily": true,
+    "invFocus": true,
+    "screenshot": "docs/pw/veedel-families/shop-focus.png"
+  },
+  "purchase": {
+    "bought": "taubenpaar",
+    "name": "Kurpark-Taubenpaar",
+    "price": 44,
+    "stat": "luck",
+    "before": 10,
+    "after": 24,
+    "items": [
+      "kastanienblatt",
+      "parkbank",
+      "taubenpaar"
+    ],
+    "counts": {
+      "kurpark": 3
+    },
+    "focus": "kurpark",
+    "shopText": "◆ Veedel-Fokus: Kurpark — ein Angebot aus dieser Familie ist garantiert.\nSkalpell\n17\nBLADE MEDICAL GEWÖHNLICH · T1\n8 Schaden · 0.46s · 92px\nKrit 14% · x2\n≈ 19,7 DPS für Leonidas\nChirurgische Schnitte: schnell, präzise und mit Blutung. Skalierung: 65% Nahkampfschaden, 35% HP-Regeneration\nSPERREN\nKräuterkessel\n44\nMEDICAL PRIMITIVE UNGEWÖHNLICH · T2\n13 Schaden · 0.59s · 365px\nKrit 5% · x1.6\n≈ 30,6 DPS für Leonidas\nKräuterwurf: hinterlässt eine Giftwolke und stärkt die Regeneration. Skalierung: 40% Fernkampfschaden, 35% HP-Regeneration\nSPERREN\nKlingenpistole\n39\nBLADE GUN UNGEWÖHNLICH · T2\n12 Schaden · 0.52s · 330px\nKrit 7% · x1.7\n≈ 32,7 DPS für Leonidas\nBajonett am Lauf: Projektile durchschlagen, Nahkampf skaliert mit. Skalierung: 50% Fernkampfschaden, 20% Nahkampfschaden\nSPERREN\nKurpark-Taubenpaar\n44\nUNGEWÖHNLICHKURPARK\n-5 Max. Leben\n+14 Glück\n+8% EP-Gewinn\nSie fressen dir aus der Hand und bringen Glück.\nSteinhammer\n25\nBLUNT PRIMITIVE GEWÖHNLICH · T1\n20 Schaden · 1.05s · 112px\nKrit 4% · x1.6\n≈ 23,6 DPS für Leonidas\nUrtümlicher Steinblock: wuchtig, langsam und mit hohem Rückstoß. Skalierung: 90% Nahkampfschaden, 20% Glück\nSPERREN\nUhrturm\n96\nSELTENINNENSTADT\n+5% Angriffstempo\n+8% Krit. Chance\n+20% Krit. Schaden\nDie Stadt taktet im Rhythmus deiner Schüsse.\nSPERREN",
+    "invText": "Veedel: Kurpark ×3 · Fokus: Kurpark\nKastanienblatt, Kurpark-Bank, Kurpark-Taubenpaar",
+    "screenshot": "docs/pw/veedel-families/shop-after-buy.png"
+  },
+  "codex": {
+    "screen": "scCodex",
+    "text": "Veedel-Familien\nFeuerwehr (15 Items) — Ueberleben, Ruestung und Heilung — der harte Kern.\nKurpark (11 Items) — Glueck, Ernte und XP — der oekonomische Pfad.\nRheinufer (13 Items) — Tempo, Ausweichen und Rueckstoss — mobil bleiben.\nLabor (16 Items) — Technik, Elemente und Explosionen — Sebbos Spezialitaet.\nInnenstadt (15 Items) — Krit, Reichweite und Praezision — jeder Schuss sitzt.\nItems\n[Kurpark] Kurhaus-Kaffee (Gewöhnlich) · 20 Mat — +6 Tempo · +4 Angriffstempo — Wiesbadener Frühstücksdoping.\n[Rheinufer] Laufschuhe (Gewöhnlich) · 18 Mat — +10 Tempo — Rennen ist auch eine Taktik.\n[Feuerwehr] Feuerwehrhelm (Gewöhnlich) · 22 Mat — +2 Rüstung · +8 Max. Leben — Leonidas trägt ihn selbst beim Schlafen.\n[Feuerwehr] Erste-Hilfe-Set (Gewöhnlich) · 20 Mat — +1 HP-Regeneration · +10 Max. Leben — Sylvias Grundausstattung.\n[Innenstadt] Zielfernrohr (Gewöhnlich) · 24 Mat — +12 Reichweite · +3 Krit. Chance — Sehen heißt treffen.\n[Labor] Multitool (Gewöhnlich) · 22 Mat — +6 Technik — Sebbo hat sieben davon.\n[Kurpark] Vierblättriges Kleeblatt (Gewöhnlich) · 20 Mat — +15 Glück — Aus dem Kurpark. Angeblich.\n[Feuerwehr] Arbeitshandschuhe (Gewöhnlich) · 19 Mat — +6 Nahkampfschaden · +1 Rüstung — Griffig.\n[Innenstadt] Schnellmagazin (Gewöhnlich) · 21 Mat — +8 Angriffstempo — Klick-klack.\n[Innenstadt] Pfefferspray (Gewöhnlich) · 18 Mat — +5 Fernkampfschaden · +3 Schaden — Polizeiausrüstung, geliehen.\n[Innenstadt] Goldenes Plektrum (Ungewöhnlich) · 38 Mat — +10 Angriffstempo · +6 Schaden — Jeder Riff ein Treffer.\n[Rheinufer] Rheinkiesel (Ungewöhnlich) · 34 Mat — +3 Rüstung · +15 Rückstoß — Vom Ufer, glatt geschliffen.\n[Rheinufer] Sprungfeder (Ungewöhnlich) · 36 Mat — +12 Tempo · +5 Ausweichen — Boing.\n[Innenstadt] Uhrmacherlupe (Ungewöhnlich) · 40 Mat — +7 Krit. Chance · +20 Krit. Schaden — Schwachstellen sind überall.\n[Labor] Wartungsdrohne (Ungewöhnlich) · 45 Mat — +12 Technik — Summt beruhigend.\n[Labor] Thermoschutz (Ungewöhnlich) · 36 Mat — +10 Elementarschaden · +1 Rüstung — Hitze? Welche Hitze.\n[Feuerwehr] Sanitätskoffer (Ungewöhnlich) · 42 Mat — +25 Max. Leben · +2 HP-Regeneration — Therapie für den Körper.\n[Labor] Kompressor (Ungewöhnlich) · 40 Mat — +25 Explosionsgröße · +5 Schaden — Größer ist besser.\n[Feuerwehr] Stachelpanzer (Ungewöhnlich) · 38 Mat — +4 Rüstung · +8 Nahkampfschaden — Wer dich trifft, blutet mit.\n[Kurpark] Nerobergluft (Ungewöhnlich) · 35 Mat — +4 Ernte · +12 Glück — Materialmagnet.\n[Rheinufer] Gummibeschichtung (Ungewöhnlich) · 44 Mat — +1 Abpraller · +4 Schaden — Projektile prallen einmal ab.\n[Labor] Wolframkern (Ungewöhnlich) · 46 Mat — +1 Durchschlag · +6 Fernkampfschaden — Durch und durch.\n[Labor] Mini-Reaktor (Selten) · 72 Mat — +20 Technik · +12 Elementarschaden — Technomagie in Reinform.\n[Rheinufer] Adrenalinpumpe (Selten) · 68 Mat — +18 Angriffstempo · +8 Tempo · +-10 Max. Leben — Der Körper zahlt später.\n[Innenstadt] Analysebrille (Selten) · 70 Mat — +10 Krit. Chance · +35 Krit. Schaden — Sebbo hat sie kalibriert.\n[Feuerwehr] Exo-Skelett (Selten) · 78 Mat — +6 Rüstung · +30 Max. Leben · +-6 Tempo — Schwer, aber sicher.\n[Feuerwehr] Blutkonserve (Selten) · 74 Mat — +18 Lebensraub · +15 Max. Leben — Frisch aus der Klinik.\n[Labor] Quantenkondensator (Selten) · 80 Mat — +18 Schaden · +15 Elementarschaden — Blitzt bläulich.\n[Rheinufer] Phasenweste (Selten) · 72 Mat — +14 Ausweichen · +6 Tempo — Manchmal einfach nicht da.\n[Kurpark] Kurhaus-Goldbarren (Selten) · 76 Mat — +8 Ernte · +30 Glück · +10 EP-Gewinn — Reich ist, wer überlebt.\n[Innenstadt] Sturmgewicht (Selten) · 70 Mat — +20 Nahkampfschaden · +40 Rückstoß — Nahkampf-Fundament.\n[Labor] Serverfarm (Selten) · 84 Mat — +25 Technik · +8 Angriffstempo — Sebbos Keller, komprimiert.\n[Innenstadt] Halbgott-Fragment (Legendär) · 130 Mat — +25 Schaden · +10 Krit. Chance · +8 Tempo · +20 Max. Leben — Ein Splitter von Sebbos wahrer Natur.\n[Feuerwehr] Herzensglut (Legendär) · 125 Mat — +25 Lebensraub · +4 HP-Regeneration · +20 Elementarschaden — Sylvias Wärme, materialisiert.\n[Rheinufer] Ewige Sirene (Legendär) · 128 Mat — +30 Fernkampfschaden · +15 Angriffstempo · +15 Reichweite — Man hört sie bis Mainz.\n[Feuerwehr] Bollwerkplatte (Legendär) · 122 Mat — +10 Rüstung · +45 Max. Leben · +-8 Tempo — Unbeweglich, unsterblich.\n[Labor] Supernova-Kern (Legendär) · 140 Mat — +35 Schaden · +40 Explosionsgröße · +-25 Max. Leben — Alles brennt. Auch du.\n[Kurpark] Zeitschleife (Legendär) · 135 Mat — +25 Angriffstempo · +10 Ausweichen · +20 EP-Gewinn — Zwei Sekunden Vorsprung, immer.\n[Kurpark] Fluch der Gier (Selten) · 55 Mat — +15 Ernte · +40 Glück · +-30 Max. Leben — Materialien glänzen. Dein Blut auch. VERFLUCHT\n[Rheinufer] Fluch der Raserei (Selten) · 58 Mat — +35 Angriffstempo · +15 Tempo · +-6 Rüstung — Schneller. Immer schneller. VERFLUCHT\n[Innenstadt] Fluch des Zorns (Legendär) · 90 Mat — +60 Schaden · +20 Krit. Chance · +-45 Max. Leben · +-10 Ausweichen — Der Zorn nimmt, was er gibt. VERFLUCHT\n[Innenstadt] Fluch der Stille (Selten) · 60 Mat — +40 Reichweite · +25 Fernkampfschaden · +-3 HP-Regeneration — Weit sehen, langsam sterben. VERFLUCHT\n[Feuerwehr] Fluch des Eisens (Selten) · 62 Mat — +12 Rüstung · +40 Max. Leben · +-25 Tempo · +-12 Angriffstempo — Ein Denkmal deiner selbst. VERFLUCHT\n[Labor] Fluch des Echos (Legendär) · 95 Mat — +40 Elementarschaden · +50 Explosionsgröße · +-15 Lebensraub · +-4 Rüstung — Jede Explosion trifft auch dich. VERFLUCHT\n[Innenstadt] Stadtarchiv-Rangliste (Selten) · 82 Mat — +1 Fähigkeitsstufe · +8 EP-Gewinn — Jede Seite ein Viertel, jede Zeile ein Rekord.\n[Labor] Kurhaus-Taktgeber (Selten) · 76 Mat — +-12 Fähigkeits-CD · +6 Angriffstempo — Der Takt des Kurhauses, präzise bis zur Millisekunde.\n[Feuerwehr] Schlauchrolle (Gewöhnlich) · 22 Mat — +12 Max. Leben · +1 Rüstung · +-2 Tempo — Schwer, aber der Schlauch hält dich im Einsatz.\n[Kurpark] Kastanienblatt (Gewöhnlich) · 20 Mat — +10 Glück · +2 Ernte — Im Kurpark gefunden, im Portemonnaie geblieben.\n[Rheinufer] Fahrradkette (Gewöhnlich) · 18 Mat — +10 Tempo · +3 Angriffstempo — Öl auf den Händen, Tempo in den Beinen.\n[Labor] Lötkolben (Gewöhnlich) · 22 Mat — +8 Technik · +4 Elementarschaden — Klein, heiß, überraschend vielseitig.\n[Innenstadt] Schaufenster (Gewöhnlich) · 24 Mat — +4 Krit. Chance · +6 Reichweite — Im Vorbeigehen siehst du jede Schwachstelle.\n[Feuerwehr] Atemschutzmaske (Ungewöhnlich) · 40 Mat — +4 Rüstung · +1 HP-Regeneration · +2 Ausweichen — Durch Rauch und Panik hindurch.\n[Feuerwehr] Löschdecke (Ungewöhnlich) · 38 Mat — +18 Max. Leben · +2 HP-Regeneration · +3 Tempo — Ersticken verhindern, dann weiterlaufen.\n[Kurpark] Kurpark-Taubenpaar (Ungewöhnlich) · 36 Mat — +14 Glück · +8 EP-Gewinn · +-5 Max. Leben — Sie fressen dir aus der Hand und bringen Glück.\n[Kurpark] Kurpark-Lichtung (Ungewöhnlich) · 38 Mat — +5 Ernte · +5 Tempo · +3 Ausweichen — Zwischen den Bäumen liegt mehr, als du siehst.\n[Rheinufer] Rheinströmung (Ungewöhnlich) · 36 Mat — +8 Tempo · +4 Ausweichen · +15 Rückstoß — Der Fluss schiebt, du lässt dich tragen.\n[Rheinufer] Fährmannstück (Ungewöhnlich) · 40 Mat — +3 Ernte · +10 Glück · +4 Tempo — Eine Überfahrt, ein Fund, ein guter Tag.\n[Labor] Messsonde (Ungewöhnlich) · 42 Mat — +10 Technik · +8 Reichweite · +3 Krit. Chance — Was du messen kannst, kannst du treffen.\n[Labor] Kühlkreislauf (Ungewöhnlich) · 38 Mat — +10 Elementarschaden · +1 HP-Regeneration · +2 Rüstung — Hält den Reaktor ruhig und dich kühl.\n[Innenstadt] Marktschreier (Ungewöhnlich) · 40 Mat — +6 Ernte · +12 Glück · +3 Schaden — Laut verkaufen, leise kassieren.\n[Feuerwehr] Unterflurhydrant (Selten) · 74 Mat — +30 Max. Leben · +3 Rüstung · +20 Rückstoß — Steht fest und spuckt zurück.\n[Kurpark] Kurmusik (Selten) · 72 Mat — +20 Glück · +15 EP-Gewinn · +5 Angriffstempo — Der Walzer trägt dich durch die Welle.\n[Rheinufer] Uferpromenade (Selten) · 76 Mat — +12 Tempo · +7 Ausweichen · +10 Reichweite — Freie Sicht, freier Lauf.\n[Labor] Prüfstand (Selten) · 80 Mat — +18 Technik · +8 Angriffstempo · +15 Explosionsgröße — Jede Explosion wird hier zuerst getestet.\n[Innenstadt] Uhrturm (Selten) · 78 Mat — +8 Krit. Chance · +20 Krit. Schaden · +5 Angriffstempo — Die Stadt taktet im Rhythmus deiner Schüsse.\n[Feuerwehr] Wachbuch (Legendär) · 130 Mat — +40 Max. Leben · +8 Rüstung · +3 HP-Regeneration · +-5 Tempo — Jede Schicht, jede Narbe, jede Regel.\n[Kurpark] Kurpark-Bank (Legendär) · 124 Mat — +30 Max. Leben · +4 HP-Regeneration · +8 Ernte · +-4 Tempo — Setz dich. Atme. Dann steh wieder auf.\n[Rheinufer] Rheinbrücke (Legendär) · 132 Mat — +20 Reichweite · +25 Krit. Schaden · +30 Rückstoß · +5 Tempo — Von hier aus triffst du das andere Ufer.\n[Labor] Reaktorhandschuh (Legendär) · 138 Mat — +25 Elementarschaden · +15 Technik · +12 Schaden · +-10 Max. Leben — Die Hitze bleibt draußen. Meistens.\n[Innenstadt] Goldener Adler (Legendär) · 145 Mat — +20 Schaden · +10 Krit. Chance · +30 Krit. Schaden · +-4 Tempo — Das Wappen der Stadt, in deiner Hand.\nRelikte & Sets\nMARATHON-FÜSSE — Permanentes +8% Tempo. (+8 Tempo)\nGLÜCKSBIERCHEN — +10 Glück für bessere Funde. (+10 Glück)\nBOHRSPITZE — +1 Durchschlag für alle Waffen. (+1 Durchschlag)\nTITANLEGIE — +6 Rüstung. (+6 Rüstung)\nWILDE 7 — +6% Krit · +15% Krit-Schaden. (+6 Krit. Chance · +15 Krit. Schaden)\nKURHAUS-MEDAILLON — +30 Leben · heilt 12% nach jeder Welle. (+30 Max. Leben)\nFUSIONSBATTERIE — Fähigkeit -12% Abklingzeit. (+-12 Fähigkeits-CD)\nSCHÖPFKELLE — +20% Material-Beute. +Material\nKOCHBRUNNEN-DAMPF — +2 Ernte · +10% Material-Beute. (+2 Ernte) +Material\nNEROBERGBAHN-JAHRESKARTE — +15 Tempo. (+15 Tempo)\nBERGKIRCH-SEGEN — +6 Rüstung · +2 HP-Regeneration. (+6 Rüstung · +2 HP-Regeneration)\nREISINGER-ROSARIUM — +15 Glück. (+15 Glück)\nAUKAMM-THERMALBAD — +12% Lebensraub · +15 Leben. (+12 Lebensraub · +15 Max. Leben)\nMARKTKIRCHEN-GLOCKE — +12% Schaden · -6 Tempo. (+12 Schaden · +-6 Tempo)\nKURHAUS-KUGEL — +8% Krit · +12% Krit-Schaden. (+8 Krit. Chance · +12 Krit. Schaden)\nGOLDENES BUCH — +10% XP · +10 Glück. (+10 EP-Gewinn · +10 Glück)\nHEILSAUNA: BERGKIRCH-SEGEN + AUKAMM-THERMALBAD\nFORTUNA-DUO: GLÜCKSBIERCHEN + REISINGER-ROSARIUM\nPRÄZISIONS-KONZERT: WILDE 7 + KURHAUS-KUGEL\nWIRTSCHAFTSWUNDER: SCHÖPFKELLE + KOCHBRUNNEN-DAMPF\nKURSTADT-TURBO: MARATHON-FÜSSE + NEROBERGBAHN-JAHRESKARTE\nSTEINERNE WACHT: TITANLEGIE + MARKTKIRCHEN-GLOCKE",
+    "families": [
+      {
+        "id": "feuerwehr",
+        "name": "Feuerwehr",
+        "count": 15
+      },
+      {
+        "id": "kurpark",
+        "name": "Kurpark",
+        "count": 11
+      },
+      {
+        "id": "rheinufer",
+        "name": "Rheinufer",
+        "count": 13
+      },
+      {
+        "id": "labor",
+        "name": "Labor",
+        "count": 16
+      },
+      {
+        "id": "innenstadt",
+        "name": "Innenstadt",
+        "count": 15
+      }
+    ],
+    "screenshot": "docs/pw/veedel-families/codex-families.png"
+  },
+  "consoleErrors": [],
+  "catalog": {
+    "items": 70,
+    "families": [
+      {
+        "id": "feuerwehr",
+        "name": "Feuerwehr",
+        "col": "#ff8a5c",
+        "count": 15
+      },
+      {
+        "id": "kurpark",
+        "name": "Kurpark",
+        "col": "#8affb0",
+        "count": 11
+      },
+      {
+        "id": "rheinufer",
+        "name": "Rheinufer",
+        "col": "#39e6ff",
+        "count": 13
+      },
+      {
+        "id": "labor",
+        "name": "Labor",
+        "col": "#a06bff",
+        "count": 16
+      },
+      {
+        "id": "innenstadt",
+        "name": "Innenstadt",
+        "col": "#f4c25a",
+        "count": 15
+      }
+    ],
+    "newItems": [
+      {
+        "id": "schlauchrolle",
+        "name": "Schlauchrolle",
+        "price": 22,
+        "r": 1,
+        "family": "feuerwehr",
+        "stats": {
+          "maxHp": 12,
+          "armor": 1,
+          "speed": -2
+        }
+      },
+      {
+        "id": "kastanienblatt",
+        "name": "Kastanienblatt",
+        "price": 20,
+        "r": 1,
+        "family": "kurpark",
+        "stats": {
+          "luck": 10,
+          "harvest": 2
+        }
+      },
+      {
+        "id": "fahrradkette",
+        "name": "Fahrradkette",
+        "price": 18,
+        "r": 1,
+        "family": "rheinufer",
+        "stats": {
+          "speed": 10,
+          "atkSpd": 3
+        }
+      },
+      {
+        "id": "loetkolben",
+        "name": "Lötkolben",
+        "price": 22,
+        "r": 1,
+        "family": "labor",
+        "stats": {
+          "eng": 8,
+          "elem": 4
+        }
+      },
+      {
+        "id": "schaufenster",
+        "name": "Schaufenster",
+        "price": 24,
+        "r": 1,
+        "family": "innenstadt",
+        "stats": {
+          "crit": 4,
+          "range": 6
+        }
+      },
+      {
+        "id": "atemschutz",
+        "name": "Atemschutzmaske",
+        "price": 40,
+        "r": 2,
+        "family": "feuerwehr",
+        "stats": {
+          "armor": 4,
+          "hpRegen": 1,
+          "dodge": 2
+        }
+      },
+      {
+        "id": "loeschdecke",
+        "name": "Löschdecke",
+        "price": 38,
+        "r": 2,
+        "family": "feuerwehr",
+        "stats": {
+          "maxHp": 18,
+          "hpRegen": 2,
+          "speed": 3
+        }
+      },
+      {
+        "id": "taubenpaar",
+        "name": "Kurpark-Taubenpaar",
+        "price": 36,
+        "r": 2,
+        "family": "kurpark",
+        "stats": {
+          "luck": 14,
+          "xpGain": 8,
+          "maxHp": -5
+        }
+      },
+      {
+        "id": "lichtung",
+        "name": "Kurpark-Lichtung",
+        "price": 38,
+        "r": 2,
+        "family": "kurpark",
+        "stats": {
+          "harvest": 5,
+          "speed": 5,
+          "dodge": 3
+        }
+      },
+      {
+        "id": "stroemung",
+        "name": "Rheinströmung",
+        "price": 36,
+        "r": 2,
+        "family": "rheinufer",
+        "stats": {
+          "speed": 8,
+          "dodge": 4,
+          "knock": 15
+        }
+      },
+      {
+        "id": "faehrmannstueck",
+        "name": "Fährmannstück",
+        "price": 40,
+        "r": 2,
+        "family": "rheinufer",
+        "stats": {
+          "harvest": 3,
+          "luck": 10,
+          "speed": 4
+        }
+      },
+      {
+        "id": "messsonde",
+        "name": "Messsonde",
+        "price": 42,
+        "r": 2,
+        "family": "labor",
+        "stats": {
+          "eng": 10,
+          "range": 8,
+          "crit": 3
+        }
+      },
+      {
+        "id": "kuehlkreislauf",
+        "name": "Kühlkreislauf",
+        "price": 38,
+        "r": 2,
+        "family": "labor",
+        "stats": {
+          "elem": 10,
+          "hpRegen": 1,
+          "armor": 2
+        }
+      },
+      {
+        "id": "marktschreier",
+        "name": "Marktschreier",
+        "price": 40,
+        "r": 2,
+        "family": "innenstadt",
+        "stats": {
+          "harvest": 6,
+          "luck": 12,
+          "dmgP": 3
+        }
+      },
+      {
+        "id": "hydrant",
+        "name": "Unterflurhydrant",
+        "price": 74,
+        "r": 3,
+        "family": "feuerwehr",
+        "stats": {
+          "maxHp": 30,
+          "armor": 3,
+          "knock": 20
+        }
+      },
+      {
+        "id": "kurmusik",
+        "name": "Kurmusik",
+        "price": 72,
+        "r": 3,
+        "family": "kurpark",
+        "stats": {
+          "luck": 20,
+          "xpGain": 15,
+          "atkSpd": 5
+        }
+      },
+      {
+        "id": "promenade",
+        "name": "Uferpromenade",
+        "price": 76,
+        "r": 3,
+        "family": "rheinufer",
+        "stats": {
+          "speed": 12,
+          "dodge": 7,
+          "range": 10
+        }
+      },
+      {
+        "id": "pruefstand",
+        "name": "Prüfstand",
+        "price": 80,
+        "r": 3,
+        "family": "labor",
+        "stats": {
+          "eng": 18,
+          "atkSpd": 8,
+          "expSize": 15
+        }
+      },
+      {
+        "id": "uhrturm",
+        "name": "Uhrturm",
+        "price": 78,
+        "r": 3,
+        "family": "innenstadt",
+        "stats": {
+          "crit": 8,
+          "critDmg": 20,
+          "atkSpd": 5
+        }
+      },
+      {
+        "id": "wachbuch",
+        "name": "Wachbuch",
+        "price": 130,
+        "r": 4,
+        "family": "feuerwehr",
+        "stats": {
+          "maxHp": 40,
+          "armor": 8,
+          "hpRegen": 3,
+          "speed": -5
+        }
+      },
+      {
+        "id": "parkbank",
+        "name": "Kurpark-Bank",
+        "price": 124,
+        "r": 4,
+        "family": "kurpark",
+        "stats": {
+          "maxHp": 30,
+          "hpRegen": 4,
+          "harvest": 8,
+          "speed": -4
+        }
+      },
+      {
+        "id": "rheinbruecke",
+        "name": "Rheinbrücke",
+        "price": 132,
+        "r": 4,
+        "family": "rheinufer",
+        "stats": {
+          "range": 20,
+          "critDmg": 25,
+          "knock": 30,
+          "speed": 5
+        }
+      },
+      {
+        "id": "reaktorhandschuh",
+        "name": "Reaktorhandschuh",
+        "price": 138,
+        "r": 4,
+        "family": "labor",
+        "stats": {
+          "elem": 25,
+          "eng": 15,
+          "dmgP": 12,
+          "maxHp": -10
+        }
+      },
+      {
+        "id": "goldener_adler",
+        "name": "Goldener Adler",
+        "price": 145,
+        "r": 4,
+        "family": "innenstadt",
+        "stats": {
+          "dmgP": 20,
+          "crit": 10,
+          "critDmg": 30,
+          "speed": -4
+        }
+      }
+    ]
+  },
+  "checks": {
+    "sawfxOff": true,
+    "naturalEndWave": true,
+    "shopScreen": true,
+    "focus": true,
+    "focusOffer": true,
+    "focusOfferIsNew": true,
+    "hint": true,
+    "tag": true,
+    "invFamily": true,
+    "purchase": true,
+    "codexScreen": true,
+    "codexFamilies": true,
+    "consoleClean": true
+  }
+}

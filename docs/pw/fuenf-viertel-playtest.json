@@ -1,0 +1,585 @@
+{
+  "generated": "2026-11-09T12:23:45.174Z",
+  "ok": true,
+  "failures": [],
+  "warnings": [],
+  "page": {
+    "ok": true,
+    "failures": [],
+    "started": {
+      "active": true,
+      "completed": false,
+      "districtIndex": 0,
+      "district": "kurpark",
+      "arena": "kurpark",
+      "wave": 1,
+      "localWave": 1,
+      "globalWave": 1,
+      "boss": null,
+      "bossAlive": false,
+      "mods": [
+        "offene_flaechen",
+        "giftfelder"
+      ],
+      "world": {
+        "cover": 2,
+        "hazard": "poison"
+      },
+      "lastPlan": {
+        "district": "kurpark",
+        "districtIndex": 0,
+        "wave": 1,
+        "globalWave": 1,
+        "baseCount": 20,
+        "baseElite": 0,
+        "countPct": 0,
+        "count": 20,
+        "elite": 0,
+        "enemies": [
+          "heckenhetzer",
+          "runner",
+          "swarm",
+          "walker",
+          "wuehlmaus"
+        ],
+        "ai": [
+          "chase",
+          "chase",
+          "chase",
+          "chase",
+          "burrower"
+        ],
+        "queued": 20,
+        "boss": null,
+        "guest": false,
+        "bossQueued": false
+      }
+    },
+    "waves": 100,
+    "districts": [
+      {
+        "index": 0,
+        "id": "kurpark",
+        "arena": "kurpark",
+        "mods": [
+          "offene_flaechen",
+          "giftfelder"
+        ],
+        "world": {
+          "cover": 2,
+          "hazard": "poison"
+        },
+        "barrels": 5,
+        "hazards": 4,
+        "movingWalls": 1,
+        "lineOfSight": false,
+        "height": false,
+        "harvest": false,
+        "range": 10,
+        "speed": 8,
+        "harvestStat": 0,
+        "hpRegen": -1,
+        "crit": 5,
+        "dodge": 0
+      },
+      {
+        "index": 1,
+        "id": "innenstadt",
+        "arena": "innenstadt",
+        "mods": [
+          "enge_gassen",
+          "sichtlinien"
+        ],
+        "world": {
+          "cover": 7,
+          "lineOfSight": true
+        },
+        "barrels": 10,
+        "hazards": 0,
+        "movingWalls": 2,
+        "lineOfSight": true,
+        "height": false,
+        "harvest": false,
+        "range": -8,
+        "speed": 8,
+        "harvestStat": 0,
+        "hpRegen": 0,
+        "crit": 10,
+        "dodge": 0
+      },
+      {
+        "index": 2,
+        "id": "rheinufer",
+        "arena": "rheinufer",
+        "mods": [
+          "weite_sicht",
+          "treibende_pontons"
+        ],
+        "world": {
+          "cover": 1,
+          "movingWalls": true,
+          "hazard": "water"
+        },
+        "barrels": 4,
+        "hazards": 3,
+        "movingWalls": 1,
+        "lineOfSight": false,
+        "height": false,
+        "harvest": false,
+        "range": 12,
+        "speed": 8,
+        "harvestStat": 0,
+        "hpRegen": 0,
+        "crit": 5,
+        "dodge": 5
+      },
+      {
+        "index": 3,
+        "id": "neroberg",
+        "arena": "neroberg",
+        "mods": [
+          "engstellen",
+          "hoehenwind"
+        ],
+        "world": {
+          "cover": 5,
+          "height": true
+        },
+        "barrels": 8,
+        "hazards": 0,
+        "movingWalls": 1,
+        "lineOfSight": false,
+        "height": true,
+        "harvest": false,
+        "range": 5,
+        "speed": 3,
+        "harvestStat": 0,
+        "hpRegen": 0,
+        "crit": 5,
+        "dodge": 0
+      },
+      {
+        "index": 4,
+        "id": "rheingau",
+        "arena": "rheingau",
+        "mods": [
+          "weinberg_terrassen",
+          "weinfelder"
+        ],
+        "world": {
+          "height": true,
+          "harvest": true
+        },
+        "barrels": 3,
+        "hazards": 0,
+        "movingWalls": 1,
+        "lineOfSight": false,
+        "height": true,
+        "harvest": true,
+        "range": 5,
+        "speed": 2,
+        "harvestStat": 2.5,
+        "hpRegen": 1,
+        "crit": 5,
+        "dodge": 0
+      }
+    ],
+    "bosses": [
+      {
+        "globalWave": 10,
+        "district": "kurpark",
+        "arena": "kurpark",
+        "id": "kurparkhueter",
+        "homeArena": "kurpark",
+        "guest": false
+      },
+      {
+        "globalWave": 20,
+        "district": "kurpark",
+        "arena": "kurpark",
+        "id": "thermalquelle",
+        "homeArena": "warmerdamm",
+        "guest": true
+      },
+      {
+        "globalWave": 30,
+        "district": "innenstadt",
+        "arena": "innenstadt",
+        "id": "kurhaus",
+        "homeArena": "innenstadt",
+        "guest": false
+      },
+      {
+        "globalWave": 40,
+        "district": "innenstadt",
+        "arena": "innenstadt",
+        "id": "marktturm",
+        "homeArena": "innenstadt",
+        "guest": false
+      },
+      {
+        "globalWave": 50,
+        "district": "rheinufer",
+        "arena": "rheinufer",
+        "id": "nerobahn",
+        "homeArena": "rheinufer",
+        "guest": false
+      },
+      {
+        "globalWave": 60,
+        "district": "rheinufer",
+        "arena": "rheinufer",
+        "id": "sirenkollektiv",
+        "homeArena": "schlachthof",
+        "guest": true
+      },
+      {
+        "globalWave": 70,
+        "district": "neroberg",
+        "arena": "neroberg",
+        "id": "rogueki",
+        "homeArena": "neroberg",
+        "guest": false
+      },
+      {
+        "globalWave": 80,
+        "district": "neroberg",
+        "arena": "neroberg",
+        "id": "bergbahn",
+        "homeArena": "neroberg",
+        "guest": false
+      },
+      {
+        "globalWave": 90,
+        "district": "rheingau",
+        "arena": "rheingau",
+        "id": "rheingaurebe",
+        "homeArena": "rheingau",
+        "guest": false
+      },
+      {
+        "globalWave": 100,
+        "district": "rheingau",
+        "arena": "rheingau",
+        "id": "kochbrunnen",
+        "homeArena": "labor",
+        "guest": true
+      }
+    ],
+    "guestBosses": [
+      {
+        "globalWave": 20,
+        "district": "kurpark",
+        "arena": "kurpark",
+        "id": "thermalquelle",
+        "homeArena": "warmerdamm",
+        "guest": true
+      },
+      {
+        "globalWave": 60,
+        "district": "rheinufer",
+        "arena": "rheinufer",
+        "id": "sirenkollektiv",
+        "homeArena": "schlachthof",
+        "guest": true
+      },
+      {
+        "globalWave": 100,
+        "district": "rheingau",
+        "arena": "rheingau",
+        "id": "kochbrunnen",
+        "homeArena": "labor",
+        "guest": true
+      }
+    ],
+    "bossKills": [
+      {
+        "id": "kurparkhueter",
+        "dead": true
+      },
+      {
+        "id": "thermalquelle",
+        "dead": true
+      },
+      {
+        "id": "kurhaus",
+        "dead": true
+      },
+      {
+        "id": "marktturm",
+        "dead": true
+      },
+      {
+        "id": "nerobahn",
+        "dead": true
+      },
+      {
+        "id": "sirenkollektiv",
+        "dead": true
+      },
+      {
+        "id": "rogueki",
+        "dead": true
+      },
+      {
+        "id": "bergbahn",
+        "dead": true
+      },
+      {
+        "id": "rheingaurebe",
+        "dead": true
+      },
+      {
+        "id": "kochbrunnen",
+        "dead": true
+      }
+    ],
+    "draftSeen": [
+      "brueckenkette",
+      "fassroller",
+      "felsenlaurer",
+      "flusspirscher",
+      "fussgaengerfalle",
+      "gartenzwerg",
+      "giftfrosch",
+      "hangkletterer",
+      "heckenhetzer",
+      "kellermeister",
+      "korkengeist",
+      "kuppelgeist",
+      "libellenwache",
+      "litfasssaeule",
+      "marktstreicher",
+      "monopteroswaechter",
+      "pegelwaechter",
+      "pflasterpirat",
+      "rebenschlinger",
+      "rebenwuermer",
+      "schleusenwaechter",
+      "schornsteinfeger",
+      "seilbahnschatten",
+      "strassenbahngeist",
+      "taubenmeister",
+      "teichmolch",
+      "terrassenhetzer",
+      "treibgutkrabbe",
+      "weinbergfalke",
+      "weinbergwolf",
+      "werftdrohne",
+      "wuehlmaus"
+    ],
+    "aiSeen": [
+      "aura",
+      "bomber",
+      "burrower",
+      "charger",
+      "chase",
+      "commander",
+      "exploder",
+      "healer",
+      "juggernaut",
+      "leech",
+      "mirror",
+      "mortar",
+      "orbit",
+      "ranged",
+      "sentinel",
+      "shielded",
+      "siren",
+      "sniper",
+      "spiral",
+      "summoner",
+      "teleport",
+      "tether",
+      "trapper",
+      "weaver"
+    ],
+    "plans": [],
+    "behavior": {
+      "burrower": {
+        "burrowCount": 1,
+        "trapCount": 0,
+        "tetherCount": 0,
+        "buffCount": 0,
+        "sniperShots": 0,
+        "slowApplied": false,
+        "trapsOnField": 0
+      },
+      "trapper": {
+        "burrowCount": 0,
+        "trapCount": 2,
+        "tetherCount": 0,
+        "buffCount": 0,
+        "sniperShots": 0,
+        "slowApplied": false,
+        "trapsOnField": 2
+      },
+      "tether": {
+        "burrowCount": 0,
+        "trapCount": 0,
+        "tetherCount": 1,
+        "buffCount": 0,
+        "sniperShots": 0,
+        "slowApplied": true,
+        "trapsOnField": 0
+      },
+      "commander": {
+        "burrowCount": 0,
+        "trapCount": 0,
+        "tetherCount": 0,
+        "buffCount": 1,
+        "sniperShots": 0,
+        "slowApplied": false,
+        "trapsOnField": 0
+      },
+      "sniper": {
+        "burrowCount": 0,
+        "trapCount": 0,
+        "tetherCount": 0,
+        "buffCount": 0,
+        "sniperShots": 1,
+        "slowApplied": false,
+        "trapsOnField": 0
+      }
+    },
+    "modEvidence": [
+      {
+        "district": "kurpark",
+        "mods": [
+          "offene_flaechen",
+          "giftfelder"
+        ],
+        "world": {
+          "cover": 2,
+          "hazard": "poison"
+        },
+        "baseRange": 0
+      },
+      {
+        "district": "innenstadt",
+        "mods": [
+          "enge_gassen",
+          "sichtlinien"
+        ],
+        "world": {
+          "cover": 7,
+          "lineOfSight": true
+        },
+        "baseRange": 0
+      },
+      {
+        "district": "rheinufer",
+        "mods": [
+          "weite_sicht",
+          "treibende_pontons"
+        ],
+        "world": {
+          "cover": 1,
+          "movingWalls": true,
+          "hazard": "water"
+        },
+        "baseRange": 0
+      },
+      {
+        "district": "neroberg",
+        "mods": [
+          "engstellen",
+          "hoehenwind"
+        ],
+        "world": {
+          "cover": 5,
+          "height": true
+        },
+        "baseRange": 0
+      },
+      {
+        "district": "rheingau",
+        "mods": [
+          "weinberg_terrassen",
+          "weinfelder"
+        ],
+        "world": {
+          "height": true,
+          "harvest": true
+        },
+        "baseRange": 0
+      },
+      {
+        "baseSpreads": {
+          "range": 0,
+          "speed": 0,
+          "harvest": 0,
+          "hpRegen": 0,
+          "crit": 0,
+          "dodge": 0
+        }
+      }
+    ],
+    "consoleErrors": [],
+    "hud": "VIERTEL 1/5 · Kurpark · WELLE 1/20 · GESAMT 1/100 · 19sOffene Flächen Giftfelder",
+    "districtWorld": [
+      {
+        "id": "kurpark",
+        "world": {
+          "cover": 2,
+          "hazard": "poison"
+        },
+        "barrels": 5,
+        "hazards": 4,
+        "lineOfSight": false,
+        "height": false,
+        "movingWalls": 1
+      },
+      {
+        "id": "innenstadt",
+        "world": {
+          "cover": 7,
+          "lineOfSight": true
+        },
+        "barrels": 10,
+        "hazards": 0,
+        "lineOfSight": true,
+        "height": false,
+        "movingWalls": 2
+      },
+      {
+        "id": "rheinufer",
+        "world": {
+          "cover": 1,
+          "movingWalls": true,
+          "hazard": "water"
+        },
+        "barrels": 4,
+        "hazards": 3,
+        "lineOfSight": false,
+        "height": false,
+        "movingWalls": 1
+      },
+      {
+        "id": "neroberg",
+        "world": {
+          "cover": 5,
+          "height": true
+        },
+        "barrels": 8,
+        "hazards": 0,
+        "lineOfSight": false,
+        "height": true,
+        "movingWalls": 1
+      },
+      {
+        "id": "rheingau",
+        "world": {
+          "height": true,
+          "harvest": true
+        },
+        "barrels": 3,
+        "hazards": 0,
+        "lineOfSight": false,
+        "height": true,
+        "movingWalls": 1
+      }
+    ]
+  },
+  "console": []
+}

@@ -15,7 +15,7 @@ const CACHE = 'wbns-dev';
    Cache nur als Offline-Rueckfall. Sonst bliebe eine lokale Kopie nach git pull
    fuer immer auf dem alten Stand, weil sich der Name nie aendert. */
 const DEV = CACHE === 'wbns-dev';
-const SHELL = ['./', './index.html', './data.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './maskable-512.png'];
+const SHELL = ['./', './index.html', './content/fuenf-viertel.data.js', './data.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './maskable-512.png'];
 
 /* SFX-Vorcach: damit hat der ERSTE Offline-Start vollen Sound (vorher kamen
    die Cues nur durch den Runtime-Cache nach der Audio-Geste zustande).

@@ -1,0 +1,279 @@
+{
+  "test": "item-recycle-live",
+  "when": "2026-11-09T09:42:17+0000",
+  "rate": 0.25,
+  "buy": {
+    "mat": 479,
+    "speed": 14,
+    "atkSpd": 4,
+    "maxHp": 135,
+    "curse": 0,
+    "turrets": 0,
+    "items": 1,
+    "counts": {
+      "kaffee": 1
+    },
+    "row": true,
+    "rowText": "Kurhaus-Kaffee\n        Recyceln +5",
+    "toast": "ERFOLG: Erster Einsatz"
+  },
+  "sell": {
+    "mat": 484,
+    "speed": 8,
+    "atkSpd": 0,
+    "maxHp": 135,
+    "curse": 0,
+    "turrets": 0,
+    "items": 0,
+    "counts": {},
+    "row": false,
+    "toast": "ERFOLG: Erster Einsatz♻ Kurhaus-Kaffee recycelt — +5 Material",
+    "beforeMat": 479,
+    "refund": 5
+  },
+  "curse": {
+    "base": {
+      "id": "c_gier",
+      "price": 57,
+      "baselineMat": 500,
+      "speed": 8,
+      "atkSpd": 0,
+      "maxHp": 135,
+      "curse": 0,
+      "turrets": 0,
+      "items": 0,
+      "row": false
+    },
+    "buy": {
+      "mat": 443,
+      "speed": 8,
+      "atkSpd": 0,
+      "maxHp": 105,
+      "curse": 5,
+      "turrets": 0,
+      "items": 1,
+      "counts": {
+        "c_gier": 1
+      },
+      "row": true,
+      "rowText": "☠ Fluch der Gier\n        Recyceln +14",
+      "toast": "ERFOLG: Erster Einsatz♻ Kurhaus-Kaffee recycelt — +5 Material☠ Fluch der Gier — Fluch +5 (gesamt 5)"
+    },
+    "sell": {
+      "mat": 457,
+      "speed": 8,
+      "atkSpd": 0,
+      "maxHp": 135,
+      "curse": 0,
+      "turrets": 0,
+      "items": 0,
+      "counts": {},
+      "row": false,
+      "toast": "ERFOLG: Erster Einsatz♻ Kurhaus-Kaffee recycelt — +5 Material☠ Fluch der Gier — Fluch +5 (gesamt 5)♻ Fluch der Gier recycelt — +14 Material · Fluch −5",
+      "beforeMat": 443,
+      "refund": 14
+    }
+  },
+  "turret": {
+    "base": {
+      "id": "drohne",
+      "price": 47,
+      "baselineMat": 500,
+      "speed": 8,
+      "atkSpd": 0,
+      "maxHp": 135,
+      "curse": 0,
+      "turrets": 0,
+      "items": 0,
+      "row": false
+    },
+    "buy": {
+      "mat": 453,
+      "speed": 8,
+      "atkSpd": 0,
+      "maxHp": 135,
+      "curse": 0,
+      "turrets": 1,
+      "items": 1,
+      "counts": {
+        "drohne": 1
+      },
+      "row": true,
+      "rowText": "Wartungsdrohne\n        Recyceln +11",
+      "toast": "ERFOLG: Erster Einsatz♻ Kurhaus-Kaffee recycelt — +5 Material☠ Fluch der Gier — Fluch +5 (gesamt 5)♻ Fluch der Gier recycelt — +14 Material · Fluch −5"
+    },
+    "sell": {
+      "mat": 464,
+      "speed": 8,
+      "atkSpd": 0,
+      "maxHp": 135,
+      "curse": 0,
+      "turrets": 0,
+      "items": 0,
+      "counts": {},
+      "row": false,
+      "toast": "ERFOLG: Erster Einsatz♻ Kurhaus-Kaffee recycelt — +5 Material☠ Fluch der Gier — Fluch +5 (gesamt 5)♻ Fluch der Gier recycelt — +14 Material · Fluch −5♻ Wartungsdrohne recycelt — +11 Material",
+      "beforeMat": 453,
+      "refund": 11
+    }
+  },
+  "price_matrix": [
+    {
+      "wave": 1,
+      "id": "kaffee",
+      "price": 21,
+      "sell": 5,
+      "ratio": 0.2381,
+      "lossPct": 76.19
+    },
+    {
+      "wave": 1,
+      "id": "drohne",
+      "price": 47,
+      "sell": 11,
+      "ratio": 0.234,
+      "lossPct": 76.6
+    },
+    {
+      "wave": 1,
+      "id": "reaktor",
+      "price": 75,
+      "sell": 18,
+      "ratio": 0.24,
+      "lossPct": 76
+    },
+    {
+      "wave": 1,
+      "id": "kernspintomograph",
+      "price": 144,
+      "sell": 36,
+      "ratio": 0.25,
+      "lossPct": 75
+    },
+    {
+      "wave": 5,
+      "id": "kaffee",
+      "price": 25,
+      "sell": 6,
+      "ratio": 0.24,
+      "lossPct": 76
+    },
+    {
+      "wave": 5,
+      "id": "drohne",
+      "price": 55,
+      "sell": 13,
+      "ratio": 0.2364,
+      "lossPct": 76.36
+    },
+    {
+      "wave": 5,
+      "id": "reaktor",
+      "price": 88,
+      "sell": 22,
+      "ratio": 0.25,
+      "lossPct": 75
+    },
+    {
+      "wave": 5,
+      "id": "kernspintomograph",
+      "price": 169,
+      "sell": 42,
+      "ratio": 0.2485,
+      "lossPct": 75.15
+    },
+    {
+      "wave": 10,
+      "id": "kaffee",
+      "price": 29,
+      "sell": 7,
+      "ratio": 0.2414,
+      "lossPct": 75.86
+    },
+    {
+      "wave": 10,
+      "id": "drohne",
+      "price": 65,
+      "sell": 16,
+      "ratio": 0.2462,
+      "lossPct": 75.38
+    },
+    {
+      "wave": 10,
+      "id": "reaktor",
+      "price": 104,
+      "sell": 26,
+      "ratio": 0.25,
+      "lossPct": 75
+    },
+    {
+      "wave": 10,
+      "id": "kernspintomograph",
+      "price": 200,
+      "sell": 50,
+      "ratio": 0.25,
+      "lossPct": 75
+    },
+    {
+      "wave": 20,
+      "id": "kaffee",
+      "price": 38,
+      "sell": 9,
+      "ratio": 0.2368,
+      "lossPct": 76.32
+    },
+    {
+      "wave": 20,
+      "id": "drohne",
+      "price": 86,
+      "sell": 21,
+      "ratio": 0.2442,
+      "lossPct": 75.58
+    },
+    {
+      "wave": 20,
+      "id": "reaktor",
+      "price": 137,
+      "sell": 34,
+      "ratio": 0.2482,
+      "lossPct": 75.18
+    },
+    {
+      "wave": 20,
+      "id": "kernspintomograph",
+      "price": 262,
+      "sell": 65,
+      "ratio": 0.2481,
+      "lossPct": 75.19
+    }
+  ],
+  "coop_menu": {
+    "found": true,
+    "label": "recyceln: Kurhaus-Kaffee (+5)",
+    "refund": 5,
+    "removed": true,
+    "acts": 4
+  },
+  "next_wave": {
+    "state": "play",
+    "wave": 2,
+    "enemies": 3,
+    "playerAlive": true,
+    "materials": 474,
+    "before": 1
+  },
+  "console_errors": [],
+  "screenshot": "docs/pw/item-recycle-shop.png",
+  "base": {
+    "id": "kaffee",
+    "price": 21,
+    "baselineMat": 500,
+    "speed": 8,
+    "atkSpd": 0,
+    "maxHp": 135,
+    "curse": 0,
+    "turrets": 0,
+    "items": 0,
+    "row": false
+  }
+}

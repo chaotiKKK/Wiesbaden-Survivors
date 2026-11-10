@@ -1,0 +1,95 @@
+{
+  "off": {
+    "under": {
+      "gap_settled": -41.5,
+      "gap_min": -58,
+      "alpha": 1,
+      "dy": 0,
+      "sy": 360,
+      "want_sy": 360,
+      "block": {
+        "top": 297.2,
+        "bot": 386.4,
+        "halfW": 233
+      }
+    },
+    "above": {
+      "gap_settled": 91.7,
+      "gap_min": 84.6,
+      "alpha": 1,
+      "dy": 0,
+      "sy": 187,
+      "want_sy": 187,
+      "block": {
+        "top": 297.2,
+        "bot": 386.4,
+        "halfW": 233
+      }
+    },
+    "below": {
+      "gap_settled": 165.8,
+      "gap_min": 154.5,
+      "alpha": 1,
+      "dy": 0,
+      "sy": 576,
+      "want_sy": 576,
+      "block": {
+        "top": 297.2,
+        "bot": 386.4,
+        "halfW": 233
+      }
+    },
+    "fade": {
+      "dy": 0,
+      "dim": 1,
+      "gap": -175.4
+    }
+  },
+  "on": {
+    "under": {
+      "gap_settled": 24.1,
+      "gap_min": 3.6,
+      "alpha": 1,
+      "dy": -32.8,
+      "sy": 360,
+      "want_sy": 360,
+      "block": {
+        "top": 264.4,
+        "bot": 353.6,
+        "halfW": 233
+      }
+    },
+    "above": {
+      "gap_settled": 91.9,
+      "gap_min": 90.4,
+      "alpha": 1,
+      "dy": 0,
+      "sy": 187,
+      "want_sy": 187,
+      "block": {
+        "top": 297.2,
+        "bot": 386.4,
+        "halfW": 233
+      }
+    },
+    "below": {
+      "gap_settled": 183.2,
+      "gap_min": 153.7,
+      "alpha": 1,
+      "dy": 0,
+      "sy": 576,
+      "want_sy": 576,
+      "block": {
+        "top": 297.2,
+        "bot": 386.4,
+        "halfW": 233
+      }
+    },
+    "fade": {
+      "dy": -9,
+      "dim": 0.958,
+      "gap": -142.9
+    }
+  },
+  "console_errors": []
+}

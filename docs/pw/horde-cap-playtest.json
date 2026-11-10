@@ -1,0 +1,260 @@
+{
+  "seed": 12648430,
+  "rule": {
+    "maxEnemiesOnScreen": 100,
+    "classicBefore": 50,
+    "campaignBefore": 70
+  },
+  "scenarios": [
+    {
+      "id": "campaign-wave-11",
+      "label": "Kampagne Horde W11",
+      "wave": 11,
+      "oldCap": 70,
+      "before": {
+        "cap": 70,
+        "queued": 77,
+        "maxAlive": 70,
+        "spawned": 70,
+        "queueLeft": 7,
+        "alive": 70,
+        "ticks": 1800,
+        "frameAvg": 0.306,
+        "frameP95": 0.8,
+        "frameP99": 1.5,
+        "frameMax": 25.1,
+        "playerAlive": true,
+        "state": "play",
+        "wave": 11
+      },
+      "after": {
+        "cap": 100,
+        "queued": 77,
+        "maxAlive": 77,
+        "spawned": 77,
+        "queueLeft": 0,
+        "alive": 77,
+        "ticks": 1800,
+        "frameAvg": 0.251,
+        "frameP95": 0.6,
+        "frameP99": 1.2,
+        "frameMax": 16,
+        "playerAlive": true,
+        "state": "play",
+        "wave": 11
+      },
+      "checks": {
+        "queueExceedsOldCap": true,
+        "oldCapBound": true,
+        "newCapReached": true,
+        "queueDrained": true,
+        "frameBudget": true
+      },
+      "ok": true
+    },
+    {
+      "id": "campaign-wave-14",
+      "label": "Kampagne Horde W14",
+      "wave": 14,
+      "oldCap": 70,
+      "before": {
+        "cap": 70,
+        "queued": 100,
+        "maxAlive": 70,
+        "spawned": 70,
+        "queueLeft": 30,
+        "alive": 70,
+        "ticks": 1800,
+        "frameAvg": 0.276,
+        "frameP95": 0.5,
+        "frameP99": 1.2,
+        "frameMax": 20.7,
+        "playerAlive": true,
+        "state": "play",
+        "wave": 14
+      },
+      "after": {
+        "cap": 100,
+        "queued": 100,
+        "maxAlive": 100,
+        "spawned": 100,
+        "queueLeft": 0,
+        "alive": 100,
+        "ticks": 1800,
+        "frameAvg": 0.264,
+        "frameP95": 0.6,
+        "frameP99": 1.2,
+        "frameMax": 7.5,
+        "playerAlive": true,
+        "state": "play",
+        "wave": 14
+      },
+      "checks": {
+        "queueExceedsOldCap": true,
+        "oldCapBound": true,
+        "newCapReached": true,
+        "queueDrained": true,
+        "frameBudget": true
+      },
+      "ok": true
+    },
+    {
+      "id": "classic-wave-3",
+      "label": "Klassisch W3",
+      "wave": 3,
+      "oldCap": 50,
+      "before": {
+        "cap": 50,
+        "queued": 84,
+        "maxAlive": 50,
+        "spawned": 50,
+        "queueLeft": 34,
+        "alive": 50,
+        "ticks": 1800,
+        "frameAvg": 0.248,
+        "frameP95": 0.4,
+        "frameP99": 0.8,
+        "frameMax": 44.8,
+        "playerAlive": true,
+        "state": "play",
+        "wave": 3
+      },
+      "after": {
+        "cap": 100,
+        "queued": 84,
+        "maxAlive": 84,
+        "spawned": 84,
+        "queueLeft": 0,
+        "alive": 84,
+        "ticks": 1800,
+        "frameAvg": 0.219,
+        "frameP95": 0.4,
+        "frameP99": 0.6,
+        "frameMax": 9.8,
+        "playerAlive": true,
+        "state": "play",
+        "wave": 3
+      },
+      "checks": {
+        "queueExceedsOldCap": true,
+        "oldCapBound": true,
+        "newCapReached": true,
+        "queueDrained": true,
+        "frameBudget": true
+      },
+      "ok": true
+    }
+  ],
+  "combat": {
+    "scenario": "classic-wave-3",
+    "before": {
+      "cap": 50,
+      "queued": 84,
+      "maxAlive": 50,
+      "spawned": 84,
+      "queueLeft": 0,
+      "alive": 17,
+      "ticks": 2400,
+      "kills": 69,
+      "xp": 199,
+      "level": 1,
+      "materials": 104,
+      "pickups": 41,
+      "weapon": {
+        "id": "loeschwasser",
+        "tier": 1,
+        "type": null
+      },
+      "weapons": 1,
+      "runDmg": 2877,
+      "enemyNearest": 1.382051712742266,
+      "playerAlive": true,
+      "hp": 135,
+      "maxHp": 135,
+      "state": "play",
+      "ui": null,
+      "frameAvg": 0.237,
+      "frameP95": 0.5,
+      "frameP99": 1.6
+    },
+    "after": {
+      "cap": 100,
+      "queued": 84,
+      "maxAlive": 58,
+      "spawned": 84,
+      "queueLeft": 0,
+      "alive": 15,
+      "ticks": 2400,
+      "kills": 71,
+      "xp": 213,
+      "level": 1,
+      "materials": 115,
+      "pickups": 35,
+      "weapon": {
+        "id": "loeschwasser",
+        "tier": 1,
+        "type": null
+      },
+      "weapons": 1,
+      "runDmg": 2950.5,
+      "enemyNearest": 7.639113248946371,
+      "playerAlive": true,
+      "hp": 135,
+      "maxHp": 135,
+      "state": "play",
+      "ui": null,
+      "frameAvg": 0.187,
+      "frameP95": 0.4,
+      "frameP99": 1.1
+    },
+    "checks": {
+      "maxAliveGrew": true,
+      "killsGrew": true,
+      "xpGrew": true,
+      "materialsNonDecreasing": true,
+      "frameBudget": true
+    }
+  },
+  "determinism": {
+    "scenario": "campaign-wave-11",
+    "same": true,
+    "first": {
+      "cap": 100,
+      "queued": 77,
+      "maxAlive": 77,
+      "spawned": 77,
+      "queueLeft": 0,
+      "alive": 77,
+      "ticks": 1800,
+      "frameAvg": 0.286,
+      "frameP95": 0.7,
+      "frameP99": 1.3,
+      "frameMax": 14.2,
+      "playerAlive": true,
+      "state": "play",
+      "wave": 11
+    },
+    "second": {
+      "cap": 100,
+      "queued": 77,
+      "maxAlive": 77,
+      "spawned": 77,
+      "queueLeft": 0,
+      "alive": 77,
+      "ticks": 1800,
+      "frameAvg": 0.23,
+      "frameP95": 0.7,
+      "frameP99": 1,
+      "frameMax": 4.2,
+      "playerAlive": true,
+      "state": "play",
+      "wave": 11
+    }
+  },
+  "checks": {
+    "determinism": true,
+    "ruleIs100": true
+  },
+  "failures": [],
+  "pass": true
+}

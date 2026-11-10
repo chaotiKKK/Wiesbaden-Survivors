@@ -1,0 +1,86 @@
+{
+  "seed": 11322197,
+  "player": "leonidas",
+  "run": {
+    "arena": "kurpark",
+    "wave": 1,
+    "seed": 11322197
+  },
+  "session": {
+    "startRunCalls": 1,
+    "optionChanges": 5,
+    "damageTrials": 2
+  },
+  "base": {
+    "maxHp": 135,
+    "damage": 32.700000047683716,
+    "gameSpeed": 5,
+    "speedBase": 1,
+    "trial": {
+      "label": "baseline",
+      "damage": 32.700000047683716,
+      "hpLoss": 32.700000047683716,
+      "byWeapon": 32.7,
+      "runDamage": 32.7,
+      "ticks": 4
+    }
+  },
+  "scaled": {
+    "maxHp": 176,
+    "expectedMaxHp": 176,
+    "damage": 39.24000000953674,
+    "damageRatio": 1.2,
+    "trial": {
+      "label": "scaled",
+      "damage": 39.24000000953674,
+      "hpLoss": 39.24000000953674,
+      "byWeapon": 32.7,
+      "runDamage": 39.24,
+      "ticks": 4
+    }
+  },
+  "options": {
+    "hpScale": 130,
+    "dmgScale": 120,
+    "hpClicks": 3,
+    "dmgClicks": 2
+  },
+  "ui": {
+    "hpLabelRendered": true,
+    "dmgLabelRendered": true,
+    "hpValueRendered": true,
+    "dmgValueRendered": true,
+    "hpDef": {
+      "type": "int",
+      "min": 50,
+      "max": 150,
+      "step": 10
+    },
+    "dmgDef": {
+      "type": "int",
+      "min": 50,
+      "max": 150,
+      "step": 10
+    }
+  },
+  "persistence": {
+    "key": "wiesbaden_survivors_v1",
+    "hpScale": 130,
+    "dmgScale": 120
+  },
+  "checks": {
+    "speedOptionLive": true,
+    "hpScaleOption": true,
+    "hpScaleStep": true,
+    "hpScaled": true,
+    "hpLiveOnPlayer": true,
+    "dmgScaleOption": true,
+    "dmgScaleStep": true,
+    "damageScaled": true,
+    "uiRendered": true,
+    "uiRange": true,
+    "persisted": true
+  },
+  "failures": [],
+  "pass": true
+}

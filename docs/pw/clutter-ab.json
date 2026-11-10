@@ -1,0 +1,37 @@
+{
+  "off": {
+    "frames": 143.78,
+    "numbers_total_mean": 3.86,
+    "numbers_in_zone_max": 3.81,
+    "numbers_in_zone_mean": 1.15,
+    "rings_in_zone_max": 4.09,
+    "rings_in_zone_mean": 0.89,
+    "enemies_mean": 42.6,
+    "wave": 20.0,
+    "quietR": 0.0,
+    "windows": [
+      0.33,
+      2.15
+    ]
+  },
+  "on": {
+    "frames": 124.95,
+    "numbers_total_mean": 5.62,
+    "numbers_in_zone_max": 0.0,
+    "numbers_in_zone_mean": 0.0,
+    "rings_in_zone_max": 4.88,
+    "rings_in_zone_mean": 1.43,
+    "enemies_mean": 56.92,
+    "wave": 20.0,
+    "quietR": 52.0,
+    "windows": [
+      0,
+      0
+    ]
+  },
+  "wave": {
+    "wave": 20,
+    "boss": false
+  },
+  "console_errors": []
+}

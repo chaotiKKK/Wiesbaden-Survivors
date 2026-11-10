@@ -14,8 +14,8 @@
 //
 // Dependency-free: plain Node >= 22 (global WebSocket, global fetch) + system Edge.
 
-import { existsSync, readFileSync, rmSync, readdirSync } from 'node:fs';
-import { spawnSync } from 'node:child_process';
+import { existsSync, readFileSync, rmSync, readdirSync, openSync } from 'node:fs';
+import { spawn, spawnSync } from 'node:child_process';
 import http from 'node:http';
 import net from 'node:net';
 import os from 'node:os';
@@ -94,15 +94,74 @@ export function startStaticServer(root) {
 
 // ------------------------------------------------------------------- edge ----
 
-const MSEDGE_CANDIDATES = [
+/* Playwright's own Chromium builds, if `playwright install chromium` ran here.
+   The headless shell is the smallest launcher and needs no X server. */
+function playwrightBrowsers() {
+  const out = [];
+  const base = path.join(os.homedir(), '.cache', 'ms-playwright');
+  try {
+    for (const d of readdirSync(base)) {
+      if (d.startsWith('chromium_headless_shell-')) out.push(path.join(base, d, 'chrome-headless-shell-linux64', 'chrome-headless-shell'));
+      if (d.startsWith('chromium-')) {
+        /* current caches use chrome-linux64/; older ones chrome-linux/. Both,
+           or the full binary is never resolved on a modern install. */
+        out.push(path.join(base, d, 'chrome-linux64', 'chrome'));
+        out.push(path.join(base, d, 'chrome-linux', 'chrome'));
+      }
+    }
+  } catch { /* no playwright cache — fine */ }
+  return out;
+}
+
+/* User-space runtime for the Playwright binaries.
+
+   Those binaries link against libraries and fonts that are NOT installed
+   system-wide on a root-less box. tools/setup-browser.sh is the one recipe for
+   that (.deb extraction into $HOME/sysroot) and `--env` prints exactly the
+   exports it needs. Shell out and let bash evaluate them instead of hardcoding
+   $HOME/sysroot — one source of truth, and the script may move things later. */
+let _browserEnv = null;
+export function browserEnv() {
+  if (_browserEnv) return _browserEnv;
+  _browserEnv = {};
+  if (process.platform === 'win32') return _browserEnv;
+  const root = path.resolve(path.dirname(fileURLToPath(new URL(import.meta.url))), '..', '..');
+  const script = path.join(root, 'tools', 'setup-browser.sh');
+  if (!existsSync(script)) return _browserEnv;
+  const r = spawnSync('bash', ['-c',
+    'eval "$(bash "$1" --env)" 2>/dev/null || exit 0; printf "%s\\n%s" "$LD_LIBRARY_PATH" "$FONTCONFIG_FILE"',
+    '_', script], { encoding: 'utf8', timeout: 20000 });
+  if (r.status !== 0) return _browserEnv;
+  const parts = String(r.stdout || '').split('\n');
+  if (parts[0] && parts[0].trim()) _browserEnv.LD_LIBRARY_PATH = parts[0].trim();
+  if (parts[1] && parts[1].trim()) _browserEnv.FONTCONFIG_FILE = parts[1].trim();
+  return _browserEnv;
+}
+
+/* Windows keeps Edge first (the gate's documented browser). POSIX falls back to
+   a Chromium/Chrome build, then to Playwright's download. WBNS_BROWSER overrides
+   everything, which is how tools/setup-browser.sh documents the sandbox run. */
+const BROWSER_CANDIDATES = [
+  /* Explicit override: WBNS_BROWSER (documented) plus CHROME_PATH/GAME_BROWSER. */
+  process.env.WBNS_BROWSER,
+  process.env.CHROME_PATH,
+  process.env.GAME_BROWSER,
+  /* Edge stays the gate's browser for Windows contributors. */
   'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
-  'C:/Program Files/Microsoft/Edge/Application/msedge.exe'
-];
-export const EDGE_PATH = MSEDGE_CANDIDATES.find(p => existsSync(p));
+  'C:/Program Files/Microsoft/Edge/Application/msedge.exe',
+  '/usr/bin/chromium', '/usr/bin/chromium-browser',
+  '/usr/bin/google-chrome', '/usr/bin/google-chrome-stable'
+].concat(playwrightBrowsers()).filter(Boolean);
+export const EDGE_PATH = BROWSER_CANDIDATES.find(p => { try { return existsSync(p); } catch { return false; } });
 
 // Headless Edge needs the background-throttling family off or chained
 // setTimeout(0) and rAF crawl at ~1 Hz — the trap that makes async probes and
 // the chunked sim look hung.
+/* Containers without user namespaces / a large /dev/shm need these;
+   harmless for a normal desktop Chromium. POSIX only — Edge on Windows
+   runs with its own sandbox. */
+const POSIX_CONTAINER_ARGS = ['--no-sandbox', '--disable-dev-shm-usage'];
+
 const BASE_EDGE_ARGS = [
   '--disable-extensions', '--no-first-run', '--no-default-browser-check',
   '--disable-features=msEdgeFirstRunExperience',
@@ -117,14 +176,18 @@ const BASE_EDGE_ARGS = [
  */
 export function killScratchEdges(prefixes) {
   const list = Array.isArray(prefixes) ? prefixes : [prefixes];
-  const clause = list.map(p => "$_.CommandLine -like '*" + p + "*'").join(' -or ');
-  powershell("Get-CimInstance Win32_Process -Filter \"Name = 'msedge.exe'\" | Where-Object { " + clause +
-    " } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }", { timeout: 15000 });
+  if (process.platform === 'win32') {
+    const clause = list.map(p => "$_.CommandLine -like '*" + p + "*'").join(' -or ');
+    powershell("Get-CimInstance Win32_Process -Filter \"Name = 'msedge.exe'\" | Where-Object { " + clause +
+      " } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }", { timeout: 15000 });
+  }
+  /* POSIX: only the profile dirs are cleaned here. Processes are killed by the
+     pid recorded in launchEdge(), never by a name/command-line pattern. */
   try {
     for (const f of readdirSync(os.tmpdir())) {
       if (list.some(p => f.indexOf(p) === 0)) rmSync(path.join(os.tmpdir(), f), { recursive: true, force: true });
     }
-  } catch { /* best effort: files may linger if Edge is slow to release */ }
+  } catch { /* best effort: files may linger if the browser is slow to release */ }
 }
 
 /**
@@ -135,7 +198,8 @@ export function killScratchEdges(prefixes) {
 export async function launchEdge({ profilePrefix, extraArgs = [] }) {
   const port = await freePort();
   const profile = path.join(os.tmpdir(), profilePrefix + process.pid + '-' + Date.now());
-  const kill = () => {
+  let launchLog = () => '';
+  let kill = () => {
     const pat = profile.replace(/\\/g, '/'); // launched with forward slashes in --user-data-dir
     powershell("Get-CimInstance Win32_Process -Filter \"Name = 'msedge.exe'\" | Where-Object { $_.CommandLine -like '*" + pat +
       "*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }", { timeout: 15000 });
@@ -143,18 +207,63 @@ export async function launchEdge({ profilePrefix, extraArgs = [] }) {
   };
   if (!EDGE_PATH) return { ok: false, port, profile, kill };
 
-  const args = ['--headless=new', '--remote-debugging-port=' + port, '--user-data-dir=' + profile.replace(/\\/g, '/')]
+  /* Playwright's headless shell is always headless and rejects --headless=new. */
+  const isHeadlessShell = /chrome-headless-shell/.test(EDGE_PATH);
+  const args = (isHeadlessShell ? [] : ['--headless=new'])
+    .concat(['--remote-debugging-port=' + port, '--user-data-dir=' + profile.replace(/\\/g, '/')])
     .concat(extraArgs, BASE_EDGE_ARGS, ['about:blank']);
-  const r = powershell("Start-Process -WindowStyle Hidden -FilePath '" + EDGE_PATH + "' -ArgumentList '" + args.join(' ') + "'");
-  if (r.timedOut || r.code !== 0) return { ok: false, port, profile, kill };
+
+  if (process.platform === 'win32') {
+    const r = powershell("Start-Process -WindowStyle Hidden -FilePath '" + EDGE_PATH + "' -ArgumentList '" + args.join(' ') + "'");
+    if (r.timedOut || r.code !== 0) return { ok: false, port, profile, kill };
+  } else {
+    /* POSIX: detached, own process group, stdio ignored — same shape as the
+       PowerShell Start-Process path. The pid is kept so kill() targets exactly
+       this browser and never a name pattern. */
+    let child;
+    /* The child MUST get the user-space runtime (LD_LIBRARY_PATH from the
+       sysroot in tools/setup-browser.sh, FONTCONFIG_FILE). Without it the
+       Playwright binary dies on libnspr4 and /json/version never answers, which
+       surfaced only as a bare "did not start on CDP port". Stderr goes to a log
+       so the failure carries a real reason instead of a guess. */
+    const logPath = profile + '.log';
+    let logFd = null;
+    try { logFd = openSync(logPath, 'w'); } catch { /* no log — still launch */ }
+    const childEnv = Object.assign({}, process.env, browserEnv());
+    try {
+      child = spawn(EDGE_PATH, args.concat(POSIX_CONTAINER_ARGS), {
+        detached: true,
+        stdio: logFd === null ? 'ignore' : ['ignore', logFd, logFd],
+        env: childEnv
+      });
+    } catch (e) { return { ok: false, port, profile, kill, err: 'spawn failed: ' + String((e && e.message) || e) }; }
+    child.unref();
+    launchLog = () => {
+      try {
+        const t = String(readFileSync(logPath, 'utf8')).trim().split('\n').filter(Boolean);
+        return t.slice(-4).join(' | ').slice(0, 400);
+      } catch { return ''; }
+    };
+    kill = () => {
+      try { process.kill(-child.pid, 'SIGKILL'); } catch { /* already gone */ }
+      setTimeout(() => { try { rmSync(profile, { recursive: true, force: true }); } catch { /* ignore */ } }, 800);
+    };
+  }
 
   const deadline = Date.now() + 15000;
   while (Date.now() < deadline) {
-    const rr = powershell('try { (Invoke-WebRequest -UseBasicParsing -TimeoutSec 2 http://127.0.0.1:' + port + '/json/version).StatusCode } catch { 0 }', { timeout: 5000 });
-    if ((rr.stdout || '').trim().startsWith('200')) return { ok: true, port, profile, kill };
+    let up = false;
+    if (process.platform === 'win32') {
+      const rr = powershell('try { (Invoke-WebRequest -UseBasicParsing -TimeoutSec 2 http://127.0.0.1:' + port + '/json/version).StatusCode } catch { 0 }', { timeout: 5000 });
+      up = (rr.stdout || '').trim().startsWith('200');
+    } else {
+      try { up = (await fetch('http://127.0.0.1:' + port + '/json/version')).ok; } catch { up = false; }
+    }
+    if (up) return { ok: true, port, profile, kill };
     await new Promise(res => setTimeout(res, 500));
   }
-  return { ok: false, port, profile, kill };
+  const why = launchLog();
+  return { ok: false, port, profile, kill, err: 'no CDP endpoint on port ' + port + ' after 15 s' + (why ? ' — launch log: ' + why : '') };
 }
 
 // -------------------------------------------------------------------- cdp ----
