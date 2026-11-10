@@ -14,6 +14,10 @@ func _ready() -> void:
 	await get_tree().process_frame
 	main.set_process(false)
 	main.start_run("leonidas", 12648430, 0)
+	var backdrop_hidden_in_run: bool = not main.ui.bg.visible
+	main.ui.show_title()
+	var backdrop_visible_in_menu: bool = main.ui.bg.visible
+	main.ui.show_hud()
 
 	main.pending_levels = 1
 	main._show_levelup(false)
@@ -44,10 +48,12 @@ func _ready() -> void:
 	var result: Dictionary = {
 		"level_ok": level_ok, "shop_ok": shop_ok,
 		"lock_ok": lock_ok, "reroll_ok": reroll_ok, "lock_persist_ok": lock_persist_ok,
+		"backdrop_hidden_in_run": backdrop_hidden_in_run,
+		"backdrop_visible_in_menu": backdrop_visible_in_menu,
 		"state": main.state, "materials": main.run_materials
 	}
 	print("UI " + JSON.stringify(result))
-	if not level_ok or not shop_ok or not lock_ok or not reroll_ok or not lock_persist_ok:
+	if not level_ok or not shop_ok or not lock_ok or not reroll_ok or not lock_persist_ok or not backdrop_hidden_in_run or not backdrop_visible_in_menu:
 		push_error("UI smoke failed: " + JSON.stringify(result))
 		get_tree().quit(1)
 	else:

@@ -25,6 +25,7 @@ const INK := Color(0.035, 0.055, 0.045)
 const PANEL := Color(0.055, 0.09, 0.075, 0.96)
 
 var root: Control
+var bg: ColorRect
 var title_panel: Control
 var char_panel: Control
 var hud: Control
@@ -81,7 +82,7 @@ func _ready() -> void:
 	root = Control.new()
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(root)
-	var bg := ColorRect.new()
+	bg = ColorRect.new()
 	bg.color = Color(0.025, 0.045, 0.035, 1.0)
 	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -555,8 +556,14 @@ func _build_end() -> void:
 	box.add_child(menu)
 
 
+func _set_backdrop(visible: bool) -> void:
+	if bg != null:
+		bg.visible = visible
+
+
 func show_title() -> void:
 	hide_all()
+	_set_backdrop(true)
 	title_panel.visible = true
 
 
@@ -564,16 +571,19 @@ func show_char_select() -> void:
 	_fill_chars()
 	_apply_unlock_state()
 	hide_all()
+	_set_backdrop(true)
 	char_panel.visible = true
 
 
 func show_hud() -> void:
 	hide_all()
+	_set_backdrop(false)
 	hud.visible = true
 	touch_hint.visible = not OS.has_feature("mobile")
 
 
 func hide_all() -> void:
+	_set_backdrop(false)
 	for panel in [title_panel, char_panel, hud, level_panel, shop_panel, pause_panel, end_panel]:
 		if panel != null:
 			panel.visible = false
@@ -650,6 +660,7 @@ func update_hud(d: Dictionary) -> void:
 
 
 func show_levelup(offers: Array) -> void:
+	_set_backdrop(false)
 	level_panel.visible = true
 	_clear(level_box)
 	level_box.add_child(_label("LEVEL-UP", 30, GOLD))
@@ -662,6 +673,7 @@ func show_levelup(offers: Array) -> void:
 
 
 func show_shop(offers: Array, materials: int, merges: Array = [], reroll_cost: int = 8, recycle: Array = [], curse: int = 0, curse_summary: String = "", workshop: Array = []) -> void:
+	_set_backdrop(false)
 	shop_panel.visible = true
 	shop_materials.text = "Material: %d" % materials
 	if curse > 0:
@@ -777,6 +789,7 @@ func _emit_shop_workshop_buy(id: String) -> void:
 
 
 func show_pause() -> void:
+	_set_backdrop(false)
 	pause_panel.visible = true
 
 
